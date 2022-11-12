@@ -9,7 +9,7 @@ import (
 )
 
 var Database *gorm.DB
-var DATABASE_URI string = fmt.Sprintf("root:j4onYumQmrJ263tkbdqZwEEw6@tcp(%s:3306)/rmm?charset=utf8mb4&parseTime=True&loc=Local", Getenv("HOST", "localhost"))
+var DATABASE_URI string = fmt.Sprintf("root:%s@tcp(%s:3306)/rmm?charset=utf8mb4&parseTime=True&loc=Local", Getenv("PW", ""), Getenv("HOST", "localhost"))
 
 func Connect() error {
 	var err error
