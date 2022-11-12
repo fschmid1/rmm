@@ -14,7 +14,7 @@ func main() {
 	app.Get("/devices", handlers.GetDevices)
 	app.Get("/devices/:id", handlers.GetDevice)
 	app.Post("/devices", handlers.AddDevice)
-	app.Put("/devices/:id", handlers.UpdateDevice)
+	app.Patch("/devices/:id", handlers.UpdateDevice)
 	app.Delete("/devices/:id", handlers.RemoveDevice)
 
 	app.Listen(":" + config.Getenv("PORT", "8080"))

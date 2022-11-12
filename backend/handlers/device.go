@@ -4,12 +4,13 @@ import (
 	"festech.de/rmm/backend/config"
 	"festech.de/rmm/backend/models"
 	"github.com/gofiber/fiber/v2"
+	"gorm.io/gorm/clause"
 )
 
 func GetDevices(c *fiber.Ctx) error {
 	var devices []models.Device
 
-	config.Database.Find(&devices)
+	config.Database.Preload(clause.Associations).Find(&devices)
 	return c.Status(200).JSON(devices)
 }
 
@@ -18,7 +19,7 @@ func GetDevice(c *fiber.Ctx) error {
 
 	var device models.Device
 
-	result := config.Database.Find(&device, id)
+	result := config.Database.Preload(clause.Associations).Find(&device, id)
 
 	if result.RowsAffected == 0 {
 		return c.SendStatus(404)
@@ -47,8 +48,9 @@ func UpdateDevice(c *fiber.Ctx) error {
 	if err := c.BodyParser(device); err != nil {
 		return c.Status(503).SendString(err.Error())
 	}
-
-	config.Database.Where("id = ?", id).Updates(&device)
+	if result := config.Database.Where("id = ?", id).Updates(&device); result.Error != nil {
+		return c.Status(400).SendString(result.Error.Error())
+	}
 	return c.Status(200).JSON(device)
 }
 

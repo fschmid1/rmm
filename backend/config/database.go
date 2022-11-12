@@ -23,7 +23,7 @@ func Connect() error {
 		panic(err)
 	}
 
-	Database.AutoMigrate(&models.Device{})
+	Database.AutoMigrate(&models.Device{}, &models.SystemInfo{})
 
 	return nil
 }
