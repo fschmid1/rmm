@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"os"
 
 	"festech.de/rmm/client/http"
 	"festech.de/rmm/client/models"
@@ -12,10 +13,15 @@ import (
 )
 
 var Device models.Device
+var Configuration models.Configuration
 
-var configPath = system.CreateConfigurationPath()
+var RestUrl string
+var WsUrl string
 
-func CreateConfiguration() models.Device {
+var configPath = system.CreateConfigurationPath() + "config"
+var devicePath = system.CreateConfigurationPath() + "device"
+
+func RegisterDevice() {
 	id := uuid.New().String()
 
 	systemInfo := models.SystemInfo{
@@ -32,17 +38,32 @@ func CreateConfiguration() models.Device {
 		SystemInfo: systemInfo,
 	}
 
-	status, textBody, _ := http.Post("http://localhost:8080/devices", device, &device)
+	status, textBody, _ := http.Post(RestUrl+"devices", device, &device)
 	if status == 400 && textBody == "Device with this mac address is already registered" {
-		http.Get(fmt.Sprintf("http://localhost:8080/devices/%s?mac=1", device.SystemInfo.MacAddress), &device)
+		http.Get(fmt.Sprintf(RestUrl+"devices/%s?mac=1", device.SystemInfo.MacAddress), &device)
 	}
-	WriteConfiguration(device)
-	return device
+	WriteConfiguration(devicePath, device)
 }
 
-func WriteConfiguration(device models.Device) {
-	file, _ := json.MarshalIndent(device, "", " ")
-	ioutil.WriteFile(configPath, file, 0644)
+func CreateConfiguration() {
+	config := models.Configuration{}
+	WriteConfiguration(configPath, config)
+	fmt.Printf("Configuration files was created under '%s'\nAfter configuration pls restart the client\n", configPath)
+	os.Exit(0)
+}
+
+func WriteConfiguration(path string, data interface{}) {
+	file, _ := json.MarshalIndent(data, "", " ")
+	ioutil.WriteFile(path, file, 0775)
+}
+
+func createUrls() {
+	var secure = ""
+	if Configuration.Secure {
+		secure = "s"
+	}
+	RestUrl = fmt.Sprintf("http%s://%s:%s/", secure, Configuration.Host, Configuration.Port)
+	WsUrl = fmt.Sprintf("ws%s://%s:%s/ws/", secure, Configuration.Host, Configuration.Port)
 }
 
 func ReadConfiguration() {
@@ -50,8 +71,18 @@ func ReadConfiguration() {
 		CreateConfiguration()
 	}
 	file, _ := ioutil.ReadFile(configPath)
+	config := models.Configuration{}
+	json.Unmarshal(file, &config)
+	Configuration = config
+	WriteConfiguration(configPath, config)
+	createUrls()
+	if !system.FileOrFolderExists(devicePath) {
+		RegisterDevice()
+	}
+	file, _ = ioutil.ReadFile(devicePath)
 	device := models.Device{}
 	json.Unmarshal(file, &device)
 
 	Device = device
+
 }

@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	"net/url"
 	"os"
 	"os/signal"
 	"time"
@@ -15,8 +14,6 @@ import (
 	"festech.de/rmm/client/system"
 	"github.com/gorilla/websocket"
 )
-
-var addr = flag.String("addr", "localhost:8080", "http service address")
 
 var interrupt = make(chan os.Signal, 1)
 var isInterrupt = false
@@ -29,8 +26,8 @@ func main() {
 
 	config.ReadConfiguration()
 	system.GetMacAddress()
-	u := url.URL{Scheme: "ws", Host: *addr, Path: fmt.Sprintf("/ws/%s", config.Device.DeviceID), RawQuery: "token=123"}
-	connectWebsocket(u.String())
+	u := config.WsUrl + fmt.Sprintf("%s?token=%s", config.Device.DeviceID, "123")
+	connectWebsocket(u)
 }
 
 func connectWebsocket(url string) {
@@ -40,8 +37,8 @@ func connectWebsocket(url string) {
 	}
 	fmt.Println("Connected to server")
 	defer c.Close()
-	
-	http.SocketConn = c;
+
+	http.SocketConn = c
 	done := make(chan struct{})
 	go system.SendUsage()
 
@@ -56,10 +53,25 @@ func connectWebsocket(url string) {
 				return
 			}
 			switch msg.Event {
-				case "start-usage":
-					system.StartStopUsageStream <- true
-				case "stop-usage":
-					system.StartStopUsageStream <- false
+			case "start-usage":
+				system.StartStopUsageStream <- true
+			case "stop-usage":
+				system.StartStopUsageStream <- false
+			case "run":
+				if config.Configuration.AllowRun {
+					c.WriteJSON(models.SocketEvent{
+						Event: "run-result",
+						Data:  system.Run(fmt.Sprintf("%v", msg.Data)),
+					})
+				}
+			case "shutdown":
+				if config.Configuration.AllowShutdown {
+					system.Run("ls")
+				}
+			case "reboot":
+				if config.Configuration.AllowReboot {
+					system.Run("ls")
+				}
 			}
 		}
 	}()

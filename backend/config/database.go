@@ -9,10 +9,12 @@ import (
 )
 
 var Database *gorm.DB
-var DATABASE_URI string = fmt.Sprintf("root:%s@tcp(%s:3306)/rmm?charset=utf8mb4&parseTime=True&loc=Local", Getenv("PW", ""), Getenv("HOST", "localhost"))
+var DATABASE_URI string = Getenv("DATABASE_URI", "")
 
 func Connect() error {
 	var err error
+
+	fmt.Println("test: " + DATABASE_URI)
 
 	Database, err = gorm.Open(mysql.Open(DATABASE_URI), &gorm.Config{
 		SkipDefaultTransaction: true,

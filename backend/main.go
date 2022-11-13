@@ -15,7 +15,6 @@ func main() {
 
 	socket.RegisterWebsocketRoute(app)
 
-
 	app.Post("/start/:id", func(c *fiber.Ctx) error {
 		socket.SendMessage(c.Params("id"), models.SocketEvent{
 			Event: "start-usage",
@@ -26,6 +25,14 @@ func main() {
 	app.Post("/stop/:id", func(c *fiber.Ctx) error {
 		socket.SendMessage(c.Params("id"), models.SocketEvent{
 			Event: "stop-usage",
+		})
+		return c.SendString("sending")
+	})
+
+	app.Post("/run/:id", func(c *fiber.Ctx) error {
+		socket.SendMessage(c.Params("id"), models.SocketEvent{
+			Event: "run",
+			Data:  "ls",
 		})
 		return c.SendString("sending")
 	})

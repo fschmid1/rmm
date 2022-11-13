@@ -29,7 +29,10 @@ func IsMac() bool {
 func CreateConfigurationPath() string {
 	if IsLinux() {
 		home, _ := os.UserHomeDir()
-		return fmt.Sprintf("%s/.fes-rmm", home)
+		if !FileOrFolderExists(fmt.Sprintf("%s/.fes-rmm", home)) {
+			os.Mkdir(fmt.Sprintf("%s/.fes-rmm", home), 0775)
+		}
+		return fmt.Sprintf("%s/.fes-rmm/", home)
 	}
 	return ""
 }
