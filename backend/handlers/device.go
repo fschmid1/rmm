@@ -6,6 +6,7 @@ import (
 	"festech.de/rmm/backend/config"
 	"festech.de/rmm/backend/models"
 	"github.com/gofiber/fiber/v2"
+	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
@@ -18,11 +19,16 @@ func GetDevices(c *fiber.Ctx) error {
 
 func GetDevice(c *fiber.Ctx) error {
 	id := c.Params("id")
+	mac := c.Query("mac")
 
 	var device models.Device
-
-	result := config.Database.Preload(clause.Associations).Find(&device, id)
-
+	var result *gorm.DB
+	if mac != "" {
+		systemInfo := GetSystemInfoByMacAddress(id)
+		result = config.Database.Preload(clause.Associations).Where("system_info_id = ?", systemInfo.ID).First(&device)
+	} else {
+		result = config.Database.Preload(clause.Associations).Find(&device, id)
+	}
 	if result.RowsAffected == 0 {
 		return c.SendStatus(404)
 	}
@@ -35,6 +41,10 @@ func AddDevice(c *fiber.Ctx) error {
 
 	if err := c.BodyParser(device); err != nil {
 		return c.Status(503).SendString(err.Error())
+	}
+
+	if GetSystemInfoByMacAddress(device.SystemInfo.MacAddress).ID > 0 {
+		return c.Status(400).SendString("Device with this mac address is already registered")
 	}
 
 	if result := config.Database.Create(&device); result.Error != nil {
