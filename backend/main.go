@@ -3,6 +3,7 @@ package main
 import (
 	"festech.de/rmm/backend/config"
 	"festech.de/rmm/backend/handlers"
+	"festech.de/rmm/backend/socket"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -10,6 +11,8 @@ func main() {
 	app := fiber.New()
 
 	config.Connect()
+
+	socket.RegisterWebsocketRoute(app)
 
 	app.Get("/devices", handlers.GetDevices)
 	app.Get("/devices/:id", handlers.GetDevice)

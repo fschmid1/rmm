@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"errors"
+
 	"festech.de/rmm/backend/config"
 	"festech.de/rmm/backend/models"
 	"github.com/gofiber/fiber/v2"
@@ -65,4 +67,28 @@ func RemoveDevice(c *fiber.Ctx) error {
 	}
 
 	return c.SendStatus(200)
+}
+
+func GetDeviceByDeviceId(id string) (models.Device, error) {
+	var device models.Device
+
+	result := config.Database.Where("device_id = ?", id).First(&device)
+
+	if result.RowsAffected == 0 {
+		return models.Device{}, errors.New("not found")
+	}
+
+	return device, nil
+}
+
+func SetDeviceConnected(id string, connected bool) (bool, error) {
+	device, err := GetDeviceByDeviceId(id)
+	if err != nil {
+		return false, errors.New("not found")
+	}
+
+	if result := config.Database.Model(&device).Update("connected", connected); result.Error != nil {
+		return false, errors.New("db error")
+	}
+	return true, nil
 }
