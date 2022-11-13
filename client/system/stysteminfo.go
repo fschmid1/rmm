@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-func run(cmd string) string {
+func Run(cmd string) string {
 	out := exec.Command("bash", "-c", cmd)
 	stdout, _ := out.Output()
 	return string(stdout)
@@ -34,7 +34,7 @@ func GetMacAddress() string {
 func GetOS() string {
 	var os string
 	if IsLinux() {
-		os = strings.ReplaceAll(run("uname -osri"), "\n", "")
+		os = strings.ReplaceAll(Run("uname -osri"), "\n", "")
 	}
 	return os
 }
@@ -43,7 +43,7 @@ func GetCores() int {
 	var cores int
 	var _ error
 	if IsLinux() {
-		cores, _ = strconv.Atoi(strings.ReplaceAll(run("grep \"^processor\" /proc/cpuinfo | wc -l"), "\n", ""))
+		cores, _ = strconv.Atoi(strings.ReplaceAll(Run("grep \"^processor\" /proc/cpuinfo | wc -l"), "\n", ""))
 	}
 	return cores
 }
@@ -52,7 +52,7 @@ func GetMemory() string {
 	var memory string
 	var _ error
 	if IsLinux() {
-		temp, _ := strconv.Atoi(strings.ReplaceAll(run("free -m | awk '$1 == \"Mem:\" {print $2}'"), "\n", ""))
+		temp, _ := strconv.Atoi(strings.ReplaceAll(Run("free -m | awk '$1 == \"Mem:\" {print $2}'"), "\n", ""))
 		memory = fmt.Sprintf("%dGB", (temp / 1000))
 	}
 	return memory
@@ -62,7 +62,7 @@ func GetDisk() string {
 	var disk string
 	var _ error
 	if IsLinux() {
-		disk = strings.ReplaceAll(run("df -Bg | grep '^/dev/' | grep -v '/boot$' | awk '{ft += $2} END {print ft}'"), "\n", "") + "GB"
+		disk = strings.ReplaceAll(Run("df -Bg | grep '^/dev/' | grep -v '/boot$' | awk '{ft += $2} END {print ft}'"), "\n", "") + "GB"
 	}
 	return disk
 }

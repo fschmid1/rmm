@@ -10,6 +10,8 @@ import (
 	"time"
 
 	"festech.de/rmm/client/config"
+	"festech.de/rmm/client/http"
+	"festech.de/rmm/client/models"
 	"festech.de/rmm/client/system"
 	"github.com/gorilla/websocket"
 )
@@ -27,7 +29,6 @@ func main() {
 
 	config.ReadConfiguration()
 	system.GetMacAddress()
-
 	u := url.URL{Scheme: "ws", Host: *addr, Path: fmt.Sprintf("/ws/%s", config.Device.DeviceID), RawQuery: "token=123"}
 	connectWebsocket(u.String())
 }
@@ -39,19 +40,27 @@ func connectWebsocket(url string) {
 	}
 	fmt.Println("Connected to server")
 	defer c.Close()
-
+	
+	http.SocketConn = c;
 	done := make(chan struct{})
+	go system.SendUsage()
 
 	go func() {
+		var msg models.SocketEvent
 		defer close(done)
 		for {
-			_, message, err := c.ReadMessage()
+			err := c.ReadJSON(&msg)
 			if err != nil {
-				log.Println("read:", err)
+				fmt.Println(err)
 				tryReconnect(url)
 				return
 			}
-			log.Printf("recv: %s", message)
+			switch msg.Event {
+				case "start-usage":
+					system.StartStopUsageStream <- true
+				case "stop-usage":
+					system.StartStopUsageStream <- false
+			}
 		}
 	}()
 
@@ -75,6 +84,7 @@ func tryReconnect(url string) {
 	if isInterrupt {
 		return
 	}
+	close(system.EndUsageStream)
 	time.Sleep(time.Second * 5)
 	connectWebsocket(url)
 }

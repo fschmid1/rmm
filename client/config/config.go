@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"os"
 
 	"festech.de/rmm/client/http"
 	"festech.de/rmm/client/models"
@@ -14,13 +13,7 @@ import (
 
 var Device models.Device
 
-func fileExists(path string) bool {
-	if _, err := os.Stat(path); err == nil {
-		return true
-	} else {
-		return false
-	}
-}
+var configPath = system.CreateConfigurationPath()
 
 func CreateConfiguration() models.Device {
 	id := uuid.New().String()
@@ -49,14 +42,14 @@ func CreateConfiguration() models.Device {
 
 func WriteConfiguration(device models.Device) {
 	file, _ := json.MarshalIndent(device, "", " ")
-	ioutil.WriteFile("conf.json", file, 0644)
+	ioutil.WriteFile(configPath, file, 0644)
 }
 
 func ReadConfiguration() {
-	if !fileExists("conf.json") {
+	if !system.FileOrFolderExists(configPath) {
 		CreateConfiguration()
 	}
-	file, _ := ioutil.ReadFile("conf.json")
+	file, _ := ioutil.ReadFile(configPath)
 	device := models.Device{}
 	json.Unmarshal(file, &device)
 

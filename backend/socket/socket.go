@@ -2,6 +2,7 @@ package socket
 
 import (
 	"errors"
+	"fmt"
 	"log"
 
 	"festech.de/rmm/backend/handlers"
@@ -46,13 +47,13 @@ func runHub() {
 	}
 }
 
-func SendMessage(id string, message string) error {
+func SendMessage(id string, message interface{}) error {
 	client, found := Clients[id]
 
 	if !found {
 		return errors.New("Client not found")
 	}
-	client.Connection.WriteMessage(websocket.TextMessage, []byte(message))
+	client.Connection.WriteJSON(message)
 
 	return nil
 }
@@ -83,14 +84,12 @@ func RegisterWebsocketRoute(app *fiber.App) {
 		register <- client
 
 		for {
-			messageType, message, err := client.Connection.ReadMessage()
+			_, message, err := client.Connection.ReadMessage()
 			if err != nil {
 				return
 			}
 
-			if messageType == websocket.TextMessage {
-				Broadcast <- string(message)
-			}
+			fmt.Println(string(message))
 		}
 	}))
 }
