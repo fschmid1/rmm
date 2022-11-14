@@ -63,7 +63,7 @@ func createUrls() {
 		secure = "s"
 	}
 	RestUrl = fmt.Sprintf("http%s://%s:%s/", secure, Configuration.Host, Configuration.Port)
-	WsUrl = fmt.Sprintf("ws%s://%s:%s/ws/", secure, Configuration.Host, Configuration.Port)
+	WsUrl = fmt.Sprintf("ws%s://%s:%s/ws/client/", secure, Configuration.Host, Configuration.Port)
 }
 
 func ReadConfiguration() {

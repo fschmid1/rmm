@@ -72,10 +72,20 @@ func connectWebsocket(url string) {
 			case "shutdown":
 				if config.Configuration.AllowShutdown {
 					system.Run("ls")
+				} else {
+					c.WriteJSON(models.SocketEvent{
+						Event: "result-shutdown",
+						Data:  "Shutdown is not allowed on this device",
+					})
 				}
 			case "reboot":
-				if config.Configuration.AllowReboot {
+				if config.Configuration.AllowShutdown {
 					system.Run("ls")
+				} else {
+					c.WriteJSON(models.SocketEvent{
+						Event: "result-reboot",
+						Data:  "Reboot is not allowed on this device",
+					})
 				}
 			case "process-list":
 				if config.Configuration.AllowProcessList {
@@ -125,7 +135,9 @@ func tryReconnect(url string) {
 	if isInterrupt {
 		return
 	}
-	close(system.EndUsageStream)
+	if (system.EndUsageStream != nil) {
+		close(system.EndUsageStream)
+	}
 	time.Sleep(time.Second * 5)
 	connectWebsocket(url)
 }
