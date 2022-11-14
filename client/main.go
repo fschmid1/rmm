@@ -53,15 +53,20 @@ func connectWebsocket(url string) {
 				return
 			}
 			switch msg.Event {
-			case "start-usage":
+			case "usage-start":
 				system.StartStopUsageStream <- true
-			case "stop-usage":
+			case "usage-stop":
 				system.StartStopUsageStream <- false
 			case "run":
 				if config.Configuration.AllowRun {
 					c.WriteJSON(models.SocketEvent{
-						Event: "run-result",
+						Event: "result-run",
 						Data:  system.Run(fmt.Sprintf("%v", msg.Data)),
+					})
+				} else {
+					c.WriteJSON(models.SocketEvent{
+						Event: "result-process-list",
+						Data:  "Run is not allowed on this device",
 					})
 				}
 			case "shutdown":
@@ -71,6 +76,30 @@ func connectWebsocket(url string) {
 			case "reboot":
 				if config.Configuration.AllowReboot {
 					system.Run("ls")
+				}
+			case "process-list":
+				if config.Configuration.AllowProcessList {
+					c.WriteJSON(models.SocketEvent{
+						Event: "result-process-list",
+						Data:  system.GetProcessList(),
+					})
+				} else {
+					c.WriteJSON(models.SocketEvent{
+						Event: "result-process-list",
+						Data:  "Process list is not allowed on this device",
+					})
+				}
+			case "process-kill":
+				if config.Configuration.AllowKill {
+					c.WriteJSON(models.SocketEvent{
+						Event: "result-process-kill",
+						Data:  system.KillProcess(msg.Data.(string)),
+					})
+				} else {
+					c.WriteJSON(models.SocketEvent{
+						Event: "result-process-kill",
+						Data:  "Process kill is not allowed on this device",
+					})
 				}
 			}
 		}

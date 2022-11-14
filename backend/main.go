@@ -3,7 +3,6 @@ package main
 import (
 	"festech.de/rmm/backend/config"
 	"festech.de/rmm/backend/handlers"
-	"festech.de/rmm/backend/models"
 	"festech.de/rmm/backend/socket"
 	"github.com/gofiber/fiber/v2"
 )
@@ -15,27 +14,7 @@ func main() {
 
 	socket.RegisterWebsocketRoute(app)
 
-	app.Post("/start/:id", func(c *fiber.Ctx) error {
-		socket.SendMessage(c.Params("id"), models.SocketEvent{
-			Event: "start-usage",
-		})
-		return c.SendString("sending")
-	})
-
-	app.Post("/stop/:id", func(c *fiber.Ctx) error {
-		socket.SendMessage(c.Params("id"), models.SocketEvent{
-			Event: "stop-usage",
-		})
-		return c.SendString("sending")
-	})
-
-	app.Post("/run/:id", func(c *fiber.Ctx) error {
-		socket.SendMessage(c.Params("id"), models.SocketEvent{
-			Event: "run",
-			Data:  "ls",
-		})
-		return c.SendString("sending")
-	})
+	app.Post("/devices/functions", socket.FunctionsHandler)
 
 	app.Get("/devices", handlers.GetDevices)
 	app.Get("/devices/:id", handlers.GetDevice)

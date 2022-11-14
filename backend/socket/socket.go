@@ -2,10 +2,11 @@ package socket
 
 import (
 	"errors"
-	"fmt"
 	"log"
+	"strings"
 
 	"festech.de/rmm/backend/handlers"
+	"festech.de/rmm/backend/models"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/websocket/v2"
 )
@@ -20,6 +21,8 @@ var register = make(chan Client)
 var Broadcast = make(chan string)
 var unregister = make(chan Client)
 
+var Results = make(map[string]chan interface{})
+
 func runHub() {
 	for {
 		select {
@@ -28,7 +31,6 @@ func runHub() {
 			Clients[client.Id] = client
 
 		case message := <-Broadcast:
-
 			for clientID := range Clients {
 				client := Clients[clientID]
 				if err := client.Connection.WriteMessage(websocket.TextMessage, []byte(message)); err != nil {
@@ -45,6 +47,12 @@ func runHub() {
 			delete(Clients, client.Id)
 		}
 	}
+}
+
+func CreateResultChannel(event string, id string) chan interface{} {
+	resultChannel := make(chan interface{})
+	Results["result-"+event+id] = resultChannel
+	return resultChannel
 }
 
 func SendMessage(id string, message interface{}) error {
@@ -84,12 +92,18 @@ func RegisterWebsocketRoute(app *fiber.App) {
 		register <- client
 
 		for {
-			_, message, err := client.Connection.ReadMessage()
+			message := models.SocketEvent{}
+			err := client.Connection.ReadJSON(&message)
 			if err != nil {
 				return
 			}
-
-			fmt.Println(string(message))
+			if strings.HasPrefix(message.Event, "result-") {
+				if channel, ok := Results[message.Event+client.Id]; ok {
+					channel <- message.Data
+					close(channel)
+					delete(Results, message.Event+client.Id)
+				}
+			}
 		}
 	}))
 }

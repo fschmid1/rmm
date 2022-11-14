@@ -1,6 +1,7 @@
 package models
 
-type SocketEvent struct  {
-	Event string `json:"event"`
-	Data interface{} `json:"data"`
+type SocketEvent struct {
+	Id    string      `json:"id"`
+	Event string      `json:"event"`
+	Data  interface{} `json:"data"`
 }
