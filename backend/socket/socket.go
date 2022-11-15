@@ -20,7 +20,7 @@ type Client struct {
 
 var Clients = make(map[string]Client)
 var register = make(chan Client)
-var Broadcast = make(chan string)
+var Broadcast = make(chan models.SocketEvent)
 var unregister = make(chan Client)
 
 var Results = make(map[string]chan interface{})
@@ -39,7 +39,7 @@ func runHub() {
 		case message := <-Broadcast:
 			for clientID := range Clients {
 				client := Clients[clientID]
-				if err := client.Connection.WriteMessage(websocket.TextMessage, []byte(message)); err != nil {
+				if err := client.Connection.WriteJSON(message); err != nil {
 					log.Println("write error:", err)
 
 					client.Connection.WriteMessage(websocket.CloseMessage, []byte{})
@@ -77,9 +77,9 @@ func SendMessage(id string, message interface{}) error {
 	if !found {
 		return errors.New("Client not found")
 	}
-	client.Connection.WriteJSON(message)
+	err := client.Connection.WriteJSON(message)
 
-	return nil
+	return err
 }
 
 func RegisterWebsocketRoute(app *fiber.App) {
@@ -107,21 +107,6 @@ func RegisterWebsocketRoute(app *fiber.App) {
 		}()
 
 		register <- client
-
-		for {
-			message := models.SocketEvent{}
-			err := client.Connection.ReadJSON(&message)
-			if err != nil {
-				return
-			}
-			if strings.HasPrefix(message.Event, "result-") {
-				if channel, ok := Results[message.Event+client.Id]; ok {
-					channel <- message.Data
-					close(channel)
-					delete(Results, message.Event+client.Id)
-				}
-			} 
-		}
 	}))
 
 	route.Get("/client/:id", websocket.New(func(c *websocket.Conn) {

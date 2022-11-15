@@ -27,6 +27,7 @@ func RegisterDevice() {
 	systemInfo := models.SystemInfo{
 		HostName:   system.GetHostName(),
 		Os:         system.GetOS(),
+		IP:         system.GetIP(),
 		MacAddress: system.GetMacAddress(),
 		Cores:      system.GetCores(),
 		Memory:     system.GetMemory(),
@@ -43,6 +44,24 @@ func RegisterDevice() {
 		http.Get(fmt.Sprintf(RestUrl+"devices/%s?mac=1", device.SystemInfo.MacAddress), &device)
 	}
 	WriteConfiguration(devicePath, device)
+}
+
+func UpdateSystemInfo() {
+	Device.SystemInfo = models.SystemInfo{
+		HostName:   system.GetHostName(),
+		Os:         system.GetOS(),
+		IP:         system.GetIP(),
+		MacAddress: system.GetMacAddress(),
+		Cores:      system.GetCores(),
+		Memory:     system.GetMemory(),
+		Disk:       system.GetDisk(),
+		ID:         Device.SystemInfo.ID,
+	}
+	status, textBody, _ := http.Patch(RestUrl+"devices", Device, &Device)
+	if status == 400 && textBody == "Device with this mac address is already registered" {
+		http.Get(fmt.Sprintf(RestUrl+"devices/%s?mac=1", Device.SystemInfo.MacAddress), &Device)
+	}
+	WriteConfiguration(devicePath, Device)
 }
 
 func CreateConfiguration() {
@@ -67,6 +86,7 @@ func createUrls() {
 }
 
 func ReadConfiguration() {
+	firstTime := false
 	if !system.FileOrFolderExists(configPath) {
 		CreateConfiguration()
 	}
@@ -78,11 +98,14 @@ func ReadConfiguration() {
 	createUrls()
 	if !system.FileOrFolderExists(devicePath) {
 		RegisterDevice()
+		firstTime = true
 	}
 	file, _ = ioutil.ReadFile(devicePath)
 	device := models.Device{}
 	json.Unmarshal(file, &device)
 
 	Device = device
-
+	if !firstTime {
+		UpdateSystemInfo()
+	}
 }

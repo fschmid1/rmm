@@ -7,10 +7,10 @@ import (
 	"net/http"
 )
 
-func Post(url string, data interface{}, respBody interface{}) (int, string, error) {
+func Patch(url string, data interface{}, respBody interface{}) (int, string, error) {
 
 	byteData, _ := json.MarshalIndent(data, "", " ")
-	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(byteData))
+	req, _ := http.NewRequest("PATCH", url, bytes.NewBuffer(byteData))
 	req.Header.Set("Content-Type", "application/json")
 
 	client := &http.Client{}
@@ -20,7 +20,7 @@ func Post(url string, data interface{}, respBody interface{}) (int, string, erro
 	}
 	body, _ := ioutil.ReadAll(resp.Body)
 	resp.Body.Close()
-	if resp.StatusCode != 200 && resp.StatusCode != 201 {
+	if resp.StatusCode != 200 {
 		return resp.StatusCode, string(body), nil
 	}
 	json.Unmarshal(body, respBody)

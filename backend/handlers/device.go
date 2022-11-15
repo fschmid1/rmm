@@ -13,7 +13,11 @@ import (
 func GetDevices(c *fiber.Ctx) error {
 	var devices []models.Device
 
-	config.Database.Preload(clause.Associations).Find(&devices)
+	result := config.Database.Preload(clause.Associations).Find(&devices)
+
+	if result.Error != nil {
+		return c.SendStatus(500)
+	}
 	return c.Status(200).JSON(devices)
 }
 
@@ -28,6 +32,9 @@ func GetDevice(c *fiber.Ctx) error {
 		result = config.Database.Preload(clause.Associations).Where("system_info_id = ?", systemInfo.ID).First(&device)
 	} else {
 		result = config.Database.Preload(clause.Associations).Find(&device, id)
+	}
+	if result.Error != nil {
+		return c.SendStatus(500)
 	}
 	if result.RowsAffected == 0 {
 		return c.SendStatus(404)
@@ -47,21 +54,36 @@ func AddDevice(c *fiber.Ctx) error {
 		return c.Status(400).SendString("Device with this mac address is already registered")
 	}
 
-	if result := config.Database.Create(&device); result.Error != nil {
-		return c.Status(400).SendString(result.Error.Error())
+	err := config.Database.Transaction(func(tx *gorm.DB) error {
+		if result := tx.Create(&device); result.Error != nil {
+			return result.Error
+		}
+		return nil
+	})
+	if err != nil {
+		return c.Status(400).SendString(err.Error())
 	}
-	return c.Status(201).JSON(device)
+
+	return c.Status(200).JSON(device)
 }
 
 func UpdateDevice(c *fiber.Ctx) error {
 	device := new(models.Device)
-	id := c.Params("id")
 
 	if err := c.BodyParser(device); err != nil {
 		return c.Status(503).SendString(err.Error())
 	}
-	if result := config.Database.Where("id = ?", id).Updates(&device); result.Error != nil {
-		return c.Status(400).SendString(result.Error.Error())
+	err := config.Database.Transaction(func(tx *gorm.DB) error {
+		if result := tx.Updates(&device); result.Error != nil {
+			return result.Error
+		}
+		if result := tx.Updates(&device.SystemInfo); result.Error != nil {
+			return result.Error
+		}
+		return nil
+	})
+	if err != nil {
+		return c.SendStatus(400)
 	}
 	return c.Status(200).JSON(device)
 }
@@ -71,6 +93,10 @@ func RemoveDevice(c *fiber.Ctx) error {
 	var device models.Device
 
 	result := config.Database.Delete(&device, id)
+
+	if result.Error != nil {
+		return c.SendStatus(500)
+	}
 
 	if result.RowsAffected == 0 {
 		return c.SendStatus(404)

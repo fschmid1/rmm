@@ -53,6 +53,14 @@ func GetOS() string {
 	return os
 }
 
+func GetIP() string {
+	var ip string
+	if IsLinux() {
+		ip = strings.SplitN(Run("hostname -I"), " ", 2)[0]
+	}
+	return ip
+}
+
 func GetCores() int {
 	var cores int
 	var _ error

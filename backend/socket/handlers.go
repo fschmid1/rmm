@@ -9,9 +9,12 @@ import (
 
 func GetDeviceProcessList(c *fiber.Ctx, event models.SocketEvent) error {
 	resultChannel := CreateResultChannel("process-list", event.Id)
-	SendMessage(event.Id, models.SocketEvent{
+	err := SendMessage(event.Id, models.SocketEvent{
 		Event: "process-list",
 	})
+	if err != nil {
+		return c.SendStatus(500)
+	}
 	timeChan := time.NewTimer(time.Second * 5).C
 	for {
 		select {
@@ -29,10 +32,13 @@ func GetDeviceProcessList(c *fiber.Ctx, event models.SocketEvent) error {
 
 func DeviceKillProcess(c *fiber.Ctx, event models.SocketEvent) error {
 	resultChannel := CreateResultChannel("process-kill", event.Id)
-	SendMessage(event.Id, models.SocketEvent{
+	err := SendMessage(event.Id, models.SocketEvent{
 		Event: "process-kill",
 		Data:  event.Data,
 	})
+	if err != nil {
+		return c.SendStatus(500)
+	}
 	timeChan := time.NewTimer(time.Second * 5).C
 	for {
 		select {
@@ -50,10 +56,13 @@ func DeviceKillProcess(c *fiber.Ctx, event models.SocketEvent) error {
 
 func ShutdownDevice(c *fiber.Ctx, event models.SocketEvent) error {
 	resultChannel := CreateResultChannel("shutdown", event.Id)
-	SendMessage(event.Id, models.SocketEvent{
+	err := SendMessage(event.Id, models.SocketEvent{
 		Event: "shutdown",
 		Data:  event.Data,
 	})
+	if err != nil {
+		return c.SendStatus(500)
+	}
 	timeChan := time.NewTimer(time.Second * 5).C
 	for {
 		select {
@@ -72,10 +81,13 @@ func ShutdownDevice(c *fiber.Ctx, event models.SocketEvent) error {
 
 func RebootDevice(c *fiber.Ctx, event models.SocketEvent) error {
 	resultChannel := CreateResultChannel("reboot", event.Id)
-	SendMessage(event.Id, models.SocketEvent{
+	err := SendMessage(event.Id, models.SocketEvent{
 		Event: "reboot",
 		Data:  event.Data,
 	})
+	if err != nil {
+		return c.SendStatus(500)
+	}
 	timeChan := time.NewTimer(time.Second * 5).C
 	for {
 		select {
@@ -116,9 +128,12 @@ func FunctionsHandler(c *fiber.Ctx) error {
 }
 
 func StartUsageStream(c *fiber.Ctx, event models.SocketEvent) error {
-	SendMessage(event.Id, models.SocketEvent{
+	err := SendMessage(event.Id, models.SocketEvent{
 		Event: "usage-start",
 	})
+	if err != nil {
+		return c.SendStatus(500)
+	}
 	if client, ok := Clients[c.GetReqHeaders()["X-Auth-User"]]; ok {
 		if UsageStreams[event.Id] == nil {
 			UsageStreams[event.Id] = make(map[string]Client)
@@ -130,9 +145,12 @@ func StartUsageStream(c *fiber.Ctx, event models.SocketEvent) error {
 }
 
 func StopUsageStream(c *fiber.Ctx, event models.SocketEvent) error {
-	SendMessage(event.Id, models.SocketEvent{
+	err := SendMessage(event.Id, models.SocketEvent{
 		Event: "usage-stop",
 	})
+	if err != nil {
+		return c.SendStatus(500)
+	}
 	if _, ok := UsageStreams[event.Id]; ok {
 		UsageStreams[event.Id] = make(map[string]Client)
 	}

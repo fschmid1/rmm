@@ -10,6 +10,6 @@ type Device struct {
 	Name         string     `json:"name" gorm:"not null"`
 	DeviceID     string     `json:"deviceID" gorm:"uniqueIndex; not null"`
 	Connected    bool       `json:"connected" gorm:"default:false"`
-	SystemInfo   SystemInfo `json:"systemInfo" gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	SystemInfo   SystemInfo `json:"systemInfo" gorm:"constraint:OnDelete:CASCADE;"`
 	SystemInfoId uint       `json:"systemInfoId"`
 }
