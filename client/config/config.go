@@ -9,14 +9,9 @@ import (
 	"festech.de/rmm/client/http"
 	"festech.de/rmm/client/models"
 	"festech.de/rmm/client/system"
+	"festech.de/rmm/client/vars"
 	"github.com/google/uuid"
 )
-
-var Device models.Device
-var Configuration models.Configuration
-
-var RestUrl string
-var WsUrl string
 
 var configPath = system.CreateConfigurationPath() + "config"
 var devicePath = system.CreateConfigurationPath() + "device"
@@ -39,15 +34,15 @@ func RegisterDevice() {
 		SystemInfo: systemInfo,
 	}
 
-	status, textBody, _ := http.Post(RestUrl+"devices", device, &device)
+	status, textBody, _ := http.Post(vars.RestUrl+"devices", device, &device)
 	if status == 400 && textBody == "Device with this mac address is already registered" {
-		http.Get(fmt.Sprintf(RestUrl+"devices/%s?mac=1", device.SystemInfo.MacAddress), &device)
+		http.Get(fmt.Sprintf(vars.RestUrl+"devices/%s?mac=1", device.SystemInfo.MacAddress), &device)
 	}
 	WriteConfiguration(devicePath, device)
 }
 
 func UpdateSystemInfo() {
-	Device.SystemInfo = models.SystemInfo{
+	vars.Device.SystemInfo = models.SystemInfo{
 		HostName:   system.GetHostName(),
 		Os:         system.GetOS(),
 		IP:         system.GetIP(),
@@ -55,13 +50,13 @@ func UpdateSystemInfo() {
 		Cores:      system.GetCores(),
 		Memory:     system.GetMemory(),
 		Disk:       system.GetDisk(),
-		ID:         Device.SystemInfo.ID,
+		ID:         vars.Device.SystemInfo.ID,
 	}
-	status, textBody, _ := http.Patch(RestUrl+"devices", Device, &Device)
+	status, textBody, _ := http.Patch(vars.RestUrl+"devices", vars.Device, &vars.Device)
 	if status == 400 && textBody == "Device with this mac address is already registered" {
-		http.Get(fmt.Sprintf(RestUrl+"devices/%s?mac=1", Device.SystemInfo.MacAddress), &Device)
+		http.Get(fmt.Sprintf(vars.RestUrl+"devices/%s?mac=1", vars.Device.SystemInfo.MacAddress), &vars.Device)
 	}
-	WriteConfiguration(devicePath, Device)
+	WriteConfiguration(devicePath, vars.Device)
 }
 
 func CreateConfiguration() {
@@ -78,11 +73,11 @@ func WriteConfiguration(path string, data interface{}) {
 
 func createUrls() {
 	var secure = ""
-	if Configuration.Secure {
+	if vars.Configuration.Secure {
 		secure = "s"
 	}
-	RestUrl = fmt.Sprintf("http%s://%s:%s/", secure, Configuration.Host, Configuration.Port)
-	WsUrl = fmt.Sprintf("ws%s://%s:%s/ws/client/", secure, Configuration.Host, Configuration.Port)
+	vars.RestUrl = fmt.Sprintf("http%s://%s:%s/", secure, vars.Configuration.Host, vars.Configuration.Port)
+	vars.WsUrl = fmt.Sprintf("ws%s://%s:%s/ws/client/", secure, vars.Configuration.Host, vars.Configuration.Port)
 }
 
 func ReadConfiguration() {
@@ -93,7 +88,7 @@ func ReadConfiguration() {
 	file, _ := ioutil.ReadFile(configPath)
 	config := models.Configuration{}
 	json.Unmarshal(file, &config)
-	Configuration = config
+	vars.Configuration = config
 	WriteConfiguration(configPath, config)
 	createUrls()
 	if !system.FileOrFolderExists(devicePath) {
@@ -104,7 +99,7 @@ func ReadConfiguration() {
 	device := models.Device{}
 	json.Unmarshal(file, &device)
 
-	Device = device
+	vars.Device = device
 	if !firstTime {
 		UpdateSystemInfo()
 	}

@@ -12,4 +12,4 @@ build:
 	CGO_ENABLED=0 go build -o $(BUILD_DIR)/$(APP_NAME) main.go
 
 run: build
-	$(BUILD_DIR)/$(APP_NAME)
+	sudo $(BUILD_DIR)/$(APP_NAME)

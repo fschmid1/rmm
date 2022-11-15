@@ -15,7 +15,7 @@ import (
 type Client struct {
 	Id         string
 	Connection *websocket.Conn
-	User 				bool
+	User       bool
 }
 
 var Clients = make(map[string]Client)
@@ -99,7 +99,7 @@ func RegisterWebsocketRoute(app *fiber.App) {
 		client := Client{
 			Id:         c.Params("id"),
 			Connection: c,
-			User: true,
+			User:       true,
 		}
 		defer func() {
 			unregister <- client
@@ -107,13 +107,35 @@ func RegisterWebsocketRoute(app *fiber.App) {
 		}()
 
 		register <- client
+
+		for {
+			message := models.SocketEvent{}
+			err := client.Connection.ReadJSON(&message)
+			if err != nil {
+				return
+			}
+			if strings.HasPrefix(message.Event, "result-") {
+				if channel, ok := Results[message.Event+client.Id]; ok {
+					channel <- message.Data
+					close(channel)
+					delete(Results, message.Event+client.Id)
+				}
+			} else if message.Event == "usage" {
+				fmt.Println(message)
+				if _, ok := UsageStreams[client.Id]; ok {
+					for _, client := range UsageStreams[client.Id] {
+						client.Connection.WriteJSON(message)
+					}
+				}
+			}
+		}
 	}))
 
 	route.Get("/client/:id", websocket.New(func(c *websocket.Conn) {
 		client := Client{
 			Id:         c.Params("id"),
 			Connection: c,
-			User: false,
+			User:       false,
 		}
 		defer func() {
 			unregister <- client

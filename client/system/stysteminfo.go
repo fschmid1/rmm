@@ -15,20 +15,6 @@ func Run(cmd string) string {
 	return string(stdout)
 }
 
-func GetProcessList() string {
-	if IsLinux() {
-		return Run("ps aux")
-	}
-	return ""
-}
-
-func KillProcess(name string) string {
-	if IsLinux() {
-		return Run("pkill " + name)
-	}
-	return ""
-}
-
 func GetHostName() string {
 	hostname, err := os.Hostname()
 	if err != nil {

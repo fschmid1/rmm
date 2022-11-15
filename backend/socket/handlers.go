@@ -78,6 +78,149 @@ func ShutdownDevice(c *fiber.Ctx, event models.SocketEvent) error {
 	}
 }
 
+func GetServiceLogs(c *fiber.Ctx, event models.SocketEvent) error {
+	resultChannel := CreateResultChannel("service-logs", event.Id)
+	err := SendMessage(event.Id, models.SocketEvent{
+		Event: "service-logs",
+		Data:  event.Data,
+	})
+	if err != nil {
+		return c.SendStatus(500)
+	}
+	timeChan := time.NewTimer(time.Second * 5).C
+	for {
+		select {
+		case data := <-resultChannel:
+			return c.JSON(models.SocketEvent{
+				Event: "result-service-logs",
+				Data:  data,
+				Id:    event.Id,
+			})
+		case <-timeChan:
+			return c.Status(500).SendString("Something went wrong")
+		}
+	}
+}
+
+func GetServiceStatus(c *fiber.Ctx, event models.SocketEvent) error {
+	resultChannel := CreateResultChannel("service-status", event.Id)
+	err := SendMessage(event.Id, models.SocketEvent{
+		Event: "service-status",
+		Data:  event.Data,
+	})
+	if err != nil {
+		return c.SendStatus(500)
+	}
+	timeChan := time.NewTimer(time.Second * 5).C
+	for {
+		select {
+		case data := <-resultChannel:
+			return c.JSON(models.SocketEvent{
+				Event: "result-service-status",
+				Data:  data,
+				Id:    event.Id,
+			})
+		case <-timeChan:
+			return c.Status(500).SendString("Something went wrong")
+		}
+	}
+}
+
+func GetServiceList(c *fiber.Ctx, event models.SocketEvent) error {
+	resultChannel := CreateResultChannel("service-list", event.Id)
+	err := SendMessage(event.Id, models.SocketEvent{
+		Event: "service-list",
+		Data:  event.Data,
+	})
+	if err != nil {
+		return c.SendStatus(500)
+	}
+	timeChan := time.NewTimer(time.Second * 5).C
+	for {
+		select {
+		case data := <-resultChannel:
+			return c.JSON(models.SocketEvent{
+				Event: "result-service-list",
+				Data:  data,
+				Id:    event.Id,
+			})
+		case <-timeChan:
+			return c.Status(500).SendString("Something went wrong")
+		}
+	}
+}
+
+func StartService(c *fiber.Ctx, event models.SocketEvent) error {
+	resultChannel := CreateResultChannel("service-start", event.Id)
+	err := SendMessage(event.Id, models.SocketEvent{
+		Event: "service-start",
+		Data:  event.Data,
+	})
+	if err != nil {
+		return c.SendStatus(500)
+	}
+	timeChan := time.NewTimer(time.Second * 5).C
+	for {
+		select {
+		case data := <-resultChannel:
+			return c.JSON(models.SocketEvent{
+				Event: "result-service-start",
+				Data:  data,
+				Id:    event.Id,
+			})
+		case <-timeChan:
+			return c.Status(500).SendString("Something went wrong")
+		}
+	}
+}
+
+func StopService(c *fiber.Ctx, event models.SocketEvent) error {
+	resultChannel := CreateResultChannel("service-stop", event.Id)
+	err := SendMessage(event.Id, models.SocketEvent{
+		Event: "service-stop",
+		Data:  event.Data,
+	})
+	if err != nil {
+		return c.SendStatus(500)
+	}
+	timeChan := time.NewTimer(time.Second * 5).C
+	for {
+		select {
+		case data := <-resultChannel:
+			return c.JSON(models.SocketEvent{
+				Event: "result-service-stop",
+				Data:  data,
+				Id:    event.Id,
+			})
+		case <-timeChan:
+			return c.Status(500).SendString("Something went wrong")
+		}
+	}
+}
+
+func RestartService(c *fiber.Ctx, event models.SocketEvent) error {
+	resultChannel := CreateResultChannel("service-restart", event.Id)
+	err := SendMessage(event.Id, models.SocketEvent{
+		Event: "service-restart",
+		Data:  event.Data,
+	})
+	if err != nil {
+		return c.SendStatus(500)
+	}
+	timeChan := time.NewTimer(time.Second * 5).C
+	for {
+		select {
+		case data := <-resultChannel:
+			return c.JSON(models.SocketEvent{
+				Event: "result-service-restart",
+				Data:  data,
+				Id:    event.Id,
+			})
+		case <-timeChan:
+			return c.Status(500).SendString("Something went wrong")
+		}
+	}
+}
 
 func RebootDevice(c *fiber.Ctx, event models.SocketEvent) error {
 	resultChannel := CreateResultChannel("reboot", event.Id)
@@ -114,6 +257,18 @@ func FunctionsHandler(c *fiber.Ctx) error {
 		return GetDeviceProcessList(c, *event)
 	case "process-kill":
 		return DeviceKillProcess(c, *event)
+	case "service-logs":
+		return GetServiceLogs(c, *event)
+	case "service-list":
+		return GetServiceList(c, *event)
+	case "service-status":
+		return GetServiceStatus(c, *event)
+	case "service-start":
+		return StartService(c, *event)
+	case "service-stop":
+		return StopService(c, *event)
+	case "service-restart":
+		return RestartService(c, *event)
 	case "usage-start":
 		return StartUsageStream(c, *event)
 	case "usage-stop":
@@ -140,7 +295,7 @@ func StartUsageStream(c *fiber.Ctx, event models.SocketEvent) error {
 		}
 		UsageStreams[event.Id][client.Id] = client
 	}
-	
+
 	return c.SendString("Started usage stream")
 }
 
