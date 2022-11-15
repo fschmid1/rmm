@@ -17,8 +17,8 @@ build:
 run: build
 	. ./.env && $(BUILD_DIR)/$(APP_NAME)
 
-docker.run: docker.build
-	docker-compose up --force-recreate
+docker.run:
+	docker-compose up -d --build --force-recreate
 
 docker.build:
 	docker-compose build
