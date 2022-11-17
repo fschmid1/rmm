@@ -1,7 +1,6 @@
 package system
 
 import (
-	"fmt"
 	"os"
 	"runtime"
 )
@@ -23,16 +22,15 @@ func IsWindows() bool {
 }
 
 func IsMac() bool {
-	return runtime.GOOS == "linux"
+	return runtime.GOOS == "mac"
 }
 
 func CreateConfigurationPath() string {
-	if IsLinux() {
-		home, _ := os.UserHomeDir()
-		if !FileOrFolderExists(fmt.Sprintf("%s/.fes-rmm", home)) {
-			os.Mkdir(fmt.Sprintf("%s/.fes-rmm", home), 0775)
+	if IsLinux() || IsMac() {
+		if !FileOrFolderExists("/etc/fes-rmm") {
+			os.Mkdir("/etc/fes-rmm", 0775)
 		}
-		return fmt.Sprintf("%s/.fes-rmm/", home)
+		return "/etc/fes-rmm/"
 	}
 	return ""
 }

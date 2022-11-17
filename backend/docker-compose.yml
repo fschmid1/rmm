@@ -10,15 +10,16 @@ services:
   #     - mariadb
   #   environment:
   #     - PORT=80
-  #     - DATABASE_URI="root:j4onYumQmrJ263tkbdqZwEEw6@tcp(localhost:3306)/rmm?charset=utf8mb4&parseTime=True&loc=Local"
+  #     - DATABASE_URI="root:j4onYumQmrJ263tkbdqZwEEw6@tcp(mariadb:3307)/rmm?charset=utf8mb4&parseTime=True&loc=Local"
   mariadb:
     image: mariadb:10.9.4
     restart: always
+    command: --init-file /data/application/init.sql
     volumes:
       - data:/var/lib/mysql
       - ./init.sql:/data/application/init.sql
     ports:
-      - 3306:3306
+      - 3307:3306
     environment:
       MYSQL_ROOT_PASSWORD: j4onYumQmrJ263tkbdqZwEEw6
     logging:

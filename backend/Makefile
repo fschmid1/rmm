@@ -19,6 +19,7 @@ run: build
 
 docker.run:
 	docker-compose up -d --build --force-recreate
+	make run
 
 docker.build:
 	docker-compose build
