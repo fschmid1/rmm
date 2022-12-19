@@ -5,6 +5,7 @@ import (
 	"festech.de/rmm/backend/handlers"
 	"festech.de/rmm/backend/socket"
 	"github.com/gofiber/fiber/v2"
+	jwtware "github.com/gofiber/jwt/v3"
 )
 
 func main() {
@@ -14,13 +15,19 @@ func main() {
 
 	socket.RegisterWebsocketRoute(app)
 
-	app.Post("/devices/functions", socket.FunctionsHandler)
+	app.Post("/auth/login", handlers.HandleLogin)
+	app.Post("/auth/signup", handlers.HandleSignUp)
 
-	app.Get("/devices", handlers.GetDevices)
-	app.Get("/devices/:id", handlers.GetDevice)
-	app.Post("/devices", handlers.AddDevice)
-	app.Patch("/devices", handlers.UpdateDevice)
-	app.Delete("/devices/:id", handlers.RemoveDevice)
+	deviceRouter := app.Group("/devices")
+	deviceRouter.Use(jwtware.New(config.JWT_CONFIG))
+
+	deviceRouter.Post("/devices/functions", socket.FunctionsHandler)
+
+	deviceRouter.Get("/", handlers.GetDevices)
+	deviceRouter.Get("/:id", handlers.GetDevice)
+	deviceRouter.Post("/", handlers.AddDevice)
+	deviceRouter.Patch("/", handlers.UpdateDevice)
+	deviceRouter.Delete("/:id", handlers.RemoveDevice)
 
 	app.Listen(":" + config.Getenv("PORT", "8080"))
 }

@@ -14,10 +14,12 @@ COPY . .
 ENV CGO_ENABLED=0 GOOS=linux GOARCH=amd64
 RUN go build -ldflags="-s -w" -o apiserver .
 
-FROM scratch
+FROM ubuntu
 
+RUN apt update && apt install -y tzdata
+ENV TZ=Europe/Berlin
 # Copy binary and config files from /build to root folder of scratch container.
 COPY --from=builder ["/build/apiserver", "/"]
 
 # Command to run when starting the container.
-ENTRYPOINT ["/apiserver"]
+CMD ["/apiserver"]

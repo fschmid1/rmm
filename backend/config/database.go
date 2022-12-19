@@ -21,7 +21,7 @@ func Connect() error {
 		panic(err)
 	}
 
-	err = Database.AutoMigrate(&models.Device{}, &models.SystemInfo{})
+	err = Database.AutoMigrate(&models.Device{}, &models.SystemInfo{}, &models.User{})
 
 	if err != nil {
 		panic(err)
