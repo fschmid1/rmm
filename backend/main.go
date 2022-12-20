@@ -21,7 +21,9 @@ func main() {
 	deviceRouter := app.Group("/devices")
 	deviceRouter.Use(jwtware.New(config.JWT_CONFIG))
 
-	deviceRouter.Post("/devices/functions", socket.FunctionsHandler)
+	deviceRouter.Post("/functions", socket.FunctionsHandler)
+
+	deviceRouter.Post("/token", handlers.AddDeviceToken)
 
 	deviceRouter.Get("/", handlers.GetDevices)
 	deviceRouter.Get("/:id", handlers.GetDevice)

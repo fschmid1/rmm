@@ -1,12 +1,54 @@
 package handlers
 
 import (
+	"errors"
+
 	"festech.de/rmm/backend/config"
 	"festech.de/rmm/backend/models"
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
+
+func AddDeviceToken(c *fiber.Ctx) error {
+	deviceToken := new(models.DeviceToken)
+
+	if err := c.BodyParser(deviceToken); err != nil {
+		return c.Status(503).SendString(err.Error())
+	}
+	device, err := getDeviceById(deviceToken.DeviceID)
+	if err != nil {
+		return c.Status(400).SendString(err.Error())
+	}
+	deviceToken.Token, err = config.GenerateDeviceJWT(device)
+	if err != nil {
+		return c.Status(400).SendString(err.Error())
+	}
+	err = config.Database.Transaction(func(tx *gorm.DB) error {
+		if result := tx.Create(&deviceToken); result.Error != nil {
+			return result.Error
+		}
+		return nil
+	})
+	if err != nil {
+		return c.Status(400).SendString(err.Error())
+	}
+
+	return c.Status(200).JSON(deviceToken)
+}
+
+func getDeviceById(id string) (models.Device, error) {
+	var device models.Device
+	result := config.Database.Preload(clause.Associations).Find(&device, id)
+	if result.Error != nil {
+		return models.Device{}, errors.New("Something went wrong")
+	}
+	if result.RowsAffected == 0 {
+		return models.Device{}, errors.New("Device not found")
+	}
+
+	return device, nil
+}
 
 func GetDevices(c *fiber.Ctx) error {
 	var devices []models.Device
