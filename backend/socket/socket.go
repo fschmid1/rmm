@@ -6,6 +6,7 @@ import (
 	"log"
 	"strings"
 
+	"festech.de/rmm/backend/config"
 	"festech.de/rmm/backend/models"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/websocket/v2"
@@ -87,9 +88,14 @@ func RegisterWebsocketRoute(app *fiber.App) {
 	route := app.Group("/ws")
 
 	route.Use(func(c *fiber.Ctx) error {
-		//TODO Authentication
-		if websocket.IsWebSocketUpgrade(c) && c.Query("token") != "" {
-			return c.Next()
+		if websocket.IsWebSocketUpgrade(c) && c.GetReqHeaders()["Authorization"] != "" {
+			header := c.GetReqHeaders()["Authorization"]
+			token := strings.Split(header, " ")[1]
+			if strings.Contains(c.Path(), "/client/") && config.VerifyClientJWT(token) {
+				return c.Next()
+			} else if strings.Contains(c.Path(), "/user/") && config.VerifyUserJWT(token) {
+				return c.Next()
+			}
 		}
 		return c.SendStatus(fiber.StatusUpgradeRequired)
 	})
