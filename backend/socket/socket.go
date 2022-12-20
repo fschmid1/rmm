@@ -88,9 +88,8 @@ func RegisterWebsocketRoute(app *fiber.App) {
 	route := app.Group("/ws")
 
 	route.Use(func(c *fiber.Ctx) error {
-		if websocket.IsWebSocketUpgrade(c) && c.GetReqHeaders()["Authorization"] != "" {
-			header := c.GetReqHeaders()["Authorization"]
-			token := strings.Split(header, " ")[1]
+		if websocket.IsWebSocketUpgrade(c) && c.Query("token") != "" {
+			token := c.Query("token")
 			if strings.Contains(c.Path(), "/client/") && config.VerifyClientJWT(token) {
 				return c.Next()
 			} else if strings.Contains(c.Path(), "/user/") && config.VerifyUserJWT(token) {

@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"time"
 
 	"festech.de/rmm/backend/models"
@@ -31,9 +32,10 @@ func GenerateDeviceJWT(device models.Device) (string, error) {
 
 func VerifyUserJWT(tokenString string) bool {
 	token, err := jwt.ParseWithClaims(tokenString, jwt.MapClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return JWT_SECRET, nil
+		return []byte(JWT_SECRET), nil
 	})
 	if err != nil {
+		fmt.Println(err)
 		return false
 	}
 	if token.Valid {
@@ -45,7 +47,7 @@ func VerifyUserJWT(tokenString string) bool {
 
 func VerifyClientJWT(tokenString string) bool {
 	token, err := jwt.ParseWithClaims(tokenString, jwt.MapClaims{}, func(token *jwt.Token) (interface{}, error) {
-		return SOCKET_JWT_SECRET, nil
+		return []byte(SOCKET_JWT_SECRET), nil
 	})
 	if err != nil {
 		return false
