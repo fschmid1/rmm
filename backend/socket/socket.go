@@ -6,7 +6,6 @@ import (
 	"log"
 	"strings"
 
-	"festech.de/rmm/backend/handlers"
 	"festech.de/rmm/backend/models"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/websocket/v2"
@@ -32,7 +31,7 @@ func runHub() {
 		select {
 		case client := <-register:
 			if !client.User {
-				handlers.SetDeviceConnected(client.Id, true)
+				SetDeviceConnected(client.Id, true)
 			}
 			Clients[client.Id] = client
 
@@ -50,7 +49,7 @@ func runHub() {
 
 		case client := <-unregister:
 			if !client.User {
-				handlers.SetDeviceConnected(client.Id, false)
+				SetDeviceConnected(client.Id, false)
 			}
 			delete(Clients, client.Id)
 			for key, stream := range UsageStreams {
@@ -163,6 +162,8 @@ func RegisterWebsocketRoute(app *fiber.App) {
 						client.Connection.WriteJSON(message)
 					}
 				}
+			} else if strings.HasPrefix(message.Event, "devices-") {
+				HandleDeviceEvent(client.Id, message)
 			}
 		}
 	}))
