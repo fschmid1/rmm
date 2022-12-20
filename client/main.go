@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"strings"
 	"time"
 
 	"festech.de/rmm/client/config"
@@ -27,7 +28,7 @@ func main() {
 
 	config.ReadConfiguration()
 	system.GetMacAddress()
-	u := vars.WsUrl + fmt.Sprintf("%s?token=%s", vars.Device.DeviceID, "123")
+	u := vars.WsUrl + fmt.Sprintf("%s?token=%s", vars.Device.DeviceID, vars.Configuration.Token)
 	connectWebsocket(u)
 }
 
@@ -46,12 +47,31 @@ func connectWebsocket(url string) {
 	go func() {
 		var msg models.SocketEvent
 		defer close(done)
+		for item := range vars.Queue {
+			err := c.WriteJSON(item)
+			if err != nil {
+				fmt.Println(err)
+				tryReconnect(url)
+				return
+			}
+		}
 		for {
 			err := c.ReadJSON(&msg)
 			if err != nil {
 				fmt.Println(err)
 				tryReconnect(url)
 				return
+			}
+
+			if strings.HasPrefix(msg.Event, "response-") {
+				if handler, ok := vars.Handlers.Handlers[msg.Event]; ok {
+					handler(msg)
+					if _, ok := vars.Handlers.Onces[msg.Event]; ok {
+						delete(vars.Handlers.Handlers, msg.Event)
+						delete(vars.Handlers.Onces, msg.Event)
+					}
+				}
+				continue
 			}
 			switch msg.Event {
 			case "usage-start":

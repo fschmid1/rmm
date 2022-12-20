@@ -11,8 +11,8 @@ import (
 )
 
 type DeviceQuery struct {
-	Id string `json:"id"`
-	Mac bool `json:"mac"`
+	Id  string `json:"id"`
+	Mac bool   `json:"mac"`
 }
 
 func GetDeviceByDeviceId(id string) (models.Device, error) {
@@ -39,10 +39,9 @@ func SetDeviceConnected(id string, connected bool) (bool, error) {
 	return true, nil
 }
 
-
 func HandleDeviceEvent(clientId string, message models.SocketEvent) {
 	var response_data interface{}
-	var err error
+	var err error = nil
 	switch message.Event {
 	case "devices-register":
 		response_data, err = registerDevice(message.Data.(models.Device))
@@ -51,23 +50,21 @@ func HandleDeviceEvent(clientId string, message models.SocketEvent) {
 	case "devices-update":
 		response_data, err = updateDevice(message.Data.(models.Device))
 	}
-	if err != nil {
-		response_data = err.Error()
-	}
-	
+
 	response_message := models.SocketEvent{
-		Event: "devices-response",
-		Data: response_data,
-		Id: clientId,
+		Event: "response-" + message.Event,
+		Data:  response_data,
+		Id:    clientId,
+		Error: err.Error(),
 	}
 
 	SendMessage(clientId, response_message)
 }
 
-func getDeviceById(id string, mac bool)(models.Device, error) {
+func getDeviceById(id string, mac bool) (models.Device, error) {
 	var device models.Device
 	var result *gorm.DB
-	if mac  {
+	if mac {
 		systemInfo := handlers.GetSystemInfoByMacAddress(id)
 		result = config.Database.Preload(clause.Associations).Where("system_info_id = ?", systemInfo.ID).First(&device)
 	} else {
@@ -113,6 +110,19 @@ func updateDevice(device models.Device) (models.Device, error) {
 	})
 	if err != nil {
 		return models.Device{}, err
+	}
+
+	return device, nil
+}
+
+func authDevice(id string) (models.Device, error) {
+	device, err := GetDeviceByDeviceId(id)
+	if err != nil {
+		return models.Device{}, err
+	}
+
+	if result := config.Database.Save(&device); result.Error != nil {
+		return models.Device{}, result.Error
 	}
 
 	return device, nil

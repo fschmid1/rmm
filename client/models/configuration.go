@@ -2,6 +2,7 @@ package models
 
 type Configuration struct {
 	Secure              bool   `json:"secure"`
+	Token               string `json:"token"`
 	Host                string `json:"host"`
 	Port                string `json:"port"`
 	AllowRun            bool   `json:"allowRun"`

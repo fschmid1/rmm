@@ -6,7 +6,6 @@ import (
 	"io/ioutil"
 	"os"
 
-	"festech.de/rmm/client/http"
 	"festech.de/rmm/client/models"
 	"festech.de/rmm/client/system"
 	"festech.de/rmm/client/vars"
@@ -33,12 +32,25 @@ func RegisterDevice() {
 		Name:       system.GetHostName(),
 		SystemInfo: systemInfo,
 	}
-
-	status, textBody, _ := http.Post(vars.RestUrl+"devices", device, &device)
-	if status == 400 && textBody == "Device with this mac address is already registered" {
-		http.Get(fmt.Sprintf(vars.RestUrl+"devices/%s?mac=1", device.SystemInfo.MacAddress), &device)
+	vars.Handlers.Once("response-devices-register", func(event models.SocketEvent) {
+		if event.Error == "Devcice with this mac address is already registered" {
+			vars.Handlers.Once("response-devices-get", func(event models.SocketEvent) {
+				device = event.Data.(models.Device)
+				WriteConfiguration(devicePath, device)
+			})
+			vars.Queue <- models.SocketEvent{
+				Event: "devices-get",
+				Data:  id,
+			}
+		} else {
+			device = event.Data.(models.Device)
+			WriteConfiguration(devicePath, device)
+		}
+	})
+	vars.Queue <- models.SocketEvent{
+		Event: "devices-register",
+		Data:  device,
 	}
-	WriteConfiguration(devicePath, device)
 }
 
 func UpdateSystemInfo() {
@@ -52,11 +64,18 @@ func UpdateSystemInfo() {
 		Disk:       system.GetDisk(),
 		ID:         vars.Device.SystemInfo.ID,
 	}
-	status, textBody, _ := http.Patch(vars.RestUrl+"devices", vars.Device, &vars.Device)
-	if status == 400 && textBody == "Device with this mac address is already registered" {
-		http.Get(fmt.Sprintf(vars.RestUrl+"devices/%s?mac=1", vars.Device.SystemInfo.MacAddress), &vars.Device)
+	vars.Handlers.Once("response-devices-update", func(event models.SocketEvent) {
+		if event.Error != "" {
+			fmt.Println(event.Error)
+			return
+		}
+		vars.Device = event.Data.(models.Device)
+		WriteConfiguration(devicePath, vars.Device)
+	})
+	vars.Queue <- models.SocketEvent{
+		Event: "devices-update",
+		Data:  vars.Device,
 	}
-	WriteConfiguration(devicePath, vars.Device)
 }
 
 func CreateConfiguration() {
