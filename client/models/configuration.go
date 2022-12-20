@@ -1,19 +1,23 @@
 package models
 
 type Configuration struct {
-	Secure              bool   `json:"secure"`
-	Token               string `json:"token"`
-	Host                string `json:"host"`
-	Port                string `json:"port"`
-	AllowRun            bool   `json:"allowRun"`
-	AllowShutdown       bool   `json:"allowShutdown"`
-	AllowReboot         bool   `json:"allowReboot"`
-	AllowProcessList    bool   `json:"allowProcessList`
-	AllowServiceList    bool   `json:"allowServiceList`
-	AllowServiceLogs    bool   `json:"allowServiceLogs`
-	AllowServiceStop    bool   `json:"allowServiceStop`
-	AllowServiceStart   bool   `json:"allowServiceStart`
-	AllowServiceStatus  bool   `json:"allowServiceStatus`
-	AllowServiceRestart bool   `json:"allowServiceRestart`
-	AllowKill           bool   `json:"allowKill`
+	Secure bool           `json:"secure"`
+	Token  string         `json:"token"`
+	Host   string         `json:"host"`
+	Port   string         `json:"port"`
+	Allow  AllowFunctions `json:"allow"`
+}
+
+type AllowFunctions struct {
+	Run            bool `json:"run"`
+	Shutdown       bool `json:"shutdown"`
+	Reboot         bool `json:"reboot"`
+	ProcessList    bool `json:"processList`
+	ServiceList    bool `json:"serviceList`
+	ServiceLogs    bool `json:"serviceLogs`
+	ServiceStop    bool `json:"serviceStop`
+	ServiceStart   bool `json:"serviceStart`
+	ServiceStatus  bool `json:"serviceStatus`
+	ServiceRestart bool `json:"serviceRestart`
+	Kill           bool `json:"kill`
 }

@@ -7,7 +7,7 @@ import (
 )
 
 func KillProcess(name string) string {
-	if !vars.Configuration.AllowKill {
+	if !vars.Configuration.Allow.Kill {
 		return "Process kill is not allowed on this device"
 	}
 	if IsLinux() {
@@ -17,7 +17,7 @@ func KillProcess(name string) string {
 }
 
 func GetProcessList() string {
-	if !vars.Configuration.AllowProcessList {
+	if !vars.Configuration.Allow.ProcessList {
 		return "Process list is not allowed on this device"
 	}
 	if IsLinux() {
@@ -27,7 +27,7 @@ func GetProcessList() string {
 }
 
 func GetServiceList() string {
-	if !vars.Configuration.AllowServiceList {
+	if !vars.Configuration.Allow.ServiceList {
 		return "Service list is not allowed on this device"
 	}
 	if IsLinux() {
@@ -37,7 +37,7 @@ func GetServiceList() string {
 }
 
 func GetServiceLogs(service string) string {
-	if !vars.Configuration.AllowServiceLogs {
+	if !vars.Configuration.Allow.ServiceLogs {
 		return "Service logs is not allowed on this device"
 	}
 	if IsLinux() {
@@ -47,7 +47,7 @@ func GetServiceLogs(service string) string {
 }
 
 func GetServiceStatus(service string) string {
-	if !vars.Configuration.AllowServiceStatus {
+	if !vars.Configuration.Allow.ServiceStatus {
 		return "Service status is not allowed on this device"
 	}
 	if IsLinux() {
@@ -57,7 +57,7 @@ func GetServiceStatus(service string) string {
 }
 
 func StartService(service string) string {
-	if !vars.Configuration.AllowServiceStart {
+	if !vars.Configuration.Allow.ServiceStart {
 		return "Service start is not allowed on this device"
 	}
 	if IsLinux() {
@@ -67,7 +67,7 @@ func StartService(service string) string {
 }
 
 func StopService(service string) string {
-	if !vars.Configuration.AllowServiceStop {
+	if !vars.Configuration.Allow.ServiceStop {
 		return "Service stop is not allowed on this device"
 	}
 	if IsLinux() {
@@ -77,7 +77,7 @@ func StopService(service string) string {
 }
 
 func RestartService(service string) string {
-	if !vars.Configuration.AllowServiceRestart {
+	if !vars.Configuration.Allow.ServiceRestart {
 		return "Service restart is not allowed on this device"
 	}
 	if IsLinux() {
@@ -87,7 +87,7 @@ func RestartService(service string) string {
 }
 
 func Reboot() string {
-	if !vars.Configuration.AllowReboot {
+	if !vars.Configuration.Allow.Reboot {
 		return "Reboot is not allowed on this device"
 	}
 	if IsLinux() {
@@ -97,7 +97,7 @@ func Reboot() string {
 }
 
 func Shutdown() string {
-	if !vars.Configuration.AllowShutdown {
+	if !vars.Configuration.Allow.Shutdown {
 		return "Shutdown is not allowed on this device"
 	}
 	if IsLinux() {
