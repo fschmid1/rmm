@@ -53,6 +53,18 @@ func AddDeviceToken(c *fiber.Ctx) error {
 
 //		return device, nil
 //	}
+
+func GetDeviceTokens(c *fiber.Ctx) error {
+	var tokens []models.DeviceToken
+
+	result := config.Database.Preload(clause.Associations).Find(&tokens).Where("User_id = ?", c.Locals("user").(*jwt.Token).Claims.(jwt.MapClaims)["user"].(map[string]interface{})["id"])
+
+	if result.Error != nil {
+		return c.SendStatus(500)
+	}
+	return c.Status(200).JSON(tokens)
+}
+
 func getDeviceById(id string) (models.Device, error) {
 	var device models.Device
 	result := config.Database.Preload(clause.Associations).Find(&device, id)

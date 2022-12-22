@@ -23,7 +23,8 @@ func main() {
 
 	deviceRouter.Post("/functions", socket.FunctionsHandler)
 
-	deviceRouter.Post("/token", handlers.AddDeviceToken)
+	deviceRouter.Post("/tokens", handlers.AddDeviceToken)
+	deviceRouter.Get("/tokens", handlers.AddDeviceToken)
 
 	deviceRouter.Get("/", handlers.GetDevices)
 	deviceRouter.Get("/:id", handlers.GetDevice)

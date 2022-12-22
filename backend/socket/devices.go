@@ -77,10 +77,10 @@ func getDeviceById(id string, mac bool) (models.Device, error) {
 		result = config.Database.Preload(clause.Associations).Find(&device, id)
 	}
 	if result.Error != nil {
-		return models.Device{}, errors.New("Something went wrong")
+		return models.Device{}, errors.New("something went wrong")
 	}
 	if result.RowsAffected == 0 {
-		return models.Device{}, errors.New("Device not found")
+		return models.Device{}, errors.New("device not found")
 	}
 
 	return device, nil
@@ -89,7 +89,7 @@ func getDeviceById(id string, mac bool) (models.Device, error) {
 func registerDevice(data map[string]interface{}) (models.Device, error) {
 	device := parseDevice(data)
 	if handlers.GetSystemInfoByMacAddress(device.SystemInfo.MacAddress).ID > 0 {
-		return models.Device{}, errors.New("Device with this mac address is already registered")
+		return models.Device{}, errors.New("device with this mac address is already registered")
 	}
 
 	err := config.Database.Transaction(func(tx *gorm.DB) error {
@@ -152,17 +152,4 @@ func parseDate(date string) time.Time {
 	layout := "2006-01-02 15:04:05"
 	t, _ := time.Parse(layout, date)
 	return t
-}
-
-func authDevice(id string) (models.Device, error) {
-	device, err := GetDeviceByDeviceId(id)
-	if err != nil {
-		return models.Device{}, err
-	}
-
-	if result := config.Database.Save(&device); result.Error != nil {
-		return models.Device{}, result.Error
-	}
-
-	return device, nil
 }

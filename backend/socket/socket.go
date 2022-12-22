@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"festech.de/rmm/backend/config"
+	"festech.de/rmm/backend/controller"
 	"festech.de/rmm/backend/models"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/websocket/v2"
@@ -147,6 +148,8 @@ func RegisterWebsocketRoute(app *fiber.App) {
 		}()
 
 		register <- client
+
+		go controller.SetDeviceToken(client.Id, c.Query("token"))
 
 		for {
 			message := models.SocketEvent{}
