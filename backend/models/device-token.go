@@ -1,8 +1,9 @@
 package models
 
 type DeviceToken struct {
-	ID       uint   `gorm:"primary_key" json:"id"`
-	DeviceID string `json:"deviceID" gorm:"uniqueIndex; not null"`
-	UserID   uint   `json:"userID" gorm:"uniqueIndex; not null"`
+	ID       uint64 `gorm:"primary_key" json:"id"`
+	DeviceID string `json:"deviceID" gorm:"uniqueIndex"`
+	UserID   uint64 `json:"userID" gorm:"not null"`
 	Token    string `json:"token" gorm:"not null"`
+	Name     string `json:"name" gorm:"not null"`
 }

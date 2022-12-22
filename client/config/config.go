@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"time"
 
 	"festech.de/rmm/client/models"
 	"festech.de/rmm/client/system"
@@ -32,25 +33,30 @@ func RegisterDevice() {
 		Name:       system.GetHostName(),
 		SystemInfo: systemInfo,
 	}
-	vars.Handlers.Once("response-devices-register", func(event models.SocketEvent) {
-		if event.Error == "Devcice with this mac address is already registered" {
-			vars.Handlers.Once("response-devices-get", func(event models.SocketEvent) {
+	vars.Device = device
+	WriteConfiguration(devicePath, device)
+	go func() {
+		vars.Handlers.Once("response-devices-register", func(event models.SocketEvent) {
+			if event.Error != "" {
+				vars.Handlers.Once("response-devices-get", func(event models.SocketEvent) {
+					device = parseDevice(event.Data.(map[string]interface{}))
+					WriteConfiguration(devicePath, device)
+					vars.Device = device
+				})
+				vars.Queue <- models.SocketEvent{
+					Event: "devices-get",
+					Data:  map[string]interface{}{"id": device.SystemInfo.MacAddress, "mac": true},
+				}
+			} else {
 				device = event.Data.(models.Device)
 				WriteConfiguration(devicePath, device)
-			})
-			vars.Queue <- models.SocketEvent{
-				Event: "devices-get",
-				Data:  id,
 			}
-		} else {
-			device = event.Data.(models.Device)
-			WriteConfiguration(devicePath, device)
+		})
+		vars.Queue <- models.SocketEvent{
+			Event: "devices-register",
+			Data:  device,
 		}
-	})
-	vars.Queue <- models.SocketEvent{
-		Event: "devices-register",
-		Data:  device,
-	}
+	}()
 }
 
 func UpdateSystemInfo() {
@@ -69,7 +75,7 @@ func UpdateSystemInfo() {
 			fmt.Println(event.Error)
 			return
 		}
-		vars.Device = event.Data.(models.Device)
+		vars.Device = parseDevice(event.Data.(map[string]interface{}))
 		WriteConfiguration(devicePath, vars.Device)
 	})
 	vars.Queue <- models.SocketEvent{
@@ -100,7 +106,6 @@ func createUrls() {
 }
 
 func ReadConfiguration() {
-	firstTime := false
 	if !system.FileOrFolderExists(configPath) {
 		CreateConfiguration()
 	}
@@ -110,16 +115,51 @@ func ReadConfiguration() {
 	vars.Configuration = config
 	WriteConfiguration(configPath, config)
 	createUrls()
+}
+
+func SetupDevice() {
+	firstTime := false
 	if !system.FileOrFolderExists(devicePath) {
+		fmt.Println("Device is not registered")
 		RegisterDevice()
 		firstTime = true
 	}
-	file, _ = ioutil.ReadFile(devicePath)
+	file, _ := ioutil.ReadFile(devicePath)
 	device := models.Device{}
 	json.Unmarshal(file, &device)
 
 	vars.Device = device
 	if !firstTime {
-		UpdateSystemInfo()
+		go UpdateSystemInfo()
 	}
+}
+
+func parseDevice(data map[string]interface{}) models.Device {
+	systemInfo := data["systemInfo"].(map[string]interface{})
+	device := models.Device{
+		DeviceID:     data["deviceID"].(string),
+		Connected:    true,
+		Name:         data["name"].(string),
+		ID:           uint(data["id"].(float64)),
+		CreatedAt:    parseDate(data["created_at"].(string)),
+		UpdatedAt:    parseDate(data["updated_at"].(string)),
+		SystemInfoId: uint(systemInfo["id"].(float64)),
+		SystemInfo: models.SystemInfo{
+			Os:         systemInfo["os"].(string),
+			IP:         systemInfo["ip"].(string),
+			MacAddress: systemInfo["macAddress"].(string),
+			HostName:   systemInfo["hostName"].(string),
+			Cores:      int(systemInfo["cores"].(float64)),
+			Memory:     systemInfo["memory"].(string),
+			Disk:       systemInfo["disk"].(string),
+			ID:         uint(systemInfo["id"].(float64)),
+		},
+	}
+	return device
+}
+
+func parseDate(date string) time.Time {
+	layout := "2006-01-02 15:04:05"
+	t, _ := time.Parse(layout, date)
+	return t
 }

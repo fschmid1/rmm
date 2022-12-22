@@ -2,7 +2,6 @@ package config
 
 import (
 	"fmt"
-	"time"
 
 	"festech.de/rmm/backend/models"
 	jwtware "github.com/gofiber/jwt/v3"
@@ -16,13 +15,13 @@ var JWT_CONFIG jwtware.Config = jwtware.Config{
 	SigningKey: []byte(JWT_SECRET),
 }
 
-func GenerateDeviceJWT(device models.Device) (string, error) {
+func GenerateDeviceJWT(device models.DeviceToken) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
-	claims["exp"] = time.Now().Add(31 * (time.Hour * 24))
 	claims["authorized"] = true
-	claims["deivce"] = device
-	tokenString, err := token.SignedString(SOCKET_JWT_SECRET)
+	claims["userID"] = device.UserID
+	claims["name"] = device.Name
+	tokenString, err := token.SignedString([]byte(SOCKET_JWT_SECRET))
 	if err != nil {
 		return "Signing Error", err
 	}
@@ -50,6 +49,7 @@ func VerifyClientJWT(tokenString string) bool {
 		return []byte(SOCKET_JWT_SECRET), nil
 	})
 	if err != nil {
+		fmt.Println(err)
 		return false
 	}
 	if token.Valid {

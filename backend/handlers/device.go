@@ -2,25 +2,28 @@ package handlers
 
 import (
 	"errors"
+	"fmt"
 
 	"festech.de/rmm/backend/config"
 	"festech.de/rmm/backend/models"
 	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt/v4"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
 func AddDeviceToken(c *fiber.Ctx) error {
 	deviceToken := new(models.DeviceToken)
+	var err error
 
 	if err := c.BodyParser(deviceToken); err != nil {
 		return c.Status(503).SendString(err.Error())
 	}
-	device, err := getDeviceById(deviceToken.DeviceID)
-	if err != nil {
-		return c.Status(400).SendString(err.Error())
-	}
-	deviceToken.Token, err = config.GenerateDeviceJWT(device)
+	user := c.Locals("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+	id := claims["user"].(map[string]interface{})["id"]
+	deviceToken.UserID = uint64(id.(float64))
+	deviceToken.Token, err = config.GenerateDeviceJWT(*deviceToken)
 	if err != nil {
 		return c.Status(400).SendString(err.Error())
 	}
@@ -31,12 +34,25 @@ func AddDeviceToken(c *fiber.Ctx) error {
 		return nil
 	})
 	if err != nil {
+		fmt.Println(err.Error())
 		return c.Status(400).SendString(err.Error())
 	}
 
 	return c.Status(200).JSON(deviceToken)
 }
 
+// func getDeviceToken(id uint64, name string) (models.Device, error) {
+// 	var token models.DeviceToken
+// 	result := config.Database.Preload(clause.Associations).Find(&token, id)
+// 	if result.Error != nil {
+// 		return models.Device{}, errors.New("Something went wrong")
+// 	}
+// 	if result.RowsAffected == 0 {
+// 		return models.Device{}, errors.New("Device not found")
+// 	}
+
+//		return device, nil
+//	}
 func getDeviceById(id string) (models.Device, error) {
 	var device models.Device
 	result := config.Database.Preload(clause.Associations).Find(&device, id)

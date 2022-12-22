@@ -93,7 +93,7 @@ func createJWTToken(user models.User) (string, int64, error) {
 	exp := time.Now().Add(time.Minute * 30).Unix()
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
-	claims["user_id"] = user.Id
+	claims["user"] = user
 	claims["exp"] = exp
 	t, err := token.SignedString([]byte(config.JWT_SECRET))
 	if err != nil {
