@@ -1,10 +1,10 @@
 package handlers
 
 import (
-	"errors"
 	"fmt"
 
 	"festech.de/rmm/backend/config"
+	"festech.de/rmm/backend/controller"
 	"festech.de/rmm/backend/models"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
@@ -41,41 +41,15 @@ func AddDeviceToken(c *fiber.Ctx) error {
 	return c.Status(200).JSON(deviceToken)
 }
 
-// func getDeviceToken(id uint64, name string) (models.Device, error) {
-// 	var token models.DeviceToken
-// 	result := config.Database.Preload(clause.Associations).Find(&token, id)
-// 	if result.Error != nil {
-// 		return models.Device{}, errors.New("Something went wrong")
-// 	}
-// 	if result.RowsAffected == 0 {
-// 		return models.Device{}, errors.New("Device not found")
-// 	}
-
-//		return device, nil
-//	}
-
 func GetDeviceTokens(c *fiber.Ctx) error {
 	var tokens []models.DeviceToken
-
-	result := config.Database.Preload(clause.Associations).Find(&tokens).Where("User_id = ?", c.Locals("user").(*jwt.Token).Claims.(jwt.MapClaims)["user"].(map[string]interface{})["id"])
+	userId := c.Locals("user").(*jwt.Token).Claims.(jwt.MapClaims)["user"].(map[string]interface{})["id"]
+	result := config.Database.Preload(clause.Associations).Find(&tokens).Where("User_id = ?", userId)
 
 	if result.Error != nil {
 		return c.SendStatus(500)
 	}
 	return c.Status(200).JSON(tokens)
-}
-
-func getDeviceById(id string) (models.Device, error) {
-	var device models.Device
-	result := config.Database.Preload(clause.Associations).Find(&device, id)
-	if result.Error != nil {
-		return models.Device{}, errors.New("Something went wrong")
-	}
-	if result.RowsAffected == 0 {
-		return models.Device{}, errors.New("Device not found")
-	}
-
-	return device, nil
 }
 
 func GetDevices(c *fiber.Ctx) error {
@@ -96,7 +70,7 @@ func GetDevice(c *fiber.Ctx) error {
 	var device models.Device
 	var result *gorm.DB
 	if mac != "" {
-		systemInfo := GetSystemInfoByMacAddress(id)
+		systemInfo := controller.GetSystemInfoByMacAddress(id)
 		result = config.Database.Preload(clause.Associations).Where("system_info_id = ?", systemInfo.ID).First(&device)
 	} else {
 		result = config.Database.Preload(clause.Associations).Find(&device, id)
@@ -118,7 +92,7 @@ func AddDevice(c *fiber.Ctx) error {
 		return c.Status(503).SendString(err.Error())
 	}
 
-	if GetSystemInfoByMacAddress(device.SystemInfo.MacAddress).ID > 0 {
+	if controller.GetSystemInfoByMacAddress(device.SystemInfo.MacAddress).ID > 0 {
 		return c.Status(400).SendString("Device with this mac address is already registered")
 	}
 

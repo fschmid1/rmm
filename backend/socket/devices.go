@@ -3,10 +3,9 @@ package socket
 import (
 	"errors"
 	"fmt"
-	"time"
 
 	"festech.de/rmm/backend/config"
-	"festech.de/rmm/backend/handlers"
+	"festech.de/rmm/backend/controller"
 	"festech.de/rmm/backend/models"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -71,7 +70,7 @@ func getDeviceById(id string, mac bool) (models.Device, error) {
 	var device models.Device
 	var result *gorm.DB
 	if mac {
-		systemInfo := handlers.GetSystemInfoByMacAddress(id)
+		systemInfo := controller.GetSystemInfoByMacAddress(id)
 		result = config.Database.Preload(clause.Associations).Where("system_info_id = ?", systemInfo.ID).First(&device)
 	} else {
 		result = config.Database.Preload(clause.Associations).Find(&device, id)
@@ -87,8 +86,8 @@ func getDeviceById(id string, mac bool) (models.Device, error) {
 }
 
 func registerDevice(data map[string]interface{}) (models.Device, error) {
-	device := parseDevice(data)
-	if handlers.GetSystemInfoByMacAddress(device.SystemInfo.MacAddress).ID > 0 {
+	device := controller.ParseDevice(data)
+	if controller.GetSystemInfoByMacAddress(device.SystemInfo.MacAddress).ID > 0 {
 		return models.Device{}, errors.New("device with this mac address is already registered")
 	}
 
@@ -106,7 +105,7 @@ func registerDevice(data map[string]interface{}) (models.Device, error) {
 }
 
 func updateDevice(data map[string]interface{}) (models.Device, error) {
-	device := parseDevice(data)
+	device := controller.ParseDevice(data)
 	err := config.Database.Transaction(func(tx *gorm.DB) error {
 		if result := tx.Updates(&device); result.Error != nil {
 			return result.Error
@@ -121,35 +120,4 @@ func updateDevice(data map[string]interface{}) (models.Device, error) {
 	}
 
 	return device, nil
-}
-
-func parseDevice(data map[string]interface{}) models.Device {
-	systemInfo := data["systemInfo"].(map[string]interface{})
-	device := models.Device{
-		DeviceID:     data["deviceID"].(string),
-		Connected:    true,
-		Name:         data["name"].(string),
-		ID:           uint(data["id"].(float64)),
-		CreatedAt:    parseDate(data["created_at"].(string)),
-		UpdatedAt:    parseDate(data["updated_at"].(string)),
-		SystemInfoId: uint(systemInfo["id"].(float64)),
-		SystemInfo: models.SystemInfo{
-			Os:         systemInfo["os"].(string),
-			IP:         systemInfo["ip"].(string),
-			MacAddress: systemInfo["macAddress"].(string),
-			HostName:   systemInfo["hostName"].(string),
-			Cores:      int(systemInfo["cores"].(float64)),
-			Memory:     systemInfo["memory"].(string),
-			Disk:       systemInfo["disk"].(string),
-			ID:         uint(systemInfo["id"].(float64)),
-		},
-	}
-
-	return device
-}
-
-func parseDate(date string) time.Time {
-	layout := "2006-01-02 15:04:05"
-	t, _ := time.Parse(layout, date)
-	return t
 }
