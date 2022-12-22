@@ -20,6 +20,5 @@ run: build
 docker.build:
 	docker-compose build
 
-docker.run:
-	docker-compose up -d --build --force-recreate
-	make run
+docker.push:
+	buildx docker-compose.yml -p -a

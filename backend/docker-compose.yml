@@ -1,38 +1,7 @@
 version: '3.8'
 
 services:
-  # api:
-  #   build:
-  #     context: .
-  #   ports:
-  #     - 8080:80
-  #   links:
-  #     - mariadb
-  #   environment:
-  #     - PORT=80
-  #     - DATABASE_URI="root:j4onYumQmrJ263tkbdqZwEEw6@tcp(mariadb:3307)/rmm?charset=utf8mb4&parseTime=True&loc=Local"
-  mariadb:
-    image: mariadb:10.9.4
-    restart: always
-    command: --init-file /data/application/init.sql
-    volumes:
-      - data:/var/lib/mysql
-      - ./init.sql:/data/application/init.sql
-    ports:
-      - 3307:3306
-    environment:
-      MYSQL_ROOT_PASSWORD: j4onYumQmrJ263tkbdqZwEEw6
-    logging:
-      driver: none
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    ports:
-      - 9004:80
-    links:
-      - mariadb
-    environment:
-      MYSQL_USERNAME: root
-      MYSQL_ROOT_PASSWORD: j4onYumQmrJ263tkbdqZwEEw6
-      PMA_HOST: mariadb
-volumes:
-  data:
+  api:
+    image: registry.festech.de/rmm:latest
+    build:
+      context: .
