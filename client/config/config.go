@@ -48,7 +48,7 @@ func RegisterDevice() {
 					Data:  map[string]interface{}{"id": device.SystemInfo.MacAddress, "mac": true},
 				}
 			} else {
-				device = event.Data.(models.Device)
+				device = parseDevice(event.Data.(map[string]interface{}))
 				WriteConfiguration(devicePath, device)
 			}
 		})
