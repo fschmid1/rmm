@@ -14,9 +14,9 @@ COPY . .
 ENV CGO_ENABLED=0 GOOS=linux GOARCH=amd64
 RUN go build -ldflags="-s -w" -o apiserver .
 
-FROM ubuntu
 
-RUN apt update && apt install -y tzdata
+FROM scratch as final
+COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
 ENV TZ=Europe/Berlin
 # Copy binary and config files from /build to root folder of scratch container.
 COPY --from=builder ["/build/apiserver", "/"]
