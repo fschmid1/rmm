@@ -11,7 +11,7 @@ import (
 
 func GetDeviceById(id string) (models.Device, error) {
 	var device models.Device
-	result := config.Database.Preload(clause.Associations).Find(&device, id)
+	result := config.Database.Preload(clause.Associations).Find(&device).Where("device_id = ?", id)
 	if result.Error != nil {
 		return models.Device{}, errors.New("something went wrong")
 	}

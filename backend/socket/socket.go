@@ -6,7 +6,6 @@ import (
 	"log"
 	"strings"
 
-	"festech.de/rmm/backend/config"
 	"festech.de/rmm/backend/controller"
 	"festech.de/rmm/backend/models"
 	"github.com/gofiber/fiber/v2"
@@ -91,9 +90,9 @@ func RegisterWebsocketRoute(app *fiber.App) {
 	route.Use(func(c *fiber.Ctx) error {
 		if websocket.IsWebSocketUpgrade(c) && c.Query("token") != "" {
 			token := c.Query("token")
-			if strings.Contains(c.Path(), "/client/") && config.VerifyClientJWT(token) {
+			if strings.Contains(c.Path(), "/client/") && controller.VerifyClientJWT(token) {
 				return c.Next()
-			} else if strings.Contains(c.Path(), "/user/") && config.VerifyUserJWT(token) {
+			} else if strings.Contains(c.Path(), "/user/") && controller.VerifyUserJWT(token) {
 				return c.Next()
 			}
 		}
@@ -150,6 +149,7 @@ func RegisterWebsocketRoute(app *fiber.App) {
 		register <- client
 
 		go controller.SetDeviceToken(client.Id, c.Query("token"))
+		go controller.AddDeviceToUser(client.Id, c.Query("token"))
 
 		for {
 			message := models.SocketEvent{}
