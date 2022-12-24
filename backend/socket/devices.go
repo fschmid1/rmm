@@ -3,6 +3,7 @@ package socket
 import (
 	"errors"
 	"fmt"
+	"strconv"
 
 	"festech.de/rmm/backend/config"
 	"festech.de/rmm/backend/controller"
@@ -26,6 +27,28 @@ func GetDeviceByDeviceId(id string) (models.Device, error) {
 	}
 
 	return device, nil
+}
+
+func NotfiyUserDeviceConnection(id string, connected bool) {
+	device, err := GetDeviceByDeviceId(id)
+	if err != nil {
+		return
+	}
+
+	result := []map[string]interface{}{}
+	config.Database.Table("user_devices").Select("user_id").Where("device_id = ?", device.ID).Find(&result)
+	for _, user := range result {
+		userId := strconv.FormatUint(user["user_id"].(uint64), 10)
+		if client, ok := Clients[userId]; ok {
+			SendMessage(client.Id, models.SocketEvent{
+				Event: "device-connection",
+				Data: map[string]interface{}{
+					"id":        device.ID,
+					"connected": connected,
+				},
+			})
+		}
+	}
 }
 
 func SetDeviceConnected(id string, connected bool) (bool, error) {

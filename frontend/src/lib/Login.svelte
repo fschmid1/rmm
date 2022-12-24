@@ -15,7 +15,7 @@ let password = "";
 const navigate = useNavigate();
 
 const login = async () => {
-	const response = await fetch(`${apiBase}auth/login`, {
+	const response = await fetch(`${apiBase}/auth/login`, {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json"

@@ -33,6 +33,7 @@ func runHub() {
 		case client := <-register:
 			if !client.User {
 				SetDeviceConnected(client.Id, true)
+				go NotfiyUserDeviceConnection(client.Id, true)
 			}
 			Clients[client.Id] = client
 
@@ -51,6 +52,7 @@ func runHub() {
 		case client := <-unregister:
 			if !client.User {
 				SetDeviceConnected(client.Id, false)
+				go NotfiyUserDeviceConnection(client.Id, false)
 			}
 			delete(Clients, client.Id)
 			for key, stream := range UsageStreams {
