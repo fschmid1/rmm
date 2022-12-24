@@ -4,6 +4,7 @@ type Configuration struct {
 	Secure bool           `json:"secure"`
 	Token  string         `json:"token"`
 	Host   string         `json:"host"`
+	Path   string         `json:"path"`
 	Port   string         `json:"port"`
 	Allow  AllowFunctions `json:"allow"`
 }

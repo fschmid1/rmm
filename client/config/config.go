@@ -101,8 +101,11 @@ func createUrls() {
 	if vars.Configuration.Secure {
 		secure = "s"
 	}
-	vars.RestUrl = fmt.Sprintf("http%s://%s:%s/", secure, vars.Configuration.Host, vars.Configuration.Port)
-	vars.WsUrl = fmt.Sprintf("ws%s://%s:%s/ws/client/", secure, vars.Configuration.Host, vars.Configuration.Port)
+	if vars.Configuration.Path == "" {
+		vars.Configuration.Path = "/"
+	}
+	vars.RestUrl = fmt.Sprintf("http%s://%s:%s%s", secure, vars.Configuration.Host, vars.Configuration.Port, vars.Configuration.Path)
+	vars.WsUrl = fmt.Sprintf("ws%s://%s:%s%sws/client/", secure, vars.Configuration.Host, vars.Configuration.Port, vars.Configuration.Path)
 }
 
 func ReadConfiguration() {

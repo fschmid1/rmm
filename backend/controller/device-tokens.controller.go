@@ -6,12 +6,11 @@ import (
 	"festech.de/rmm/backend/config"
 	"festech.de/rmm/backend/models"
 	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
 )
 
 func GetDeviceToken(token string) (models.DeviceToken, error) {
 	var deviceToken models.DeviceToken
-	result := config.Database.Preload(clause.Associations).Find(&deviceToken).Where("token = ?", token)
+	result := config.Database.Where("token = ?", token).Find(&deviceToken)
 	if result.Error != nil {
 		return models.DeviceToken{}, errors.New("something went wrong")
 	}
