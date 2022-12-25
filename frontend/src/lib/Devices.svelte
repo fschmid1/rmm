@@ -49,7 +49,7 @@ onMount(async () => {
 									<TableBodyCell><div class="flex"><ConnectionIndecator connected={device.connected} />{device.name}</div></TableBodyCell>
 									<TableBodyCell>{device.systemInfo.ip}</TableBodyCell>
 									<TableBodyCell>{device.systemInfo.cores}</TableBodyCell>
-									<TableBodyCell>{device.systemInfo.memory}</TableBodyCell>
+									<TableBodyCell>{device.systemInfo.memoryTotal.toFixed(2)} GB</TableBodyCell>
 							</TableBodyRow>
             {/each}
         </TableBody>
