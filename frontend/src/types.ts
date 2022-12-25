@@ -18,12 +18,16 @@ export type Device = {
 }
 
 export type SystemInfo = {
-	id:         number;
-	os:         string;
-	ip:         string;
-	macAddress: string;
-	hostName:   string;
-	cores:      number;
-	memory:     string;
-	disk:       string;
+	id:          number;
+	os:          string;
+	ip:          string;
+	macAddress:  string;
+	hostName:    string;
+	cores:       number;
+	gpu:         string;
+	cpu:         string;
+	memoryTotal: number;
+	memoryUsed:  number;
+	diskTotal:   number;
+	diskUsed:    number;
 }

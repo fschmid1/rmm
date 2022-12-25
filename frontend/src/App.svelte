@@ -10,6 +10,7 @@ import {
 import Redirects from './lib/Redirects.svelte';
 import Login from './lib/Login.svelte';
 import Devices from './lib/Devices.svelte';
+import Device from './lib/Device.svelte';
 import {
   userStore, ws, deviceStore
 } from './stores';
@@ -42,6 +43,9 @@ onMount(async () => {
 <Router>
     <Route primary={true} path="/devices">
         <Devices />
+    </Route>
+    <Route primary={true} path="/devices/:id/*" let:params >
+        <Device id={params.id} />
     </Route>
     <Route>
         <Redirects />
