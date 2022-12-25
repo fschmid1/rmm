@@ -11,7 +11,7 @@ import Redirects from './lib/Redirects.svelte';
 import Login from './lib/Login.svelte';
 import Devices from './lib/Devices.svelte';
 import {
-  userStore, ws, deviceStore
+  userStore, ws, deviceStore, device
 } from './stores';
 import jwtDecode from 'jwt-decode';
 import { Websocket } from './ws';
@@ -36,6 +36,9 @@ onMount(async () => {
 			}
 			return device;
 		});
+		if ($device?.id == data.id) {
+			$device.connected = data.connected;
+		}
 	});
 });
 </script>

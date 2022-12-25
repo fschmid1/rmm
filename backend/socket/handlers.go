@@ -250,7 +250,7 @@ func FunctionsHandler(c *fiber.Ctx) error {
 	event := new(models.SocketEvent)
 
 	if err := c.BodyParser(event); err != nil {
-		return c.Status(503).SendString(err.Error())
+		return c.Status(400).SendString(err.Error())
 	}
 	switch event.Event {
 	case "process-list":

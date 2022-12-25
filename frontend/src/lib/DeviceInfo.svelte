@@ -9,10 +9,6 @@ export let device: Device;
 </script>
 
 <div class="w-full">
-    <div class="flex items-center justify-center">
-        <ConnectionIndecator connected={device.connected} />
-        {device.name}
-    </div>
     <Table>
         <TableBody>
             <TableBodyRow>
