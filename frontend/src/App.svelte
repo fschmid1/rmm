@@ -10,12 +10,12 @@ import {
 import Redirects from './lib/Redirects.svelte';
 import Login from './lib/Login.svelte';
 import Devices from './lib/Devices.svelte';
-import Device from './lib/Device.svelte';
 import {
   userStore, ws, deviceStore
 } from './stores';
 import jwtDecode from 'jwt-decode';
 import { Websocket } from './ws';
+import DevicePage from './lib/DevicePage.svelte';
 
 onMount(async () => {
   document.documentElement.classList.add('dark');
@@ -45,7 +45,7 @@ onMount(async () => {
         <Devices />
     </Route>
     <Route primary={true} path="/devices/:id/*" let:params >
-        <Device id={params.id} />
+        <DevicePage id={params.id} />
     </Route>
     <Route>
         <Redirects />
