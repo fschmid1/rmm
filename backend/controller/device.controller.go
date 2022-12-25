@@ -24,6 +24,7 @@ func GetDeviceById(id string) (models.Device, error) {
 
 func ParseDevice(data map[string]interface{}) models.Device {
 	systemInfo := data["systemInfo"].(map[string]interface{})
+
 	device := models.Device{
 		DeviceID:     data["deviceID"].(string),
 		Connected:    true,
@@ -33,14 +34,18 @@ func ParseDevice(data map[string]interface{}) models.Device {
 		UpdatedAt:    parseDate(data["updated_at"].(string)),
 		SystemInfoId: uint(systemInfo["id"].(float64)),
 		SystemInfo: models.SystemInfo{
-			Os:         systemInfo["os"].(string),
-			IP:         systemInfo["ip"].(string),
-			MacAddress: systemInfo["macAddress"].(string),
-			HostName:   systemInfo["hostName"].(string),
-			Cores:      int(systemInfo["cores"].(float64)),
-			Memory:     systemInfo["memory"].(string),
-			Disk:       systemInfo["disk"].(string),
-			ID:         uint(systemInfo["id"].(float64)),
+			Os:          systemInfo["os"].(string),
+			IP:          systemInfo["ip"].(string),
+			MacAddress:  systemInfo["macAddress"].(string),
+			HostName:    systemInfo["hostName"].(string),
+			Cores:       int(systemInfo["cores"].(float64)),
+			MemoryTotal: systemInfo["memoryTotal"].(float64),
+			MemoryUsed:  systemInfo["memoryUsed"].(float64),
+			DiskTotal:   systemInfo["diskTotal"].(float64),
+			DiskUsed:    systemInfo["diskUsed"].(float64),
+			CPU:         systemInfo["cpu"].(string),
+			GPU:         systemInfo["gpu"].(string),
+			ID:          uint(systemInfo["id"].(float64)),
 		},
 	}
 

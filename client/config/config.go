@@ -20,13 +20,18 @@ func RegisterDevice() {
 	id := uuid.New().String()
 
 	systemInfo := models.SystemInfo{
-		HostName:   system.GetHostName(),
-		Os:         system.GetOS(),
-		IP:         system.GetIP(),
-		MacAddress: system.GetMacAddress(),
-		Cores:      system.GetCores(),
-		Memory:     system.GetMemory(),
-		Disk:       system.GetDisk(),
+		HostName:    system.GetHostName(),
+		Os:          system.GetOS(),
+		IP:          system.GetIP(),
+		MacAddress:  system.GetMacAddress(),
+		Cores:       system.GetCores(),
+		MemoryTotal: system.GetMemoryTotal(),
+		MemoryUsed:  system.GetMemoryUsed(),
+		DiskTotal:   system.GetDiskTotal(),
+		DiskUsed:    system.GetDiskUsed(),
+		CPU:         system.GetCPU(),
+		GPU:         system.GetGPU(),
+		ID:          vars.Device.SystemInfo.ID,
 	}
 	device := models.Device{
 		DeviceID:   id,
@@ -61,14 +66,18 @@ func RegisterDevice() {
 
 func UpdateSystemInfo() {
 	vars.Device.SystemInfo = models.SystemInfo{
-		HostName:   system.GetHostName(),
-		Os:         system.GetOS(),
-		IP:         system.GetIP(),
-		MacAddress: system.GetMacAddress(),
-		Cores:      system.GetCores(),
-		Memory:     system.GetMemory(),
-		Disk:       system.GetDisk(),
-		ID:         vars.Device.SystemInfo.ID,
+		HostName:    system.GetHostName(),
+		Os:          system.GetOS(),
+		IP:          system.GetIP(),
+		MacAddress:  system.GetMacAddress(),
+		Cores:       system.GetCores(),
+		MemoryTotal: system.GetMemoryTotal(),
+		MemoryUsed:  system.GetMemoryUsed(),
+		DiskTotal:   system.GetDiskTotal(),
+		DiskUsed:    system.GetDiskUsed(),
+		CPU:         system.GetCPU(),
+		GPU:         system.GetGPU(),
+		ID:          vars.Device.SystemInfo.ID,
 	}
 	vars.Handlers.Once("response-devices-update", func(event models.SocketEvent) {
 		if event.Error != "" {
@@ -148,14 +157,18 @@ func parseDevice(data map[string]interface{}) models.Device {
 		UpdatedAt:    parseDate(data["updated_at"].(string)),
 		SystemInfoId: uint(systemInfo["id"].(float64)),
 		SystemInfo: models.SystemInfo{
-			Os:         systemInfo["os"].(string),
-			IP:         systemInfo["ip"].(string),
-			MacAddress: systemInfo["macAddress"].(string),
-			HostName:   systemInfo["hostName"].(string),
-			Cores:      int(systemInfo["cores"].(float64)),
-			Memory:     systemInfo["memory"].(string),
-			Disk:       systemInfo["disk"].(string),
-			ID:         uint(systemInfo["id"].(float64)),
+			Os:          systemInfo["os"].(string),
+			IP:          systemInfo["ip"].(string),
+			MacAddress:  systemInfo["macAddress"].(string),
+			HostName:    systemInfo["hostName"].(string),
+			Cores:       int(systemInfo["cores"].(float64)),
+			MemoryTotal: systemInfo["memoryTotal"].(float64),
+			MemoryUsed:  systemInfo["memoryUsed"].(float64),
+			DiskTotal:   systemInfo["diskTotal"].(float64),
+			DiskUsed:    systemInfo["diskUsed"].(float64),
+			CPU:         systemInfo["cpu"].(string),
+			GPU:         systemInfo["gpu"].(string),
+			ID:          uint(systemInfo["id"].(float64)),
 		},
 	}
 	return device

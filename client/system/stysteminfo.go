@@ -1,7 +1,6 @@
 package system
 
 import (
-	"fmt"
 	"net"
 	"os"
 	"os/exec"
@@ -56,21 +55,58 @@ func GetCores() int {
 	return cores
 }
 
-func GetMemory() string {
-	var memory string
+func GetMemoryUsed() float64 {
+	var memory float64
 	var _ error
 	if IsLinux() {
-		temp, _ := strconv.Atoi(strings.ReplaceAll(Run("free -m | awk '$1 == \"Mem:\" {print $2}'"), "\n", ""))
-		memory = fmt.Sprintf("%dGB", (temp / 1000))
+		temp, _ := strconv.ParseFloat(strings.ReplaceAll(Run("free -m | awk '$1 == \"Mem:\" {print $3}'"), "\n", ""), 64)
+		memory = temp / 1024
 	}
 	return memory
 }
 
-func GetDisk() string {
-	var disk string
+func GetMemoryTotal() float64 {
+	var memory float64
 	var _ error
 	if IsLinux() {
-		disk = strings.ReplaceAll(Run("df -Bg | grep '^/dev/' | grep -v '/boot$' | awk '{ft += $2} END {print ft}'"), "\n", "") + "GB"
+		temp, _ := strconv.ParseFloat(strings.ReplaceAll(Run("free -m | awk '$1 == \"Mem:\" {print $2}'"), "\n", ""), 64)
+		memory = temp / 1024
+	}
+	return memory
+}
+
+func GetDiskTotal() float64 {
+	var disk float64
+	var _ error
+	if IsLinux() {
+		temp, _ := strconv.ParseFloat(strings.ReplaceAll(Run("df -Bg | grep '^/dev/' | grep -v '/boot$' | awk '{ft += $2} END {print ft}'"), "\n", ""), 64)
+		disk = temp
 	}
 	return disk
+}
+
+func GetDiskUsed() float64 {
+	var disk float64
+	var _ error
+	if IsLinux() {
+		temp, _ := strconv.ParseFloat(strings.ReplaceAll(Run("df -Bg | grep '^/dev/' | grep -v '/boot$' | awk '{ft += $3} END {print ft}'"), "\n", ""), 64)
+		disk = temp
+	}
+	return disk
+}
+
+func GetCPU() string {
+	var cpu string
+	if IsLinux() {
+		cpu = strings.ReplaceAll(Run("cat /proc/cpuinfo | grep 'model name' | uniq | awk -F: '{print $2}'"), "\n", "")
+	}
+	return cpu
+}
+
+func GetGPU() string {
+	var gpu string
+	if IsLinux() {
+		gpu = strings.ReplaceAll(Run("lspci | grep VGA | awk -F: '{print $3}'"), "\n", "")
+	}
+	return gpu
 }
