@@ -23,4 +23,8 @@ export class Websocket {
 	public on(event: string, handler: (...data:any) => void) {
 		this.events.set(event, handler);
 	}
+
+	public off(event: string) {
+		this.events.delete(event);
+	}
 }

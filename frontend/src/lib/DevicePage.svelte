@@ -30,6 +30,7 @@ import DeviceHeader from "./DeviceHeader.svelte";
 import { device } from "../stores";
 import DeviceServices from "./DeviceServices.svelte";
 import DeviceProcesses from "./DeviceProcesses.svelte";
+import DeviceUsage from "./DeviceUsage.svelte";
 
 export let id: string;
 
@@ -67,6 +68,11 @@ onMount(async () => {
                 	    <span class="space-x-4">Processes</span>
                     </Link>
                 </Li>
+                <Li class="py-2 pl-4">
+                    <Link to="/devices/{$device.id}/usage">
+                	    <span class="space-x-4">Usage</span>
+                    </Link>
+                </Li>
             </List>
         </div>
         <div class="flex w-9/12 flex-col">
@@ -81,6 +87,9 @@ onMount(async () => {
                     </Route>
                     <Route path="/processes" primary={false}>
                         <DeviceProcesses device={$device} />
+                    </Route>
+                    <Route path="/usage" primary={false}>
+                        <DeviceUsage device={$device} />
                     </Route>
                 </Router>
             </div>

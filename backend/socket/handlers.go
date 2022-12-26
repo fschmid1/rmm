@@ -1,10 +1,12 @@
 package socket
 
 import (
+	"strconv"
 	"time"
 
 	"festech.de/rmm/backend/models"
 	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt/v4"
 )
 
 func GetDeviceProcessList(c *fiber.Ctx, event models.SocketEvent) error {
@@ -289,14 +291,19 @@ func StartUsageStream(c *fiber.Ctx, event models.SocketEvent) error {
 	if err != nil {
 		return c.SendStatus(500)
 	}
-	if client, ok := Clients[c.GetReqHeaders()["X-Auth-User"]]; ok {
+	userId := strconv.FormatFloat(c.Locals("user").(*jwt.Token).Claims.(jwt.MapClaims)["user"].(map[string]interface{})["id"].(float64), 'f', 0, 64)
+	if client, ok := Clients[userId]; ok {
 		if UsageStreams[event.Id] == nil {
 			UsageStreams[event.Id] = make(map[string]Client)
 		}
 		UsageStreams[event.Id][client.Id] = client
 	}
 
-	return c.SendString("Started usage stream")
+	return c.JSON(models.SocketEvent{
+		Event: "usage-start",
+		Data:  "Started usage stream",
+		Id:    event.Id,
+	})
 }
 
 func StopUsageStream(c *fiber.Ctx, event models.SocketEvent) error {
@@ -309,5 +316,9 @@ func StopUsageStream(c *fiber.Ctx, event models.SocketEvent) error {
 	if _, ok := UsageStreams[event.Id]; ok {
 		UsageStreams[event.Id] = make(map[string]Client)
 	}
-	return c.SendString("Stoped usage stream")
+	return c.JSON(models.SocketEvent{
+		Event: "usage-stop",
+		Data:  "Stopped usage stream",
+		Id:    event.Id,
+	})
 }

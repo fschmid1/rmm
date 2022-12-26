@@ -1,7 +1,6 @@
 package models
 
 type Usage struct {
-	CPU      string    `json:"cpu"`
-	Memory     string `json:"memory"`
-	Disk       string `json:"disk"`
+	CPU    float64 `json:"cpu"`
+	Memory float64 `json:"memory"`
 }
