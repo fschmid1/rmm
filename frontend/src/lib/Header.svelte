@@ -20,6 +20,7 @@
     </DropdownHeader>
     <DropdownItem
       on:click={async () => {
+				localStorage.clear();
         location.reload();
       }}>Sign out</DropdownItem
     >

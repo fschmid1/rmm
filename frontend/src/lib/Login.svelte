@@ -29,6 +29,7 @@ const login = async () => {
 	if (data.token) {
 		localStorage.setItem("token", data.token);
 		navigate("/");
+		location.reload();
 	}
 	if (data.user)
 	userStore.set(data.user);
