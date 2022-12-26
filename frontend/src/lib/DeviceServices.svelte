@@ -20,6 +20,7 @@ import {
   List,
   Modal
 } from "flowbite-svelte";
+import { customConfirm } from "../functions";
 type Service = {
   name: string,
   enabled: boolean,
@@ -77,6 +78,9 @@ const openServiceModal = async (service: Service) => {
         {#if selectedService?.enabled}
         <Button color="red" on:click={
 						async () => {
+								if (!(await customConfirm('Are you sure you want to stop this service?'))) {
+									return;
+								}
 								await callDeviceFunction(device.deviceID, 'service-stop', selectedService?.name);
 								serviceList = serviceList.map((s) => {
 									if (s.name === selectedService?.name) {
@@ -103,6 +107,9 @@ const openServiceModal = async (service: Service) => {
         {/if}
         <Button color="green" on:click={
 						async () => {
+								if (!(await customConfirm('Are you sure you want to restart this service?'))) {
+									return;
+								}
 								await callDeviceFunction(device.deviceID, 'service-restart', selectedService?.name);
 								await openServiceModal(selectedService);
 						}

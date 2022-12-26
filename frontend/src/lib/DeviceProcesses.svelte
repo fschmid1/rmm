@@ -21,6 +21,7 @@ import {
   TableBodyCell,
   TableBodyRow
 } from "flowbite-svelte";
+import { customConfirm } from "../functions";
 type Process = {
   name: string,
 	user: string,
@@ -94,6 +95,7 @@ async function getProcesses() {
     <svelte:fragment slot='footer'>
 			<Button color="red" on:click={
 				async () => {
+					if (!(await customConfirm('Are you sure you want to kill this process?')))  return;
 					await callDeviceFunction(device.deviceID, 'process-kill', selectedProcess.name);
 					setTimeout(async () => {
 						await getProcesses();

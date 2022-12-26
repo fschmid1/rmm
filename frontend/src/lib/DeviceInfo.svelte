@@ -1,5 +1,16 @@
 <script lang="ts">
-import { Hr, Table, TableBody, TableBodyCell, TableBodyRow } from "flowbite-svelte";
+import {
+  Button,
+  Hr,
+  Table,
+  TableBody,
+  TableBodyCell,
+  TableBodyRow
+} from "flowbite-svelte";
+import { customConfirm } from "../functions";
+import {
+  callDeviceFunction
+} from "../http";
 import type {
   Device
 } from "../types";
@@ -50,4 +61,17 @@ export let device: Device;
             </TableBodyRow>
         </TableBody>
     </Table>
+    <Hr />
+    <div class="flex">
+        <Button color="red" class="mr-2" on:click={async () => {
+						if (await customConfirm("Are you sure you want to reboot this device?")) {
+							callDeviceFunction(device.deviceID, "reboot")
+						}
+						}}>Reboot</Button>
+        <Button color="red" on:click={ async () => {
+					if (await customConfirm("Are you sure you want to shutdown this device?")) {
+						callDeviceFunction(device.deviceID, "shutdown")
+					}
+					}}>Shutdown</Button>
+    </div>
 </div>

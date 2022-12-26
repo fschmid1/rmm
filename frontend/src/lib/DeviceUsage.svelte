@@ -26,6 +26,7 @@ export let device: Device;
 
 let dataQueue = [];
 let canvasElement: HTMLCanvasElement;
+let chart: Chart;
 
 let data = {
   labels: [],
@@ -77,7 +78,7 @@ let options: any = {
 };
 onMount(async () => {
   Chart.register(ChartStreaming);
-  new Chart(canvasElement, {
+  chart = new Chart(canvasElement, {
     type: 'line',
     data: data,
     options: options,
@@ -91,6 +92,10 @@ onMount(async () => {
 
 onDestroy(async () => {
   $ws.off('usage');
+	const interval_id = window.setInterval(function(){}, Number.MAX_SAFE_INTEGER);
+	for (let i = 1; i < interval_id; i++) {
+ 		window.clearInterval(i);
+	}
   await callDeviceFunction(device.deviceID, 'usage-stop');
 })
 </script>
