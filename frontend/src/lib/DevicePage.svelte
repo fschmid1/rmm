@@ -29,6 +29,7 @@ import {
 import DeviceHeader from "./DeviceHeader.svelte";
 import { device } from "../stores";
 import DeviceServices from "./DeviceServices.svelte";
+import DeviceProcesses from "./DeviceProcesses.svelte";
 
 export let id: string;
 
@@ -61,6 +62,11 @@ onMount(async () => {
                 	    <span class="space-x-4">Services</span>
                     </Link>
                 </Li>
+                <Li class="py-2 pl-4">
+                    <Link to="/devices/{$device.id}/processes">
+                	    <span class="space-x-4">Processes</span>
+                    </Link>
+                </Li>
             </List>
         </div>
         <div class="flex w-9/12 flex-col">
@@ -72,6 +78,9 @@ onMount(async () => {
                     </Route>
                     <Route path="/services" primary={false}>
                         <DeviceServices device={$device} />
+                    </Route>
+                    <Route path="/processes" primary={false}>
+                        <DeviceProcesses device={$device} />
                     </Route>
                 </Router>
             </div>

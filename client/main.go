@@ -128,7 +128,7 @@ func connectWebsocket(url string) {
 			case "service-stop":
 				c.WriteJSON(models.SocketEvent{
 					Event: "result-service-stop",
-					Data:  system.StartService(msg.Data.(string)),
+					Data:  system.StopService(msg.Data.(string)),
 				})
 			case "service-restart":
 				c.WriteJSON(models.SocketEvent{
