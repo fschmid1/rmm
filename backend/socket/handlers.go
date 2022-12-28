@@ -20,12 +20,8 @@ func GetDeviceProcessList(c *fiber.Ctx, event models.SocketEvent) error {
 	timeChan := time.NewTimer(time.Second * 5).C
 	for {
 		select {
-		case data := <-resultChannel:
-			return c.JSON(models.SocketEvent{
-				Event: "result-process-list",
-				Data:  data,
-				Id:    event.Id,
-			})
+		case msg := <-resultChannel:
+			return c.JSON(msg)
 		case <-timeChan:
 			return c.Status(500).SendString("Something went wrong")
 		}
@@ -44,12 +40,8 @@ func DeviceKillProcess(c *fiber.Ctx, event models.SocketEvent) error {
 	timeChan := time.NewTimer(time.Second * 5).C
 	for {
 		select {
-		case data := <-resultChannel:
-			return c.JSON(models.SocketEvent{
-				Event: "result-process-kill",
-				Data:  data,
-				Id:    event.Id,
-			})
+		case msg := <-resultChannel:
+			return c.JSON(msg)
 		case <-timeChan:
 			return c.Status(500).SendString("Something went wrong")
 		}
@@ -68,12 +60,8 @@ func ShutdownDevice(c *fiber.Ctx, event models.SocketEvent) error {
 	timeChan := time.NewTimer(time.Second * 5).C
 	for {
 		select {
-		case data := <-resultChannel:
-			return c.JSON(models.SocketEvent{
-				Event: "result-shutdown",
-				Data:  data,
-				Id:    event.Id,
-			})
+		case msg := <-resultChannel:
+			return c.JSON(msg)
 		case <-timeChan:
 			return c.Status(500).SendString("Something went wrong")
 		}
@@ -92,12 +80,8 @@ func GetServiceLogs(c *fiber.Ctx, event models.SocketEvent) error {
 	timeChan := time.NewTimer(time.Second * 5).C
 	for {
 		select {
-		case data := <-resultChannel:
-			return c.JSON(models.SocketEvent{
-				Event: "result-service-logs",
-				Data:  data,
-				Id:    event.Id,
-			})
+		case msg := <-resultChannel:
+			return c.JSON(msg)
 		case <-timeChan:
 			return c.Status(500).SendString("Something went wrong")
 		}
@@ -116,12 +100,8 @@ func GetServiceStatus(c *fiber.Ctx, event models.SocketEvent) error {
 	timeChan := time.NewTimer(time.Second * 5).C
 	for {
 		select {
-		case data := <-resultChannel:
-			return c.JSON(models.SocketEvent{
-				Event: "result-service-status",
-				Data:  data,
-				Id:    event.Id,
-			})
+		case msg := <-resultChannel:
+			return c.JSON(msg)
 		case <-timeChan:
 			return c.Status(500).SendString("Something went wrong")
 		}
@@ -140,12 +120,8 @@ func GetServiceList(c *fiber.Ctx, event models.SocketEvent) error {
 	timeChan := time.NewTimer(time.Second * 5).C
 	for {
 		select {
-		case data := <-resultChannel:
-			return c.JSON(models.SocketEvent{
-				Event: "result-service-list",
-				Data:  data,
-				Id:    event.Id,
-			})
+		case msg := <-resultChannel:
+			return c.JSON(msg)
 		case <-timeChan:
 			return c.Status(500).SendString("Something went wrong")
 		}
@@ -164,12 +140,8 @@ func StartService(c *fiber.Ctx, event models.SocketEvent) error {
 	timeChan := time.NewTimer(time.Second * 5).C
 	for {
 		select {
-		case data := <-resultChannel:
-			return c.JSON(models.SocketEvent{
-				Event: "result-service-start",
-				Data:  data,
-				Id:    event.Id,
-			})
+		case msg := <-resultChannel:
+			return c.JSON(msg)
 		case <-timeChan:
 			return c.Status(500).SendString("Something went wrong")
 		}
@@ -188,12 +160,8 @@ func StopService(c *fiber.Ctx, event models.SocketEvent) error {
 	timeChan := time.NewTimer(time.Second * 5).C
 	for {
 		select {
-		case data := <-resultChannel:
-			return c.JSON(models.SocketEvent{
-				Event: "result-service-stop",
-				Data:  data,
-				Id:    event.Id,
-			})
+		case msg := <-resultChannel:
+			return c.JSON(msg)
 		case <-timeChan:
 			return c.Status(500).SendString("Something went wrong")
 		}
@@ -212,12 +180,8 @@ func RestartService(c *fiber.Ctx, event models.SocketEvent) error {
 	timeChan := time.NewTimer(time.Second * 5).C
 	for {
 		select {
-		case data := <-resultChannel:
-			return c.JSON(models.SocketEvent{
-				Event: "result-service-restart",
-				Data:  data,
-				Id:    event.Id,
-			})
+		case msg := <-resultChannel:
+			return c.JSON(msg)
 		case <-timeChan:
 			return c.Status(500).SendString("Something went wrong")
 		}
@@ -236,12 +200,8 @@ func RebootDevice(c *fiber.Ctx, event models.SocketEvent) error {
 	timeChan := time.NewTimer(time.Second * 5).C
 	for {
 		select {
-		case data := <-resultChannel:
-			return c.JSON(models.SocketEvent{
-				Event: "result-reboot",
-				Data:  data,
-				Id:    event.Id,
-			})
+		case msg := <-resultChannel:
+			return c.JSON(msg)
 		case <-timeChan:
 			return c.Status(500).SendString("Something went wrong")
 		}

@@ -6,102 +6,102 @@ import (
 	"festech.de/rmm/client/vars"
 )
 
-func KillProcess(name string) string {
+func KillProcess(name string) (string, string) {
 	if !vars.Configuration.Allow.Kill {
-		return "Process kill is not allowed on this device"
+		return "", "Process kill is not allowed on this device"
 	}
 	if IsLinux() {
-		return Run("pkill " + name)
+		return Run("pkill " + name), ""
 	}
-	return ""
+	return "", ""
 }
 
-func GetProcessList() string {
+func GetProcessList() (string, string) {
 	if !vars.Configuration.Allow.ProcessList {
-		return "Process list is not allowed on this device"
+		return "", "Process list is not allowed on this device"
 	}
 	if IsLinux() {
-		return Run("ps aux")
+		return Run("ps aux"), ""
 	}
-	return ""
+	return "", ""
 }
 
-func GetServiceList() string {
+func GetServiceList() (string, string) {
 	if !vars.Configuration.Allow.ServiceList {
-		return "Service list is not allowed on this device"
+		return "", "Service list is not allowed on this device"
 	}
 	if IsLinux() {
-		return Run("service --status-all")
+		return Run("service --status-all"), ""
 	}
-	return ""
+	return "", ""
 }
 
-func GetServiceLogs(service string) string {
+func GetServiceLogs(service string) (string, string) {
 	if !vars.Configuration.Allow.ServiceLogs {
-		return "Service logs is not allowed on this device"
+		return "", "Service logs are not allowed on this device"
 	}
 	if IsLinux() {
-		return Run(fmt.Sprintf("journalctl -u %s -e --no-pager", service))
+		return Run(fmt.Sprintf("journalctl -u %s -e --no-pager", service)), ""
 	}
-	return ""
+	return "", ""
 }
 
-func GetServiceStatus(service string) string {
+func GetServiceStatus(service string) (string, string) {
 	if !vars.Configuration.Allow.ServiceStatus {
-		return "Service status is not allowed on this device"
+		return "", "Service status is not allowed on this device"
 	}
 	if IsLinux() {
-		return Run(fmt.Sprintf("service %s status", service))
+		return Run(fmt.Sprintf("service %s status", service)), ""
 	}
-	return ""
+	return "", ""
 }
 
-func StartService(service string) string {
+func StartService(service string) (string, string) {
 	if !vars.Configuration.Allow.ServiceStart {
-		return "Service start is not allowed on this device"
+		return "", "Service start is not allowed on this device"
 	}
 	if IsLinux() {
-		return Run(fmt.Sprintf("systemctl start %s", service))
+		return Run(fmt.Sprintf("systemctl start %s", service)), ""
 	}
-	return ""
+	return "", ""
 }
 
-func StopService(service string) string {
+func StopService(service string) (string, string) {
 	if !vars.Configuration.Allow.ServiceStop {
-		return "Service stop is not allowed on this device"
+		return "", "Service stop is not allowed on this device"
 	}
 	if IsLinux() {
-		return Run(fmt.Sprintf("systemctl stop %s", service))
+		return Run(fmt.Sprintf("systemctl stop %s", service)), ""
 	}
-	return ""
+	return "", ""
 }
 
-func RestartService(service string) string {
+func RestartService(service string) (string, string) {
 	if !vars.Configuration.Allow.ServiceRestart {
-		return "Service restart is not allowed on this device"
+		return "", "Service restart is not allowed on this device"
 	}
 	if IsLinux() {
-		return Run(fmt.Sprintf("systemctl restart %s", service))
+		return Run(fmt.Sprintf("systemctl restart %s", service)), ""
 	}
-	return ""
+	return "", ""
 }
 
-func Reboot() string {
+func Reboot() (string, string) {
 	if !vars.Configuration.Allow.Reboot {
-		return "Reboot is not allowed on this device"
+		return "", "Reboot is not allowed on this device"
 	}
 	if IsLinux() {
-		return Run("reboot")
+		return Run("reboot"), ""
 	}
-	return ""
+	return "", ""
 }
 
-func Shutdown() string {
+func Shutdown() (string, string) {
 	if !vars.Configuration.Allow.Shutdown {
-		return "Shutdown is not allowed on this device"
+		return "", "Shutdown is not allowed on this device"
 	}
 	if IsLinux() {
-		return Run("shutdown -h 10")
+		return Run("shutdown -h 10"), ""
 	}
-	return ""
+	return "", ""
 }

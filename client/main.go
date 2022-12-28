@@ -92,58 +92,79 @@ func connectWebsocket(url string) {
 				} else {
 					c.WriteJSON(models.SocketEvent{
 						Event: "result-process-list",
-						Data:  "Run is not allowed on this device",
+						Data:  "",
+						Error: "Run is not allowed on this device",
 					})
 				}
 			case "shutdown":
+				data, err := system.Shutdown()
 				c.WriteJSON(models.SocketEvent{
 					Event: "result-shutdown",
-					Data:  system.Shutdown(),
+					Data:  data,
+					Error: err,
 				})
 			case "reboot":
+				data, err := system.Reboot()
 				c.WriteJSON(models.SocketEvent{
 					Event: "result-reboot",
-					Data:  system.Reboot(),
+					Data:  data,
+					Error: err,
 				})
 			case "process-list":
+				data, err := system.GetProcessList()
 				c.WriteJSON(models.SocketEvent{
 					Event: "result-process-list",
-					Data:  system.GetProcessList(),
+					Data:  data,
+					Error: err,
 				})
 			case "service-list":
+				data, err := system.GetServiceList()
 				c.WriteJSON(models.SocketEvent{
 					Event: "result-service-list",
-					Data:  system.GetServiceList(),
+					Data:  data,
+					Error: err,
 				})
 			case "service-logs":
+				data, err := system.GetServiceLogs(msg.Data.(string))
 				c.WriteJSON(models.SocketEvent{
 					Event: "result-service-logs",
-					Data:  system.GetServiceLogs(msg.Data.(string)),
+					Data:  data,
+					Error: err,
 				})
 			case "service-start":
+				data, err := system.StartService(msg.Data.(string))
 				c.WriteJSON(models.SocketEvent{
 					Event: "result-service-start",
-					Data:  system.StartService(msg.Data.(string)),
+					Data:  data,
+					Error: err,
 				})
 			case "service-stop":
+				data, err := system.StopService(msg.Data.(string))
 				c.WriteJSON(models.SocketEvent{
 					Event: "result-service-stop",
-					Data:  system.StopService(msg.Data.(string)),
+					Data:  data,
+					Error: err,
 				})
 			case "service-restart":
+				data, err := system.RestartService(msg.Data.(string))
 				c.WriteJSON(models.SocketEvent{
 					Event: "result-service-restart",
-					Data:  system.RestartService(msg.Data.(string)),
+					Data:  data,
+					Error: err,
 				})
 			case "service-status":
+				data, err := system.GetServiceStatus(msg.Data.(string))
 				c.WriteJSON(models.SocketEvent{
 					Event: "result-service-status",
-					Data:  system.GetServiceStatus(msg.Data.(string)),
+					Data:  data,
+					Error: err,
 				})
 			case "process-kill":
+				data, err := system.KillProcess(msg.Data.(string))
 				c.WriteJSON(models.SocketEvent{
 					Event: "result-process-kill",
-					Data:  system.KillProcess(msg.Data.(string)),
+					Data:  data,
+					Error: err,
 				})
 			}
 		}

@@ -17,6 +17,7 @@ import jwtDecode from 'jwt-decode';
 import { Websocket } from './ws';
 import DevicePage from './lib/DevicePage.svelte';
 import Confirm from './lib/Confirm.svelte';
+import { SvelteToast } from '@zerodevx/svelte-toast';
 
 onMount(async () => {
   document.documentElement.classList.add('dark');
@@ -60,3 +61,5 @@ onMount(async () => {
 </Router>
 
 <Confirm></Confirm>
+
+<SvelteToast />

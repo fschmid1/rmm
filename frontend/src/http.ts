@@ -1,4 +1,5 @@
 import { apiBase } from "./vars";
+import { toast } from '@zerodevx/svelte-toast';
 
 export async function fetchWithToken(url: string, options: any, json = true) {
 	if (!options.headers) options.headers = {};
@@ -24,5 +25,10 @@ export async function callDeviceFunction<T>(id: string, event: string, data = ''
       data
     }),
 	})
-	return await response.json();
+	const json = await response.json();
+	if (json.error) {
+		toast.push(json.error, {});
+		throw new Error(json.error);
+	}
+	return json;
 }

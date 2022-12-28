@@ -50,6 +50,9 @@ let options: any = {
     y: {
       beginAtZero: true,
       max: 100,
+			ticks: {
+				callback: value => `${value}%`,
+			}
     },
     x: {
       type: 'realtime',
