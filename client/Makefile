@@ -11,5 +11,8 @@ clean:
 build:
 	CGO_ENABLED=0 go build -o $(BUILD_DIR)/$(APP_NAME) main.go
 
+arm: clean
+	env GOOS=linux GOARCH=arm64 go build -o $(BUILD_DIR)/$(APP_NAME) $(GOFLAGS) main.go
+
 run: build
 	sudo $(BUILD_DIR)/$(APP_NAME)
