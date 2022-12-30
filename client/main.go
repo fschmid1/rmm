@@ -85,13 +85,14 @@ func connectWebsocket(url string) {
 				system.StartStopUsageStream <- false
 			case "run":
 				if vars.Configuration.Allow.Run {
+					data := system.Run(fmt.Sprintf("%v", msg.Data))
 					c.WriteJSON(models.SocketEvent{
 						Event: "result-run",
-						Data:  system.Run(fmt.Sprintf("%v", msg.Data)),
+						Data:  data,
 					})
 				} else {
 					c.WriteJSON(models.SocketEvent{
-						Event: "result-process-list",
+						Event: "result-run",
 						Data:  "",
 						Error: "Run is not allowed on this device",
 					})

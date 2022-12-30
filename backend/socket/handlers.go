@@ -28,6 +28,26 @@ func GetDeviceProcessList(c *fiber.Ctx, event models.SocketEvent) error {
 	}
 }
 
+func RunCommand(c *fiber.Ctx, event models.SocketEvent) error {
+	resultChannel := CreateResultChannel("run", event.Id)
+	err := SendMessage(event.Id, models.SocketEvent{
+		Event: "run",
+		Data:  event.Data,
+	})
+	if err != nil {
+		return c.SendStatus(500)
+	}
+	timeChan := time.NewTimer(time.Second * 5).C
+	for {
+		select {
+		case msg := <-resultChannel:
+			return c.JSON(msg)
+		case <-timeChan:
+			return c.Status(500).SendString("Something went wrong")
+		}
+	}
+}
+
 func DeviceKillProcess(c *fiber.Ctx, event models.SocketEvent) error {
 	resultChannel := CreateResultChannel("process-kill", event.Id)
 	err := SendMessage(event.Id, models.SocketEvent{
@@ -215,6 +235,8 @@ func FunctionsHandler(c *fiber.Ctx) error {
 		return c.Status(400).SendString(err.Error())
 	}
 	switch event.Event {
+	case "run":
+		return RunCommand(c, *event)
 	case "process-list":
 		return GetDeviceProcessList(c, *event)
 	case "process-kill":

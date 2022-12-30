@@ -160,6 +160,7 @@ func RegisterWebsocketRoute(app *fiber.App) {
 				return
 			}
 			if strings.HasPrefix(message.Event, "result-") {
+				fmt.Println(message)
 				if channel, ok := Results[message.Event+client.Id]; ok {
 					channel <- message
 					close(channel)
