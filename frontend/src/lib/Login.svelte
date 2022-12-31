@@ -37,18 +37,15 @@ const login = async () => {
 </script>
 
 <div class="flex w-full justify-center mt-12">
-
-    <Card size="xl">
-        <div class="w-full px-12 items-center flex flex-col">
-            <Label class="space-y-2">
-                <span>Email</span>
-                <Input type="email" bind:value={email} placeholder="email" size="md" />
-            </Label>
-            <Label class="space-y-2 mt-4">
-                <span>Password</span>
-          	<Input type="password" bind:value={password} placeholder="" size="md" />
-            </Label>
-						<Button on:click={login} class="mt-6" size="lg">Login</Button>
-        </div>
-    </Card>
+    <div class="w-9/12 md:w-1/2 mt-12 rounded-lg p-8 border border-gray-700 grid">
+		<Label class="space-y-2">
+			<span>Email</span>
+			<Input type="email" bind:value={email} placeholder="email" size="md" />
+		</Label>
+		<Label class="space-y-2 mt-4">
+			<span>Password</span>
+		<Input type="password" bind:value={password} class="w-full" placeholder="" size="md" />
+		</Label>
+		<Button on:click={login} class="mt-6" size="lg">Login</Button>
+    </div>
 </div>
