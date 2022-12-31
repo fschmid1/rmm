@@ -137,7 +137,7 @@ func GetServiceList(c *fiber.Ctx, event models.SocketEvent) error {
 	if err != nil {
 		return c.SendStatus(500)
 	}
-	timeChan := time.NewTimer(time.Second * 5).C
+	timeChan := time.NewTimer(time.Second * 20).C
 	for {
 		select {
 		case msg := <-resultChannel:

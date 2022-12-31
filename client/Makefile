@@ -13,6 +13,8 @@ build:
 
 arm: clean
 	env GOOS=linux GOARCH=arm64 go build -o $(BUILD_DIR)/$(APP_NAME) $(GOFLAGS) main.go
+make linux: clean
+	env GOOS=linux GOARCH=amd64 go build -o $(BUILD_DIR)/$(APP_NAME) $(GOFLAGS) main.go
 
 run: build
 	sudo $(BUILD_DIR)/$(APP_NAME)

@@ -18,7 +18,8 @@ import {
   Input,
   Li,
   List,
-  Modal
+  Modal,
+  Spinner
 } from "flowbite-svelte";
 import { customConfirm } from "../functions";
 type Service = {
@@ -31,6 +32,7 @@ let serviceList: Service[] = [];
 let serviceModal = false;
 let selectedService: Service | null = null;
 let filter = '';
+let loading = true;
 
 onMount(async () => {
   const response = await callDeviceFunction < string > (device.deviceID, 'service-list', '');
@@ -43,6 +45,7 @@ onMount(async () => {
     };
     return service;
   });
+  loading = false;
 });
 
 const openServiceModal = async (service: Service) => {
@@ -55,6 +58,11 @@ const openServiceModal = async (service: Service) => {
 <Input id="search" bind:value={filter} placeholder="Search" size="md" class="mb-2">
 <svg slot="left" aria-hidden="true" class="w-6 h-6 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
 </Input>
+{#if loading}
+	<div class="text-center">
+		<Spinner size="12"></Spinner>
+	</div>
+{/if}
 <List tag="ul" class="spaces-y-1 h-96 overflow-y-scroll min-w-full" list="none">
     {#each serviceList.filter(el => el.name?.toLowerCase().includes(filter.toLowerCase())) as service}
     <Li icon class="cursor-pointer" >

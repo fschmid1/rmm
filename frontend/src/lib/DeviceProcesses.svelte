@@ -16,6 +16,7 @@ import {
   Li,
   List,
   Modal,
+  Spinner,
   Table,
   TableBody,
   TableBodyCell,
@@ -34,6 +35,7 @@ let processList: Process[] = [];
 let processModal = false;
 let selectedProcess: Process | null = null;
 let filter = '';
+let loading = true;
 
 onMount(async () => {
 	await getProcesses();
@@ -59,11 +61,17 @@ async function getProcesses() {
   });
 	processList.splice(0, 1);
 	processList.splice(processList.length - 1, 1);
+	loading = false;
 }
 </script>
 <Input id="search" bind:value={filter} placeholder="Search" size="md" class="mb-2">
     <svg slot="left" aria-hidden="true" class="w-6 h-6 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
 </Input>
+{#if loading}
+	<div class="text-center">
+		<Spinner size="12"></Spinner>
+	</div>
+{/if}
 <List tag="ul" class="spaces-y-1 h-96 overflow-y-scroll min-w-full" list="none">
     {#each processList.filter(el => el.name.toLowerCase().includes(filter.toLowerCase())) as process}
     <Li  class="cursor-pointer" >

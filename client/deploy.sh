@@ -2,7 +2,7 @@
 
 myArray=("hoku01" "hoku02" "hoku04" "loadbalancer" "dns")
 
-make build
+make linux
 
 for str in ${myArray[@]}; do
   scp build/RMM_CLIENT $str:/home/felix/RMM_CLIENT
