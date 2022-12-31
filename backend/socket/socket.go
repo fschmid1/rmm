@@ -127,7 +127,6 @@ func RegisterWebsocketRoute(app *fiber.App) {
 					delete(Results, message.Event+client.Id)
 				}
 			} else if message.Event == "usage" {
-				fmt.Println(message)
 				if _, ok := UsageStreams[client.Id]; ok {
 					for _, client := range UsageStreams[client.Id] {
 						client.Connection.WriteJSON(message)
@@ -160,7 +159,6 @@ func RegisterWebsocketRoute(app *fiber.App) {
 				return
 			}
 			if strings.HasPrefix(message.Event, "result-") {
-				fmt.Println(message)
 				if channel, ok := Results[message.Event+client.Id]; ok {
 					channel <- message
 					close(channel)
