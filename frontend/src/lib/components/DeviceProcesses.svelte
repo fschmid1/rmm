@@ -5,10 +5,10 @@ import {
 import {
     callDeviceFunction,
   
-} from "../http";
+} from "../helper/http";
 import type {
   Device
-} from "../types";
+} from "../../types";
 import {
     A,
   Button,
@@ -22,7 +22,7 @@ import {
   TableBodyCell,
   TableBodyRow
 } from "flowbite-svelte";
-import { customConfirm } from "../functions";
+import { customConfirm } from "../helper/functions";
 type Process = {
   name: string,
 	user: string,

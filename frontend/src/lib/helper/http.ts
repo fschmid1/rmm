@@ -1,4 +1,4 @@
-import { apiBase } from "./vars";
+import { apiBase } from "../../vars";
 import { toast } from '@zerodevx/svelte-toast';
 
 export async function fetchWithToken(url: string, options: any, json = true) {

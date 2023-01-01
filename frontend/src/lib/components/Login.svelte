@@ -6,8 +6,8 @@ import {
   Label
 } from "flowbite-svelte";
 import { useNavigate } from "svelte-navigator";
-import { userStore } from "../stores";
-import { apiBase } from "../vars";
+import { userStore } from "../../stores";
+import { apiBase } from "../../vars";
 
 let email = "";
 let password = "";

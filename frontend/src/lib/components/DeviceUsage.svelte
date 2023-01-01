@@ -5,13 +5,13 @@ import {
 } from "svelte";
 import {
   callDeviceFunction
-} from "../http";
+} from "../helper/http";
 import {
   ws
-} from "../stores";
+} from "../../stores";
 import type {
   Device
-} from "../types";
+} from "../../types";
 import ChartStreaming from 'chartjs-plugin-streaming';
 import 'chartjs-adapter-date-fns';
 import {

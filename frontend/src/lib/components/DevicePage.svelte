@@ -14,20 +14,20 @@ import {
 } from "svelte-navigator";
 import {
   fetchWithToken
-} from "../http";
+} from "../helper/http";
 import type {
   Device
-} from "../types";
+} from "../../types";
 import {
   apiBase
-} from "../vars";
+} from "../../vars";
 import DeviceInfo from "./DeviceInfo.svelte";
 import Fa from 'svelte-fa/src/fa.svelte'
 import {
   faArrowLeft
 } from '@fortawesome/free-solid-svg-icons'
 import DeviceHeader from "./DeviceHeader.svelte";
-import { device } from "../stores";
+import { device } from "../../stores";
 import DeviceServices from "./DeviceServices.svelte";
 import DeviceProcesses from "./DeviceProcesses.svelte";
 import DeviceUsage from "./DeviceUsage.svelte";

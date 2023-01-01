@@ -1,4 +1,4 @@
-import { confirmModal } from "./stores"
+import { confirmModal } from "../../stores"
 
 export const customConfirm = async (text: string) => {
 	confirmModal.set({open: true, text, desision: false});

@@ -1,7 +1,7 @@
 <script lang="ts">
 import { ArrowKeyRight, Input} from "flowbite-svelte";
-import { callDeviceFunction } from "../http";
-import type { Device } from "../types";
+import { callDeviceFunction } from "../helper/http";
+import type { Device } from "../../types";
 
 
 	export let device: Device;

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Navbar, DarkMode, Dropdown, DropdownItem, DropdownHeader, Skeleton, Avatar  } from 'flowbite-svelte';
-  import { userStore } from '../stores';
+  import { userStore } from '../../stores';
 </script>
 
 <Navbar>
@@ -16,7 +16,7 @@
   </div>
   <Dropdown placement="bottom" triggeredBy="#avatar-menu">
     <DropdownHeader>
-      
+		<DropdownItem href="/tokens">Tokens</DropdownItem>
     </DropdownHeader>
     <DropdownItem
       on:click={async () => {

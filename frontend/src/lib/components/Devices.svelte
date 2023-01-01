@@ -15,13 +15,13 @@ import {
 } from "svelte-navigator";
 import {
   fetchWithToken
-} from "../http";
+} from "../helper/http";
 import {
   deviceStore
-} from "../stores";
+} from "../../stores";
 import {
   apiBase
-} from "../vars";
+} from "../../vars";
 import ConnectionIndecator from "./ConnectionIndecator.svelte";
 
 let navigate = useNavigate();

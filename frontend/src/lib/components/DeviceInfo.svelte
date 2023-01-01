@@ -7,14 +7,13 @@ import {
   TableBodyCell,
   TableBodyRow
 } from "flowbite-svelte";
-import { customConfirm } from "../functions";
+import { customConfirm } from "../helper/functions";
 import {
   callDeviceFunction
-} from "../http";
+} from "../helper/http";
 import type {
   Device
-} from "../types";
-import ConnectionIndecator from "./ConnectionIndecator.svelte";
+} from "../../types";
 
 export let device: Device;
 </script>

@@ -4,10 +4,10 @@ import {
 } from "svelte";
 import {
   callDeviceFunction,
-} from "../http";
+} from "../helper/http";
 import type {
   Device
-} from "../types";
+} from "../../types";
 import Fa from 'svelte-fa';
 import {
   faCheck,
@@ -21,7 +21,7 @@ import {
   Modal,
   Spinner
 } from "flowbite-svelte";
-import { customConfirm } from "../functions";
+import { customConfirm } from "../helper/functions";
 type Service = {
   name: string,
   enabled: boolean,

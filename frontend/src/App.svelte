@@ -2,22 +2,23 @@
 import {
   onMount
 } from 'svelte';
-import Header from './lib/Header.svelte';
+import Header from './lib/components/Header.svelte';
 import {
   Router,
   Route
 } from 'svelte-navigator';
-import Redirects from './lib/Redirects.svelte';
-import Login from './lib/Login.svelte';
-import Devices from './lib/Devices.svelte';
+import Redirects from './lib/components/Redirects.svelte';
+import Login from './lib/components/Login.svelte';
+import Devices from './lib/components/Devices.svelte';
 import {
   userStore, ws, deviceStore, device
 } from './stores';
 import jwtDecode from 'jwt-decode';
 import { Websocket } from './lib/helper/ws';
-import DevicePage from './lib/DevicePage.svelte';
+import DevicePage from './lib/components/DevicePage.svelte';
 import Confirm from './lib/components/Confirm.svelte';
 import { SvelteToast } from '@zerodevx/svelte-toast';
+import TokenOverview from './lib/components/TokenOverview.svelte';
 
 onMount(async () => {
   document.documentElement.classList.add('dark');
@@ -55,6 +56,9 @@ onMount(async () => {
     <Route>
         <Redirects />
     </Route>
+	<Route primary={false} path="/tokens">
+		<TokenOverview />
+	</Route>
     <Route primary={false} path="/login">
         <Login />
     </Route>
