@@ -26,6 +26,7 @@ var unregister = make(chan Client)
 var Results = make(map[string]chan interface{})
 
 var UsageStreams = make(map[string]map[string]Client)
+var ConnectionEvents = make(map[string]chan bool)
 
 func runHub() {
 	for {
@@ -71,6 +72,15 @@ func CreateResultChannel(event string, id string) chan interface{} {
 	resultChannel := make(chan interface{})
 	Results["result-"+event+id] = resultChannel
 	return resultChannel
+}
+
+func CreateConnectionEventChannel(id string) chan bool {
+	if _, ok := ConnectionEvents[id]; ok {
+		return ConnectionEvents[id]
+	}
+	connectionChannel := make(chan bool, 1)
+	ConnectionEvents[id] = connectionChannel
+	return connectionChannel
 }
 
 func SendMessage(id string, message interface{}) error {

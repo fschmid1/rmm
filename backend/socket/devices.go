@@ -4,9 +4,11 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
+	"time"
 
 	"festech.de/rmm/backend/config"
 	"festech.de/rmm/backend/controller"
+	"festech.de/rmm/backend/helpers"
 	"festech.de/rmm/backend/models"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
@@ -37,16 +39,37 @@ func NotfiyUserDeviceConnection(id string, connected bool) {
 
 	result := []map[string]interface{}{}
 	config.Database.Table("user_devices").Select("user_id").Where("device_id = ?", device.ID).Find(&result)
-	for _, user := range result {
-		userId := strconv.FormatUint(user["user_id"].(uint64), 10)
-		if client, ok := Clients[userId]; ok {
-			SendMessage(client.Id, models.SocketEvent{
-				Event: "device-connection",
-				Data: map[string]interface{}{
-					"id":        device.ID,
-					"connected": connected,
-				},
-			})
+	connectionEvent := CreateConnectionEventChannel(device.DeviceID)
+	var duration time.Duration
+	if connected {
+		duration = time.Second * 0
+	} else {
+		duration = time.Second * 5
+	}
+	timer := time.NewTimer(duration)
+	select {
+	case <-connectionEvent:
+		timer.Stop()
+		close(connectionEvent)
+		delete(ConnectionEvents, device.DeviceID)
+		return
+	case <-timer.C:
+		for _, user := range result {
+			userId := strconv.FormatUint(user["user_id"].(uint64), 10)
+			if client, ok := Clients[userId]; ok {
+				SendMessage(client.Id, models.SocketEvent{
+					Event: "device-connection",
+					Data: map[string]interface{}{
+						"id":        device.ID,
+						"connected": connected,
+					},
+				})
+			}
+		}
+		if !helpers.IsClosed(connectionEvent) {
+			close(connectionEvent)
+			delete(ConnectionEvents, device.DeviceID)
+			return
 		}
 	}
 }
@@ -59,6 +82,9 @@ func SetDeviceConnected(id string, connected bool) (bool, error) {
 
 	if result := config.Database.Model(&device).Update("connected", connected); result.Error != nil {
 		return false, errors.New("db error")
+	}
+	if _, ok := ConnectionEvents[id]; ok {
+		ConnectionEvents[id] <- connected
 	}
 	return true, nil
 }
