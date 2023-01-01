@@ -14,9 +14,9 @@ import {
   userStore, ws, deviceStore, device
 } from './stores';
 import jwtDecode from 'jwt-decode';
-import { Websocket } from './ws';
+import { Websocket } from './lib/helper/ws';
 import DevicePage from './lib/DevicePage.svelte';
-import Confirm from './lib/Confirm.svelte';
+import Confirm from './lib/components/Confirm.svelte';
 import { SvelteToast } from '@zerodevx/svelte-toast';
 
 onMount(async () => {

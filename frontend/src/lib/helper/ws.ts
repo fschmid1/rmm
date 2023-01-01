@@ -1,4 +1,4 @@
-import { apiBase } from "./vars";
+import { apiBase } from "../../vars";
 
 export class Websocket {
 	private ws;
