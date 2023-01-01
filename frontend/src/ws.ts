@@ -4,8 +4,18 @@ export class Websocket {
 	private ws;
 	private events: Map<string, (...data: any) => void> = new Map();
 
+	private userId: number;
+	private token: string;
+
 	constructor(userId: number, token: string) {
-		this.ws = new WebSocket(`${apiBase.replace(/^http/, 'ws')}/ws/user/${userId}?token=${token}`);
+		this.userId = userId;
+		this.token = token;
+
+		this.connect();
+	}
+
+	private connect() {
+		this.ws = new WebSocket(`${apiBase.replace(/^http/, 'ws')}/ws/user/${this.userId}?token=${this.token}`);
 
 		this.ws.onmessage = (rawEvent) => {
 			try {
@@ -15,8 +25,13 @@ export class Websocket {
 					this.events.get(event.event)(event.data);
 				}
 			} catch (error) {
-				
+				console.log(error);
 			}
+		}
+		this.ws.onclose = () => {
+			setTimeout(() => {
+				this.connect();
+			}, 5000);
 		}
 	}
 

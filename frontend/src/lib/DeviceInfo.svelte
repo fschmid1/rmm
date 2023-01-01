@@ -62,7 +62,7 @@ export let device: Device;
         </TableBody>
     </Table>
     <Hr />
-    <div class="flex">
+    <div class="flex mt-2">
         <Button color="red" class="mr-2" on:click={async () => {
 						if (await customConfirm("Are you sure you want to reboot this device?")) {
 							callDeviceFunction(device.deviceID, "reboot")
