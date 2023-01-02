@@ -1,0 +1,17 @@
+{
+    "folders": [
+        {
+            "path": "../../"
+        },
+        {
+            "path": "frontend"
+        },
+        {
+            "path": "go/backend"
+        },
+        {
+            "path": "go/client"
+        }
+    ],
+    "settings": {}
+}
