@@ -1,7 +1,7 @@
 load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
 
-go_binary(
-    name = "RMM_CLIENT",
+go_library(
+    name = "client_lib",
     srcs = ["main.go"],
     importpath = "github.com/fes111/rmm/projects/rmm/go/client",
     visibility = ["//visibility:private"],
@@ -13,4 +13,26 @@ go_binary(
 			"//projects/rmm/go/client/http:http",
 			"//projects/rmm/go/client/config:config",
 			],
+)
+
+go_binary(
+    name = "RMM_CLIENT",
+    embed = [":client_lib"],
+    visibility = ["//visibility:public"],
+)
+
+go_binary(
+    name = "RMM_CLIENT_ARM",
+    embed = [":client_lib"],
+    visibility = ["//visibility:public"],
+		goos = "linux",
+		goarch = "arm64",
+)
+
+go_binary(
+    name = "RMM_CLIENT_LINUX",
+    embed = [":client_lib"],
+    visibility = ["//visibility:public"],
+		goos = "linux",
+		goarch = "amd64",
 )

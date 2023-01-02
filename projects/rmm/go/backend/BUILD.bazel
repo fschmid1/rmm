@@ -1,7 +1,7 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_binary") 
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")") 
 
-go_binary(
-    name = "RMM_API",
+go_library(
+    name = "backend_lib",
     visibility = ["//visibility:public"],
     srcs = ["main.go"],
     deps = [
@@ -12,4 +12,18 @@ go_binary(
 				"//projects/rmm/go/backend/socket:socket",
 				"//projects/rmm/go/backend/handlers:handlers",
     ],
+)
+
+go_binary(
+	name = "RMM_API",
+	embed = [":backend_lib"],
+	visibility = ["//visibility:public"],
+)
+
+go_binary(
+	name = "RMM_API_LINUX",
+	embed = [":backend_lib"],
+	visibility = ["//visibility:public"],
+	goos = "linux",
+	goarch = "amd64",
 )
