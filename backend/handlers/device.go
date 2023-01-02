@@ -44,12 +44,30 @@ func AddDeviceToken(c *fiber.Ctx) error {
 func GetDeviceTokens(c *fiber.Ctx) error {
 	var tokens []models.DeviceToken
 	userId := c.Locals("user").(*jwt.Token).Claims.(jwt.MapClaims)["user"].(map[string]interface{})["id"]
-	result := config.Database.Preload(clause.Associations).Find(&tokens).Where("User_id = ?", userId)
+	result := config.Database.Preload(clause.Associations).Find(&tokens).Where("u	ser_id = ?", userId)
 
 	if result.Error != nil {
 		return c.SendStatus(500)
 	}
 	return c.Status(200).JSON(tokens)
+}
+
+func DeleteDeviceToken(c *fiber.Ctx) error {
+	id := c.Params("id")
+	var token models.DeviceToken
+	result := config.Database.Preload(clause.Associations).Find(&token, id)
+
+	if result.Error != nil {
+		return c.SendStatus(500)
+	}
+	if result.RowsAffected == 0 {
+		return c.SendStatus(404)
+	}
+	result = config.Database.Delete(&token)
+	if result.Error != nil {
+		return c.SendStatus(500)
+	}
+	return c.SendStatus(200)
 }
 
 func GetDevices(c *fiber.Ctx) error {

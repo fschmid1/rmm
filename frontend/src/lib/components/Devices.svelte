@@ -35,7 +35,6 @@ onMount(async () => {
 });
 </script>
 <div class="w-9/12 mx-auto mt-12">
-
     <Table striped={true}>
         <TableHead>
             <TableHeadCell>Name</TableHeadCell>

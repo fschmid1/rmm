@@ -31,3 +31,13 @@ export type SystemInfo = {
 	diskTotal:   number;
 	diskUsed:    number;
 }
+
+export type DeviceToken = {
+	id:         number;
+	created_at: string;
+	updated_at: string;
+	deleted_at: null;
+	deviceID:   string;
+	token:      string;
+	name:       string;
+}

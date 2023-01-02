@@ -16,7 +16,6 @@ export async function fetchWithToken(url: string, options: any, json = true) {
 }
 
 export async function callDeviceFunction<T>(id: string, event: string, data = ''): Promise<{data: T, event: string, id: string}> {
-
 	const response = await fetchWithToken(`${apiBase}/devices/functions`, {
     method: "POST",
     body: JSON.stringify({
