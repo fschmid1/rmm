@@ -1,0 +1,21 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "controller",
+    srcs = [
+        "device.controller.go",
+        "device-tokens.controller.go",
+        "jwt.controller.go",
+        "systemInfo.controller.go",
+        "user.controller.go",
+    ],
+    importpath = "github.com/fes111/rmm/projects/rmm/go/backend/controller",
+    visibility = ["//visibility:public"],
+    deps = [
+        "@com_github_golang_jwt_jwt//:jwt",
+        "@io_gorm_gorm//:gorm",
+        "@io_gorm_gorm//clause",
+				"//projects/rmm/go/lib/models:models",
+				"//projects/rmm/go/backend/config:config",
+    ],
+)

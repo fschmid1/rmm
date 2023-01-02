@@ -1,0 +1,39 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+
+go_library(
+    name = "client_lib",
+    srcs = ["main.go"],
+    importpath = "github.com/fes111/rmm/projects/rmm/go/client",
+    visibility = ["//visibility:private"],
+    deps = [
+			"@com_github_gorilla_websocket//:websocket",
+			"//projects/rmm/go/lib/models:models",
+			"//projects/rmm/go/client/vars:vars",
+			"//projects/rmm/go/client/system:system",
+			"//projects/rmm/go/client/http:http",
+			"//projects/rmm/go/client/config:config",
+			"//libs/go/helpers:helpers",
+			],
+)
+
+go_binary(
+    name = "RMM_CLIENT",
+    embed = [":client_lib"],
+    visibility = ["//visibility:public"],
+)
+
+go_binary(
+    name = "RMM_CLIENT_ARM",
+    embed = [":client_lib"],
+    visibility = ["//visibility:public"],
+		goos = "linux",
+		goarch = "arm64",
+)
+
+go_binary(
+    name = "RMM_CLIENT_LINUX",
+    embed = [":client_lib"],
+    visibility = ["//visibility:public"],
+		goos = "linux",
+		goarch = "amd64",
+)

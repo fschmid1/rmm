@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "http",
+    srcs = ["socket.go"],
+    importpath = "github.com/fes111/rmm/projects/rmm/go/client/http",
+    visibility = ["//visibility:public"],
+    deps = ["@com_github_gorilla_websocket//:websocket", "//projects/rmm/go/lib/models:models"],
+)
