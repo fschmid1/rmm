@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/fes111/rmm/libs/go/helpers"
 	"github.com/fes111/rmm/projects/rmm/go/client/config"
 	"github.com/fes111/rmm/projects/rmm/go/client/http"
 	"github.com/fes111/rmm/projects/rmm/go/client/system"
@@ -186,22 +187,12 @@ func connectWebsocket(url string) {
 	}
 }
 
-func IsClosed(ch <-chan bool) bool {
-	select {
-	case <-ch:
-		return true
-	default:
-	}
-
-	return false
-}
-
 func tryReconnect(url string) {
 	fmt.Println("trying to reconnect to server")
 	if isInterrupt {
 		return
 	}
-	if system.EndUsageStream != nil && !IsClosed(system.EndUsageStream) {
+	if system.EndUsageStream != nil && !helpers.IsClosed(system.EndUsageStream) {
 		close(system.EndUsageStream)
 	}
 	time.Sleep(time.Second * 5)

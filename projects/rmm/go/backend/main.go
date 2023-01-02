@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/fes111/rmm/libs/go/helpers"
 	"github.com/fes111/rmm/projects/rmm/go/backend/config"
 	"github.com/fes111/rmm/projects/rmm/go/backend/handlers"
 	"github.com/fes111/rmm/projects/rmm/go/backend/socket"
@@ -35,5 +36,5 @@ func main() {
 	deviceRouter.Patch("/", handlers.UpdateDevice)
 	deviceRouter.Delete("/:id", handlers.RemoveDevice)
 
-	app.Listen(":" + config.Getenv("PORT", "8080"))
+	app.Listen(":" + helpers.Getenv("PORT", "8080"))
 }

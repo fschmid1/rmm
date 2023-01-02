@@ -4,7 +4,6 @@ go_library(
     name = "config",
     srcs = [
         "database.go",
-        "env.go",
         "jwt.go",
     ],
     importpath = "github.com/fes111/rmm/projects/rmm/go/backend/config",
@@ -14,5 +13,6 @@ go_library(
         "@io_gorm_driver_mysql//:mysql",
         "@io_gorm_gorm//:gorm",
 				"//projects/rmm/go/lib/models:models",
+				"//libs/go/helpers:helpers"
     ],
 )

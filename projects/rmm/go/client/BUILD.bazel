@@ -12,6 +12,7 @@ go_library(
 			"//projects/rmm/go/client/system:system",
 			"//projects/rmm/go/client/http:http",
 			"//projects/rmm/go/client/config:config",
+			"//libs/go/helpers:helpers",
 			],
 )
 

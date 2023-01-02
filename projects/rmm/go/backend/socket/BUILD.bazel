@@ -19,6 +19,6 @@ go_library(
 				"//projects/rmm/go/backend/controller:controller",
 				"//projects/rmm/go/backend/handlers:handlers",
 				"//projects/rmm/go/backend/config:config",
-				"//projects/rmm/go/backend/helpers:helpers",
+				"//libs/go/helpers:helpers",
     ],
 )

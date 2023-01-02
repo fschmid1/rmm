@@ -1,13 +1,14 @@
 package config
 
 import (
+	"github.com/fes111/rmm/libs/go/helpers"
 	"github.com/fes111/rmm/projects/rmm/go/lib/models"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
 var Database *gorm.DB
-var DATABASE_URI string = Getenv("DATABASE_URI", "")
+var DATABASE_URI string = helpers.Getenv("DATABASE_URI", "")
 
 func Connect() error {
 	var err error
