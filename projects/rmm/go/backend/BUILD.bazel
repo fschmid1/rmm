@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary") 
+
+go_binary(
+    name = "RMM_API",
+    visibility = ["//visibility:public"],
+    srcs = ["main.go"],
+    deps = [
+        "@com_github_gofiber_fiber_v2//:fiber",
+        "@com_github_gofiber_fiber_v2//middleware/cors",
+        "@com_github_gofiber_jwt_v3//:jwt",
+				"//projects/rmm/go/backend/config:config",
+				"//projects/rmm/go/backend/socket:socket",
+				"//projects/rmm/go/backend/handlers:handlers",
+    ],
+)

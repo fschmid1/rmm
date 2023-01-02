@@ -1,0 +1,18 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "system",
+    srcs = [
+        "functions.go",
+        "platform.go",
+        "stysteminfo.go",
+        "usage.go",
+    ],
+		deps = [
+			"//projects/rmm/go/client/vars:vars",
+			"//projects/rmm/go/client/http:http",
+			"//projects/rmm/go/lib/models:models",
+		],
+    importpath = "github.com/fes111/rmm/projects/rmm/go/client/system",
+    visibility = ["//visibility:public"],
+)
