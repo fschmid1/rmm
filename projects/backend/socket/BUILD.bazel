@@ -1,0 +1,24 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "socket",
+    srcs = [
+        "devices.go",
+        "handlers.go",
+        "socket.go",
+    ],
+    importpath = "github.com/fes111/rmm/projects/backend/socket",
+    visibility = ["//visibility:public"],
+    deps = [
+        "@com_github_gofiber_fiber_v2//:fiber",
+        "@com_github_gofiber_websocket_v2//:websocket",
+        "@com_github_golang_jwt_jwt_v4//:jwt",
+        "@io_gorm_gorm//:gorm",
+        "@io_gorm_gorm//clause",
+		"//libs/go/models:models",
+		"//projects/backend/controller:controller",
+		"//projects/backend/handlers:handlers",
+		"//projects/backend/config:config",
+		"//libs/go/helpers:helpers",
+    ],
+)
