@@ -8,6 +8,7 @@ go_library(
         "jwt.controller.go",
         "systemInfo.controller.go",
         "user.controller.go",
+		"pushover.controller.go"
     ],
     importpath = "github.com/fes111/rmm/projects/backend/controller",
     visibility = ["//visibility:public"],
@@ -15,6 +16,7 @@ go_library(
         "@com_github_golang_jwt_jwt//:jwt",
         "@io_gorm_gorm//:gorm",
         "@io_gorm_gorm//clause",
+		"@com_github_gregdel_pushover//:pushover",
 		"//libs/go/models:models",
 		"//projects/backend/config:config",
     ],

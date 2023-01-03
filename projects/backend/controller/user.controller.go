@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"github.com/fes111/rmm/libs/go/models"
 	"github.com/fes111/rmm/projects/backend/config"
 )
 
@@ -19,4 +20,10 @@ func AddDeviceToUser(id string, token string) error {
 		config.Database.Table("user_devices").Create(map[string]interface{}{"user_id": deviceToken.UserID, "device_id": device.ID})
 	}
 	return nil
+}
+
+func GetUserById(id uint) (models.User, error) {
+	user := models.User{}
+	err := config.Database.First(&user, id).Error
+	return user, err
 }

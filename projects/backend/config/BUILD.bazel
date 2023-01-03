@@ -5,6 +5,7 @@ go_library(
     srcs = [
         "database.go",
         "jwt.go",
+		"pushover.go"
     ],
     importpath = "github.com/fes111/rmm/projects/backend/config",
     visibility = ["//visibility:public"],
@@ -12,6 +13,7 @@ go_library(
         "@com_github_gofiber_jwt_v3//:jwt",
         "@io_gorm_driver_mysql//:mysql",
         "@io_gorm_gorm//:gorm",
+		"@com_github_gregdel_pushover//:pushover",
 		"//libs/go/models:models",
 		"//libs/go/helpers:helpers"
     ],

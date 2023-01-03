@@ -5,7 +5,10 @@ oldFile=$(cat src/vars.ts)
 
 echo "$(sed "1s/.*/$prod/1" src/vars.ts)" > src/vars.ts
 
+cd ../../
 npm run build
+cd projects/frontend
+
 cd dist
 tar -czf files.tar.gz ./*
 ssh rmm 'cd /var/www/rmm.festech.de && rm -rf ./*'
