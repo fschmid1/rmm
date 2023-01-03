@@ -5,6 +5,6 @@ type User struct {
 	Name      string   `json:"name"`
 	Email     string   `json:"email"`
 	Password  string   `json:"-"`
-	Devices   []Device `gorm:"many2many:user_devices;"`
-	PushToken string   `json:"-"`
+	Devices   []Device `gorm:"many2many:user_devices;" json:"-"`
+	PushToken string   `json:"pushToken"`
 }

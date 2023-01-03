@@ -10,7 +10,8 @@
       <span class="block ml-2 text-sm">{$userStore?.name}</span>
 	  <Dropdown placement="bottom" triggeredBy="#avatar-menu">
 		<DropdownHeader>
-			<DropdownItem href="/tokens">Tokens</DropdownItem>
+			<DropdownItem href="/settings/profile">Settings</DropdownItem>
+			<DropdownItem href="/settings/tokens">Tokens</DropdownItem>
 		</DropdownHeader>
 		<DropdownItem
 		  on:click={async () => {

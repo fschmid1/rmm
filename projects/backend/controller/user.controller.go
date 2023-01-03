@@ -22,6 +22,11 @@ func AddDeviceToUser(id string, token string) error {
 	return nil
 }
 
+func UpdateUser(user models.User) error {
+	err := config.Database.Save(&user).Error
+	return err
+}
+
 func GetUserById(id uint) (models.User, error) {
 	user := models.User{}
 	err := config.Database.First(&user, id).Error

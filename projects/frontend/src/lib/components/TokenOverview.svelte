@@ -87,39 +87,31 @@ let transitionParams = {
   };
 </script>
 
-<div class="w-9/12 mx-auto mt-12">
-	<div class="flex w-full justify-between">
-		<Link to="-1">
-			<Button class="bg-gray-700 hover:bg-gray-600">
-				<Fa icon={faArrowLeft} class="mr-2" />
-				Back
-			</Button>
-		</Link>
-		<Button on:click={() => drawerClosed = false}>
-			<Fa icon={faPlus} class="mr-2" />
-			Create new token
-		</Button>
-	</div>
-    <Table striped={true} class="mt-2">
-        <TableHead>
-            <TableHeadCell>Name</TableHeadCell>
-            <TableHeadCell>Token</TableHeadCell>
-            <TableHeadCell>Actions</TableHeadCell>
-        </TableHead>
-        <TableBody class="divide-y">
-            {#each tokens as token (token.id)}
-            <TableBodyRow>
-                <TableBodyCell>{token.name}</TableBodyCell>
-                <TableBodyCell class="truncate" style="max-width: 10rem">{token.token}</TableBodyCell>
-                <TableBodyCell>
-					<button on:click={() => copyToken(token.token)} class="mr-2"><Fa class="cursor-pointer" size="lg" icon={faCopy} /></button>
-					<button on:click={() => deleteToken(token)}><Fa class="cursor-pointer" size="lg" icon={faTrash} /></button>
-				</TableBodyCell>
-            </TableBodyRow>
-            {/each}
-        </TableBody>
-    </Table>
+<div class="flex w-full justify-end">
+	<Button on:click={() => drawerClosed = false}>
+		<Fa icon={faPlus} class="mr-2" />
+		Create new token
+	</Button>
 </div>
+<Table striped={true} class="mt-2">
+	<TableHead>
+		<TableHeadCell>Name</TableHeadCell>
+		<TableHeadCell>Token</TableHeadCell>
+		<TableHeadCell>Actions</TableHeadCell>
+	</TableHead>
+	<TableBody class="divide-y">
+		{#each tokens as token (token.id)}
+		<TableBodyRow>
+			<TableBodyCell>{token.name}</TableBodyCell>
+			<TableBodyCell class="truncate" style="max-width: 10rem">{token.token}</TableBodyCell>
+			<TableBodyCell>
+				<button on:click={() => copyToken(token.token)} class="mr-2"><Fa class="cursor-pointer" size="lg" icon={faCopy} /></button>
+				<button on:click={() => deleteToken(token)}><Fa class="cursor-pointer" size="lg" icon={faTrash} /></button>
+			</TableBodyCell>
+		</TableBodyRow>
+		{/each}
+	</TableBody>
+</Table>
 <Drawer transitionType="fly" placement="right" {transitionParams} bind:hidden={drawerClosed}>
 	<div class='flex items-center'>
 		<h5 id="drawer-label" class="inline-flex items-center mb-6 text-base font-semibold text-gray-500 uppercase dark:text-gray-400">Create new token</h5>

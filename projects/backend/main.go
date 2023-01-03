@@ -22,6 +22,12 @@ func main() {
 	app.Post("/auth/login", handlers.HandleLogin)
 	app.Post("/auth/signup", handlers.HandleSignUp)
 
+	userRouter := app.Group("/user")
+	userRouter.Use(jwtware.New(config.JWT_CONFIG))
+
+	userRouter.Get("/", handlers.HandleGetProfile)
+	userRouter.Patch("/", handlers.HandleUserUpdate)
+
 	deviceRouter := app.Group("/devices")
 	deviceRouter.Use(jwtware.New(config.JWT_CONFIG))
 
