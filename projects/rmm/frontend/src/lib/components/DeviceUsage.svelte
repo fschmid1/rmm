@@ -20,7 +20,8 @@ import {
 
 import {
   Chart,
-} from 'chart.js/auto';
+  LineController, LineElement, PointElement, LinearScale, Title 
+} from 'chart.js';
 
 export let device: Device;
 
@@ -80,7 +81,7 @@ let options: any = {
   }
 };
 onMount(async () => {
-  Chart.register(ChartStreaming);
+Chart.register(ChartStreaming, LineController, LineElement, PointElement, LinearScale, Title);
   chart = new Chart(canvasElement, {
     type: 'line',
     data: data,
