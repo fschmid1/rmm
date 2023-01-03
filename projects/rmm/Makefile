@@ -24,4 +24,4 @@ run.backend: build.backend
 	. ./go/backend/.env && bazel run //projects/rmm/go/backend:RMM_API
 
 run.client: build.client
-	bazel run //projects/rmm/go/client:RMM_CLIENT
+	sudo ../../bazel-bin/projects/rmm/go/client/RMM_CLIENT_/RMM_CLIENT
