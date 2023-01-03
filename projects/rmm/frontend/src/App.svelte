@@ -16,7 +16,7 @@ import {
 import jwtDecode from 'jwt-decode';
 import { Websocket } from './lib/helper/ws';
 import DevicePage from './lib/components/DevicePage.svelte';
-import Confirm from './lib/components/Confirm.svelte';
+import { Confirm } from 'svelte-lib';
 import { SvelteToast } from '@zerodevx/svelte-toast';
 import TokenOverview from './lib/components/TokenOverview.svelte';
 

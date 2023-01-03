@@ -1,6 +1,7 @@
+
 <script lang="ts">
 import { Button, Modal } from "flowbite-svelte";
-import { confirmModal } from "../../stores";
+import { confirmModal } from "./confirm";
 </script>
 <Modal bind:open={$confirmModal.open} size="xs">
   <div class="text-center">

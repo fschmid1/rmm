@@ -22,7 +22,7 @@ import {
   TableBodyCell,
   TableBodyRow
 } from "flowbite-svelte";
-import { customConfirm } from "../helper/functions";
+import { customConfirm } from "svelte-lib";
 type Process = {
   name: string,
 	user: string,

@@ -37,7 +37,7 @@ import {
 } from "@zerodevx/svelte-toast";
 import { Link } from "svelte-navigator";
 import { sineIn } from 'svelte/easing';
-import { customConfirm } from "../helper/functions";
+import { customConfirm } from "svelte-lib";
 
 let tokens: DeviceToken[] = [];
 

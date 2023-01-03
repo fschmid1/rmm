@@ -1,0 +1,13 @@
+{
+  "name": "svelte-lib",
+  "version": "0.0.0",
+  "private": true,
+	"type": "module",
+	"module": "index.ts",
+  "main": "index.ts",
+  "devDependencies": {
+    "svelte": "^3.54.0",
+    "flowbite": "^1.5.5",
+    "flowbite-svelte": "^0.29.5"
+  }
+}

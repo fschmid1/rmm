@@ -7,7 +7,7 @@ import {
   TableBodyCell,
   TableBodyRow
 } from "flowbite-svelte";
-import { customConfirm } from "../helper/functions";
+import { customConfirm } from "svelte-lib";
 import {
   callDeviceFunction
 } from "../helper/http";

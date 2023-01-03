@@ -21,7 +21,7 @@ import {
   Modal,
   Spinner
 } from "flowbite-svelte";
-import { customConfirm } from "../helper/functions";
+import { customConfirm } from "svelte-lib";
 type Service = {
   name: string,
   enabled: boolean,

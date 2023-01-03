@@ -1,4 +1,9 @@
-import { confirmModal } from "../../stores"
+
+import { writable } from 'svelte/store';
+
+
+export const confirmModal = writable<{open: boolean, text: string, desision: boolean}>({open: false, text: '', desision: false});
+
 
 export const customConfirm = async (text: string) => {
 	confirmModal.set({open: true, text, desision: false});
