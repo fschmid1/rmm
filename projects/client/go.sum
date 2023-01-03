@@ -1,5 +1,5 @@
-github.com/fes111/rmm v0.0.0-20230102222045-fa25da993ab2 h1:r37rW74t4QV1o/nRPfTWPIwJ2Qy5RChZE7+RaoYCjAA=
-github.com/fes111/rmm v0.0.0-20230102222045-fa25da993ab2/go.mod h1:wz9zg4NJMyoD0wzY/z7Lj6dYzHsB4qoHJBfpUUDmqiI=
+github.com/fes111/rmm v0.0.0-20230103145619-0479a5a65032 h1:6AhsywrlDSBZFDK3xQQ3HykG2XIGkUOIiPRU9Q4d+cA=
+github.com/fes111/rmm v0.0.0-20230103145619-0479a5a65032/go.mod h1:wz9zg4NJMyoD0wzY/z7Lj6dYzHsB4qoHJBfpUUDmqiI=
 github.com/google/uuid v1.3.0 h1:t6JiXgmwXMjEs8VusXIJk2BXHsn+wx8BZdTaoZ5fu7I=
 github.com/google/uuid v1.3.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
 github.com/gorilla/websocket v1.5.0 h1:PPwGk2jz7EePpoHN/+ClbZu8SPxiqlu12wZP/3sWmnc=
