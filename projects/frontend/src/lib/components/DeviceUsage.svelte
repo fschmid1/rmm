@@ -88,10 +88,12 @@ Chart.register(ChartStreaming, LineController, LineElement, PointElement, Linear
     options: options,
   });
 
-  $ws.on('usage', (data) => {
-    dataQueue.push(data);
-  });
-  await callDeviceFunction(device.deviceID, 'usage-start');
+  setTimeout(async () => {
+	$ws.on('usage', (data) => {
+    	dataQueue.push(data);
+  	});
+ 	 await callDeviceFunction(device.deviceID, 'usage-start');
+  }, 1000);
 });
 
 onDestroy(async () => {
