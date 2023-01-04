@@ -20,7 +20,7 @@ import {
 
 import {
   Chart,
-  LineController, LineElement, PointElement, LinearScale, Title 
+  LineController, LineElement, PointElement, LinearScale, Title, Legend 
 } from 'chart.js';
 
 export let device: Device;
@@ -81,7 +81,7 @@ let options: any = {
   }
 };
 onMount(async () => {
-Chart.register(ChartStreaming, LineController, LineElement, PointElement, LinearScale, Title);
+Chart.register(ChartStreaming, LineController, LineElement, PointElement, LinearScale, Title, Legend);
   chart = new Chart(canvasElement, {
     type: 'line',
     data: data,

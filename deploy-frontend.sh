@@ -5,7 +5,6 @@ oldFile=$(cat src/vars.ts)
 
 echo "$(sed "1s/.*/$prod/1" src/vars.ts)" > src/vars.ts
 
-cd ../../
 npm run build
 cd projects/frontend
 
