@@ -12,6 +12,7 @@ go_library(
         "@com_github_gofiber_jwt_v3//:jwt",
 		"//projects/backend/config:config",
 		"//projects/backend/socket:socket",
+		"//projects/backend/controller:controller",
 		"//projects/backend/handlers:handlers",
 		"//libs/go/helpers:helpers",
     ],

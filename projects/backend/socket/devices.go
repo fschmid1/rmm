@@ -49,28 +49,26 @@ func NotfiyUserDeviceConnection(id string, connected bool) {
 	timer := time.NewTimer(duration)
 	select {
 	case <-connectionEvent:
-		timer.Stop()
-		close(connectionEvent)
-		delete(ConnectionEvents, device.DeviceID)
-		return
+		if !helpers.IsClosed(connectionEvent) {
+			timer.Stop()
+			close(connectionEvent)
+			delete(ConnectionEvents, device.DeviceID)
+			return
+		}
 	case <-timer.C:
-		for _, userRaw := range result {
-			if !connected {
-				go func() {
-					user, err := controller.GetUserById(uint(userRaw["user_id"].(uint64)))
-					if err != nil {
-						return
-					}
-					if user.PushToken != "" {
-						controller.SendMessage(user, fmt.Sprintf("Device %s is %s", device.Name, func() string {
-							if connected {
-								return "connected"
-							}
-							return "disconnected"
-						}()), "Device connection")
-					}
-				}()
+		if !connected {
+			notifications := controller.GetDeviceNotificationsByDeviceID(device.ID)
+			for _, userRaw := range notifications {
+				user, err := controller.GetUserById(uint(userRaw["user_id"].(uint64)))
+				if err != nil {
+					return
+				}
+				if user.PushToken != "" {
+					controller.SendMessage(user, fmt.Sprintf("Device %s is %s", device.Name, "disconnected"), "Device connection")
+				}
 			}
+		}
+		for _, userRaw := range result {
 			userId := strconv.FormatUint(userRaw["user_id"].(uint64), 10)
 			if client, ok := Clients[userId]; ok {
 				SendMessage(client.Id, models.SocketEvent{
@@ -85,8 +83,8 @@ func NotfiyUserDeviceConnection(id string, connected bool) {
 		if !helpers.IsClosed(connectionEvent) {
 			close(connectionEvent)
 			delete(ConnectionEvents, device.DeviceID)
-			return
 		}
+		return
 	}
 }
 

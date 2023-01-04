@@ -23,6 +23,6 @@ func HandleToggleDeviceNotfication(c *fiber.Ctx) error {
 
 func HandleGetDeviceNotfications(c *fiber.Ctx) error {
 	userId := c.Locals("user").(*jwt.Token).Claims.(jwt.MapClaims)["user"].(map[string]interface{})["id"].(float64)
-	notifications := controller.GetDeviceNotifications(uint(userId))
+	notifications := controller.GetDeviceNotificationsByUserID(uint(userId))
 	return c.JSON(notifications)
 }

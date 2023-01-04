@@ -15,7 +15,7 @@ func SendMessage(user models.User, msg string, title string) error {
 		Priority:  pushover.PriorityHigh,
 		Timestamp: time.Now().Unix(),
 		Retry:     60 * time.Second,
-		Sound:     pushover.SoundVibrate,
+		Sound:     pushover.SoundFalling,
 	}
 	recipient := pushover.NewRecipient(user.PushToken)
 	_, err := config.Pusher.SendMessage(message, recipient)

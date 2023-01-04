@@ -4,6 +4,8 @@ github.com/fasthttp/websocket v1.5.0 h1:B4zbe3xXyvIdnqjOZrafVFklCUq5ZLo/TqCt5JA1
 github.com/fasthttp/websocket v1.5.0/go.mod h1:n0BlOQvJdPbTuBkZT0O5+jk/sp/1/VCzquR1BehI2F4=
 github.com/fes111/rmm v0.0.0-20230103145619-0479a5a65032 h1:6AhsywrlDSBZFDK3xQQ3HykG2XIGkUOIiPRU9Q4d+cA=
 github.com/fes111/rmm v0.0.0-20230103145619-0479a5a65032/go.mod h1:wz9zg4NJMyoD0wzY/z7Lj6dYzHsB4qoHJBfpUUDmqiI=
+github.com/fes111/rmm v0.0.0-20230104120351-1c288c31753b h1:q26cmr2XhFKcvTWIMRQ3mfp4NzJZhauvefNhHL51GG4=
+github.com/fes111/rmm v0.0.0-20230104120351-1c288c31753b/go.mod h1:wz9zg4NJMyoD0wzY/z7Lj6dYzHsB4qoHJBfpUUDmqiI=
 github.com/go-sql-driver/mysql v1.7.0 h1:ueSltNNllEqE3qcWBTD0iQd3IpL/6U+mJxLkazJ7YPc=
 github.com/go-sql-driver/mysql v1.7.0/go.mod h1:OXbVy3sEdcQ2Doequ6Z5BW6fXNQTmx+9S1MCJN5yJMI=
 github.com/gofiber/fiber/v2 v2.40.1/go.mod h1:Gko04sLksnHbzLSRBFWPFdzM9Ws9pRxvvIaohJK1dsk=

@@ -14,8 +14,14 @@ func ToggleDeviceNotification(userId uint, deviceId uint) {
 	}
 }
 
-func GetDeviceNotifications(userId uint) []map[string]interface{} {
+func GetDeviceNotificationsByUserID(userId uint) []map[string]interface{} {
 	result := []map[string]interface{}{}
 	config.Database.Table("device_notifications").Where("user_id = ?", userId).Find(&result)
+	return result
+}
+
+func GetDeviceNotificationsByDeviceID(deviceID uint) []map[string]interface{} {
+	result := []map[string]interface{}{}
+	config.Database.Table("device_notifications").Where("device_id = ?", deviceID).Find(&result)
 	return result
 }
