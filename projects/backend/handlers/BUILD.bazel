@@ -5,7 +5,8 @@ go_library(
     srcs = [
         "auth.go",
         "device.go",
-		"user.handler.go"
+		"user.handler.go",
+		"notfication.handler.go"
     ],
     importpath = "github.com/fes111/rmm/projects/backend/handlers",
     visibility = ["//visibility:public"],

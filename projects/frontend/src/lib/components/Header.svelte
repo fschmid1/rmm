@@ -12,6 +12,7 @@
 		<DropdownHeader>
 			<DropdownItem href="/settings/profile">Settings</DropdownItem>
 			<DropdownItem href="/settings/tokens">Tokens</DropdownItem>
+			<DropdownItem href="/settings/notifications">Notifications</DropdownItem>
 		</DropdownHeader>
 		<DropdownItem
 		  on:click={async () => {

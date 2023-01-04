@@ -15,7 +15,7 @@ func AddDeviceToUser(id string, token string) error {
 		return err
 	}
 	result := map[string]interface{}{}
-	config.Database.Table("user_devices").Where("user_id = ?", deviceToken.UserID).Where("device_id = ?", device.ID).First(&result)
+	config.Database.Table("user_devices").Where("user_id = ?", deviceToken.UserID).Where("device_id = ?", device.ID).Find(&result)
 	if len(result) == 0 {
 		config.Database.Table("user_devices").Create(map[string]interface{}{"user_id": deviceToken.UserID, "device_id": device.ID})
 	}

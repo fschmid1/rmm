@@ -26,6 +26,8 @@ func main() {
 	userRouter.Use(jwtware.New(config.JWT_CONFIG))
 
 	userRouter.Get("/", handlers.HandleGetProfile)
+	userRouter.Patch("/notifications/toggle", handlers.HandleToggleDeviceNotfication)
+	userRouter.Get("/notifications", handlers.HandleGetDeviceNotfications)
 	userRouter.Patch("/", handlers.HandleUserUpdate)
 
 	deviceRouter := app.Group("/devices")

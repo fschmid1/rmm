@@ -8,7 +8,8 @@ go_library(
         "jwt.controller.go",
         "systemInfo.controller.go",
         "user.controller.go",
-		"pushover.controller.go"
+		"pushover.controller.go",
+		"notification.controller.go"
     ],
     importpath = "github.com/fes111/rmm/projects/backend/controller",
     visibility = ["//visibility:public"],

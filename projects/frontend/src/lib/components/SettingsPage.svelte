@@ -15,6 +15,7 @@ import {
     faArrowLeft
 } from '@fortawesome/free-solid-svg-icons'
 import Profile from "./Profile.svelte";
+import Notifications from "./Notifications.svelte";
 </script>
 <div class="w-11/12 mx-auto mt-12">
     <Link to="/devices">
@@ -36,6 +37,11 @@ import Profile from "./Profile.svelte";
                     	<span class="space-x-4">Tokens</span>
                     </Link>
                 </Li>
+                <Li class="py-2 pl-4">
+                    <Link to="/settings/notifications">
+                    	<span class="space-x-4">Notifications</span>
+                    </Link>
+                </Li>
             </List>
         </div>
         <div class="flex w-9/12 flex-col">
@@ -46,6 +52,9 @@ import Profile from "./Profile.svelte";
                     </Route>
                     <Route path="/profile" primary={false}>
 						<Profile />
+                    </Route>
+                    <Route path="/notifications" primary={false}>
+						<Notifications />
                     </Route>
                 </Router>
             </div>
