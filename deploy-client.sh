@@ -4,17 +4,17 @@ myArray=("hoku01" "hoku02" "hoku04" "loadbalancer" "dns")
 arm=("hoku03" "hoku05")
 
 make build.client.linux
-pwd=$(bazel cquery //projects/rmm/go/client:RMM_CLIENT_LINUX --output=files)
+pwd=$(bazel cquery //projects/client:RMM_CLIENT_LINUX --output=files)
 
 for str in ${myArray[@]}; do
-  scp ../../$pwd $str:/home/felix/RMM_CLIENT
+  scp $pwd $str:/home/felix/RMM_CLIENT
 done
 
 make build.client.arm
-pwd=$(bazel cquery //projects/rmm/go/client:RMM_CLIENT_ARM --output=files)
+pwd=$(bazel cquery //projects/client:RMM_CLIENT_ARM --output=files)
 
 for str in ${arm[@]}; do
-  scp ../../$pwd $str:/home/felix/RMM_CLIENT
+  scp $pwd $str:/home/felix/RMM_CLIENT
 done
 
 for str in ${myArray[@]}; do

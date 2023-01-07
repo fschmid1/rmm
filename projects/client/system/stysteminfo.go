@@ -10,7 +10,7 @@ import (
 
 func Run(cmd string) string {
 	out := exec.Command("bash", "-c", cmd)
-	stdout, _ := out.Output()
+	stdout, _ := out.CombinedOutput()
 	return string(stdout)
 }
 
