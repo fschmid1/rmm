@@ -17,10 +17,4 @@ for str in ${arm[@]}; do
   scp $pwd $str:/home/felix/RMM_CLIENT
 done
 
-for str in ${myArray[@]}; do
-	ssh $str "sudo systemctl stop rmm && sudo mv ./RMM_CLIENT /opt/rmm/RMM_CLIENT && sudo rm -rf /etc/fes-rmm/device && sudo systemctl start rmm && sleep 4 && sudo systemctl restart rmm"
-done
-
-for str in ${arm[@]}; do
-	ssh $str "sudo systemctl stop rmm && sudo mv ./RMM_CLIENT /opt/rmm/RMM_CLIENT && sudo rm -rf /etc/fes-rmm/device && sudo systemctl start rmm && sleep 4 && sudo systemctl restart rmm"
-done
+ansible server -m shell -a "sudo systemctl stop rmm && sudo mv ./RMM_CLIENT /opt/rmm/RMM_CLIENT && sudo rm -rf /etc/fes-rmm/device && sudo systemctl start rmm && sleep 4 && sudo systemctl restart rmm"
