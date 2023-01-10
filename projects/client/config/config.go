@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 	"time"
 
@@ -81,7 +82,7 @@ func UpdateSystemInfo() {
 	}
 	vars.Handlers.Once("response-devices-update", func(event models.SocketEvent) {
 		if event.Error != "" {
-			fmt.Println(event.Error)
+			log.Println(event.Error)
 			return
 		}
 		vars.Device = parseDevice(event.Data.(map[string]interface{}))
@@ -96,7 +97,7 @@ func UpdateSystemInfo() {
 func CreateConfiguration() {
 	config := models.Configuration{}
 	WriteConfiguration(configPath, config)
-	fmt.Printf("Configuration files was created under '%s'\nAfter configuration pls restart the client\n", configPath)
+	log.Printf("Configuration files was created under '%s'\nAfter configuration pls restart the client\n", configPath)
 	os.Exit(0)
 }
 
@@ -132,7 +133,7 @@ func ReadConfiguration() {
 func SetupDevice() {
 	firstTime := false
 	if !system.FileOrFolderExists(devicePath) {
-		fmt.Println("Device is not registered")
+		log.Println("Device is not registered")
 		RegisterDevice()
 		firstTime = true
 	}

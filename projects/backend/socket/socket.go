@@ -2,7 +2,6 @@ package socket
 
 import (
 	"errors"
-	"fmt"
 	"log"
 	"strings"
 
@@ -87,7 +86,7 @@ func SendMessage(id string, message interface{}) error {
 	client, found := Clients[id]
 
 	if !found {
-		fmt.Println("Client not found")
+		log.Println("Client not found")
 		return errors.New("Client not found")
 	}
 	err := client.Connection.WriteJSON(message)

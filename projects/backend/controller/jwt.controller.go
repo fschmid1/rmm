@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"fmt"
+	"log"
 
 	"github.com/fes111/rmm/libs/go/models"
 	"github.com/fes111/rmm/projects/backend/config"
@@ -27,7 +27,7 @@ func VerifyUserJWT(tokenString string) bool {
 		return []byte(config.JWT_SECRET), nil
 	})
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return false
 	}
 	if token.Valid {
@@ -42,7 +42,7 @@ func VerifyClientJWT(tokenString string) bool {
 		return []byte(config.SOCKET_JWT_SECRET), nil
 	})
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return false
 	}
 	if token.Valid {

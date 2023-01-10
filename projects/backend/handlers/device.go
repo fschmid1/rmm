@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"fmt"
+	"log"
 
 	"github.com/fes111/rmm/libs/go/models"
 	"github.com/fes111/rmm/projects/backend/config"
@@ -34,7 +34,7 @@ func AddDeviceToken(c *fiber.Ctx) error {
 		return nil
 	})
 	if err != nil {
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		return c.Status(400).SendString(err.Error())
 	}
 

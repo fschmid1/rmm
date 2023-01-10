@@ -30,7 +30,7 @@ func main() {
 	config.ReadConfiguration()
 	config.SetupDevice()
 	if vars.Configuration.Token == "" {
-		fmt.Printf("No token found, please create one first and add it to the config file\n")
+		log.Printf("No token found, please create one first and add it to the config file\n")
 		os.Exit(1)
 	}
 	u := vars.WsUrl + fmt.Sprintf("%s?token=%s", vars.Device.DeviceID, vars.Configuration.Token)
@@ -42,7 +42,7 @@ func connectWebsocket(url string) {
 	if err != nil {
 		tryReconnect(url)
 	}
-	fmt.Println("Connected to server")
+	log.Println("Connected to server")
 	defer c.Close()
 
 	http.SocketConn = c
@@ -60,7 +60,7 @@ func connectWebsocket(url string) {
 			for item := range vars.Queue {
 				err := c.WriteJSON(item)
 				if err != nil {
-					fmt.Println(err)
+					log.Println(err)
 					tryReconnect(url)
 					return
 				}
@@ -69,7 +69,7 @@ func connectWebsocket(url string) {
 		for {
 			err := c.ReadJSON(&msg)
 			if err != nil {
-				fmt.Println(err)
+				log.Println(err)
 				tryReconnect(url)
 				return
 			}
@@ -192,7 +192,7 @@ func connectWebsocket(url string) {
 }
 
 func tryReconnect(url string) {
-	fmt.Println("trying to reconnect to server")
+	log.Println("trying to reconnect to server")
 	if isInterrupt {
 		return
 	}

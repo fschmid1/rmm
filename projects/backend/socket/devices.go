@@ -3,6 +3,7 @@ package socket
 import (
 	"errors"
 	"fmt"
+	"log"
 	"strconv"
 	"time"
 
@@ -125,7 +126,7 @@ func HandleDeviceEvent(clientId string, message models.SocketEvent) {
 	}
 	err = SendMessage(clientId, response_message)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 	}
 }
 
