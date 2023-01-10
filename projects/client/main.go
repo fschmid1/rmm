@@ -48,6 +48,10 @@ func connectWebsocket(url string) {
 	http.SocketConn = c
 	done := make(chan struct{})
 	go system.SendUsage()
+	go func() {
+		time.Sleep(time.Minute * 15)
+		c.Close()
+	}()
 
 	go func() {
 		var msg models.SocketEvent
