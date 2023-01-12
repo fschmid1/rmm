@@ -38,7 +38,16 @@
         </Label>
         <Label class="space-y-2 mt-4">
             <span>Password</span>
-            <Input type="password" bind:value={password} class="w-full" placeholder="" size="md" />
+            <Input
+                type="password"
+                bind:value={password}
+                class="w-full"
+                placeholder=""
+                size="md"
+                on:keypress={(event) => {
+                    if (event.key === 'Enter') login();
+                }}
+            />
         </Label>
         <Button on:click={login} class="mt-6" size="lg">Login</Button>
     </div>
