@@ -1,4 +1,7 @@
 <script lang="ts">
+    import { faCopy, faHashtag, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
+    import { createQuery, useQueryClient } from '@tanstack/svelte-query';
+    import { toast } from '@zerodevx/svelte-toast';
     import {
         Button,
         CloseButton,
@@ -13,16 +16,12 @@
         TableHead,
         TableHeadCell,
     } from 'flowbite-svelte';
-    import { onMount } from 'svelte';
     import Fa from 'svelte-fa/src/fa.svelte';
-    import { faArrowLeft, faCopy, faPlus, faHashtag, faTrash } from '@fortawesome/free-solid-svg-icons';
+    import { customConfirm } from 'svelte-lib';
+    import { sineIn } from 'svelte/easing';
     import type { DeviceToken } from '../../types';
     import { apiBase } from '../../vars';
     import { fetchWithToken } from '../helper/http';
-    import { toast } from '@zerodevx/svelte-toast';
-    import { sineIn } from 'svelte/easing';
-    import { customConfirm } from 'svelte-lib';
-    import { createQuery, useQueryClient } from '@tanstack/svelte-query';
 
     const queryClient = useQueryClient();
 

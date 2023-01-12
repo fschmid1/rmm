@@ -1,20 +1,20 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
-    import Header from './lib/components/Header.svelte';
-    import { Router, Route } from 'svelte-navigator';
-    import Redirects from './lib/components/Redirects.svelte';
-    import Login from './lib/components/Login.svelte';
-    import Devices from './lib/components/Devices.svelte';
-    import { userStore, ws } from './stores';
-    import { Websocket } from './lib/helper/ws';
-    import DevicePage from './lib/components/DevicePage.svelte';
-    import { Confirm } from 'svelte-lib';
+    import { QueryClient, QueryClientProvider } from '@tanstack/svelte-query';
     import { SvelteToast } from '@zerodevx/svelte-toast';
+    import { onMount } from 'svelte';
+    import { Confirm } from 'svelte-lib';
+    import { Route, Router } from 'svelte-navigator';
+    import DevicePage from './lib/components/DevicePage.svelte';
+    import Devices from './lib/components/Devices.svelte';
+    import Header from './lib/components/Header.svelte';
+    import Login from './lib/components/Login.svelte';
+    import Redirects from './lib/components/Redirects.svelte';
     import SettingsPage from './lib/components/SettingsPage.svelte';
     import { fetchWithToken } from './lib/helper/http';
-    import { apiBase } from './vars';
+    import { Websocket } from './lib/helper/ws';
+    import { userStore, ws } from './stores';
     import type { Device, User } from './types';
-    import { QueryClientProvider, QueryClient } from '@tanstack/svelte-query';
+    import { apiBase } from './vars';
 
     const queryClient = new QueryClient();
 

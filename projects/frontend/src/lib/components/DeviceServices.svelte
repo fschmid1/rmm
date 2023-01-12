@@ -1,11 +1,11 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
-    import { callDeviceFunction } from '../helper/http';
-    import type { Device } from '../../types';
-    import Fa from 'svelte-fa';
     import { faCheck, faX } from '@fortawesome/free-solid-svg-icons';
     import { Button, Input, Li, List, Modal, Spinner } from 'flowbite-svelte';
+    import { onMount } from 'svelte';
+    import Fa from 'svelte-fa';
     import { customConfirm } from 'svelte-lib';
+    import type { Device } from '../../types';
+    import { callDeviceFunction } from '../helper/http';
     type Service = {
         name: string;
         enabled: boolean;

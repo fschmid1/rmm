@@ -1,10 +1,10 @@
 <script lang="ts">
-    import { userStore } from '../../stores';
-    import { onMount, onDestroy } from 'svelte';
     import { Button, Input, Label } from 'flowbite-svelte';
+    import { onDestroy, onMount } from 'svelte';
+    import { userStore } from '../../stores';
     import type { User } from '../../types';
-    import { fetchWithToken } from '../helper/http';
     import { apiBase } from '../../vars';
+    import { fetchWithToken } from '../helper/http';
 
     let user: User;
     let unsub;

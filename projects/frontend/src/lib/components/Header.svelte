@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Navbar, DarkMode, Dropdown, DropdownItem, DropdownHeader, Skeleton, Avatar } from 'flowbite-svelte';
+    import { Avatar, Dropdown, DropdownHeader, DropdownItem, Navbar } from 'flowbite-svelte';
     import { useNavigate } from 'svelte-navigator';
     import { userStore } from '../../stores';
     const navigate = useNavigate();

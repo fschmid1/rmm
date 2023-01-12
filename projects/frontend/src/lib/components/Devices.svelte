@@ -1,11 +1,11 @@
 <script lang="ts">
-    import { Spinner, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
-    import { Link, useNavigate } from 'svelte-navigator';
-    import { fetchWithToken } from '../helper/http';
-    import { apiBase } from '../../vars';
-    import ConnectionIndecator from './ConnectionIndecator.svelte';
     import { createQuery } from '@tanstack/svelte-query';
+    import { Spinner, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
+    import { useNavigate } from 'svelte-navigator';
     import type { Device } from '../../types';
+    import { apiBase } from '../../vars';
+    import { fetchWithToken } from '../helper/http';
+    import ConnectionIndecator from './ConnectionIndecator.svelte';
     let navigate = useNavigate();
 
     const devices = createQuery<Device[], Error>({

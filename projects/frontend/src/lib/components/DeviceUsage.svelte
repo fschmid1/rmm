@@ -1,13 +1,13 @@
 <script lang="ts">
-    import { onMount, onDestroy } from 'svelte';
-    import { callDeviceFunction } from '../helper/http';
+    import 'chartjs-adapter-date-fns';
+    import ChartStreaming from 'chartjs-plugin-streaming';
+    import { enUS } from 'date-fns/locale';
+    import { onDestroy, onMount } from 'svelte';
     import { ws } from '../../stores';
     import type { Device } from '../../types';
-    import ChartStreaming from 'chartjs-plugin-streaming';
-    import 'chartjs-adapter-date-fns';
-    import { enUS } from 'date-fns/locale';
+    import { callDeviceFunction } from '../helper/http';
 
-    import { Chart, LineController, LineElement, PointElement, LinearScale, Title, Legend } from 'chart.js';
+    import { Chart, Legend, LinearScale, LineController, LineElement, PointElement, Title } from 'chart.js';
 
     export let device: Device;
 

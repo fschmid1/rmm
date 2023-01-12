@@ -1,8 +1,8 @@
 <script lang="ts">
     import { Button, Hr, Table, TableBody, TableBodyCell, TableBodyRow } from 'flowbite-svelte';
     import { customConfirm } from 'svelte-lib';
-    import { callDeviceFunction } from '../helper/http';
     import type { Device } from '../../types';
+    import { callDeviceFunction } from '../helper/http';
 
     export let device: Device;
 </script>

@@ -1,9 +1,5 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
-    import { callDeviceFunction } from '../helper/http';
-    import type { Device } from '../../types';
     import {
-        A,
         Button,
         Input,
         Li,
@@ -15,7 +11,10 @@
         TableBodyCell,
         TableBodyRow,
     } from 'flowbite-svelte';
+    import { onMount } from 'svelte';
     import { customConfirm } from 'svelte-lib';
+    import type { Device } from '../../types';
+    import { callDeviceFunction } from '../helper/http';
     type Process = {
         name: string;
         user: string;

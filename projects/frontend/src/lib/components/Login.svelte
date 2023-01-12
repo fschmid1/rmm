@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Button, Card, Input, Label } from 'flowbite-svelte';
+    import { Button, Input, Label } from 'flowbite-svelte';
     import { useNavigate } from 'svelte-navigator';
     import { userStore } from '../../stores';
     import { apiBase } from '../../vars';

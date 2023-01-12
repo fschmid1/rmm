@@ -1,11 +1,11 @@
 <script lang="ts">
-    import { Button, Li, List } from 'flowbite-svelte';
-    import { Router, Route, Link } from 'svelte-navigator';
-    import TokenOverview from './TokenOverview.svelte';
-    import Fa from 'svelte-fa/src/fa.svelte';
     import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-    import Profile from './Profile.svelte';
+    import { Button, Li, List } from 'flowbite-svelte';
+    import Fa from 'svelte-fa/src/fa.svelte';
+    import { Link, Route, Router } from 'svelte-navigator';
     import Notifications from './Notifications.svelte';
+    import Profile from './Profile.svelte';
+    import TokenOverview from './TokenOverview.svelte';
 </script>
 
 <div class="w-11/12 mx-auto mt-12">

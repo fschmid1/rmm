@@ -10,7 +10,6 @@
         TableHeadCell,
         Toggle,
     } from 'flowbite-svelte';
-    import { onMount } from 'svelte';
     import type { Device } from '../../types';
     import { apiBase } from '../../vars';
     import { fetchWithToken } from '../helper/http';

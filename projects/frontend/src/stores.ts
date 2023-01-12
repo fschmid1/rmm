@@ -1,7 +1,6 @@
-
 import { writable } from 'svelte/store';
-import type { Device, User } from './types';
 import type { Websocket } from './lib/helper/ws';
+import type { Device, User } from './types';
 
 export const userStore = writable<User>(null);
 

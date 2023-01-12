@@ -1,19 +1,18 @@
 <script lang="ts">
+    import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+    import { createQuery } from '@tanstack/svelte-query';
     import { Button, Li, List, Spinner } from 'flowbite-svelte';
-    import { onMount } from 'svelte';
-    import { Router, Route, Link } from 'svelte-navigator';
-    import { fetchWithToken } from '../helper/http';
+    import Fa from 'svelte-fa/src/fa.svelte';
+    import { Link, Route, Router } from 'svelte-navigator';
     import type { Device } from '../../types';
     import { apiBase } from '../../vars';
-    import DeviceInfo from './DeviceInfo.svelte';
-    import Fa from 'svelte-fa/src/fa.svelte';
-    import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+    import { fetchWithToken } from '../helper/http';
     import DeviceHeader from './DeviceHeader.svelte';
-    import DeviceServices from './DeviceServices.svelte';
+    import DeviceInfo from './DeviceInfo.svelte';
     import DeviceProcesses from './DeviceProcesses.svelte';
-    import DeviceUsage from './DeviceUsage.svelte';
     import DeviceRun from './DeviceRun.svelte';
-    import { createQuery } from '@tanstack/svelte-query';
+    import DeviceServices from './DeviceServices.svelte';
+    import DeviceUsage from './DeviceUsage.svelte';
 
     export let id: string;
 
