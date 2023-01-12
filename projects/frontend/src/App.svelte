@@ -13,8 +13,6 @@ import Devices from './lib/components/Devices.svelte';
 import {
     userStore,
     ws,
-    deviceStore,
-    device
 } from './stores';
 import {
     Websocket
@@ -34,8 +32,13 @@ import {
     apiBase
 } from './vars';
 import type {
+    Device,
     User
 } from './types';
+import { QueryClientProvider, QueryClient } from '@tanstack/svelte-query'
+
+
+const queryClient = new QueryClient();
 
 onMount(async () => {
     document.documentElement.classList.add('dark');
@@ -57,37 +60,35 @@ onMount(async () => {
         id: number,
         connected: boolean
     }) => {
-        $deviceStore = $deviceStore.map(device => {
-            if (device.id == data.id) {
-                device.connected = data.connected;
-            }
-            return device;
-        });
-        if ($device?.id == data.id) {
-            $device.connected = data.connected;
-        }
+		const newData = (queryClient.getQueryData(['devices']) as Device[]).map((device: any) => {
+			if (device.id == data.id) {
+				device.connected = data.connected;
+			}
+			return device;
+		});
+        queryClient.setQueryData(['devices'], newData) 
     });
 });
 </script>
-<Header />
-<Router>
-	<Route primary={true} path="/devices">
-		<Devices />
-	</Route>
-	<Route primary={true} path="/devices/:id/*" let:params >
-		<DevicePage id={params.id} />
-	</Route>
-	<Route primary={false} path="/settings/*">
-		<SettingsPage />
-	</Route>
-    <Route>
-        <Redirects />
-    </Route>
-    <Route primary={false} path="/login">
-        <Login />
-    </Route>
-</Router>
-
-<Confirm></Confirm>
-
-<SvelteToast />
+<QueryClientProvider client={queryClient}>
+	<Router>
+		<Header />
+		<Route primary={true} path="/devices">
+			<Devices />
+		</Route>
+		<Route primary={true} path="/devices/:id/*" let:params >
+			<DevicePage id={params.id} />
+		</Route>
+		<Route primary={false} path="/settings/*">
+			<SettingsPage />
+		</Route>
+		<Route>
+			<Redirects />
+		</Route>
+		<Route primary={false} path="/login">
+			<Login />
+		</Route>
+	</Router>
+	<Confirm></Confirm>
+	<SvelteToast />
+</QueryClientProvider>

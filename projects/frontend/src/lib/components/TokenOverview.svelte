@@ -5,6 +5,7 @@ import {
     Drawer,
     Input,
     Label,
+    Spinner,
     Table,
     TableBody,
     TableBodyCell,
@@ -35,18 +36,18 @@ import {
 import {
     toast
 } from "@zerodevx/svelte-toast";
-import { Link } from "svelte-navigator";
 import { sineIn } from 'svelte/easing';
 import { customConfirm } from "svelte-lib";
+import { createQuery, useQueryClient } from "@tanstack/svelte-query";
 
-let tokens: DeviceToken[] = [];
+const queryClient = useQueryClient();
 
-onMount(async () => {
-    const response = await fetchWithToken(`${apiBase}/devices/tokens`, {
-        method: "GET",
-    });
-    tokens = await response.json();
-});
+let tokens = createQuery < DeviceToken[], Error > ({
+	queryKey: ['tokens'],
+	queryFn: () => fetchWithToken(`${apiBase}/devices/tokens`, {
+		method: "GET",
+	}).then(res => res.json())
+})
 
 const copyToken = (token: string) => {
     navigator.clipboard.writeText(token);
@@ -62,7 +63,7 @@ const createToken = async () => {
 	});
 	const token = await response.json();
 	drawerClosed = true;
-	tokens = [...tokens, token];
+	queryClient.setQueriesData(['tokens'], [...$tokens.data, token]);
 	tokenName = "";
 }
 
@@ -73,7 +74,8 @@ const deleteToken = async (token: DeviceToken) => {
 		method: "DELETE"
 	});
 	if (response.status === 200) {
-		tokens = tokens.filter(el => el.id !== token.id);
+		queryClient.setQueriesData(['tokens'], $tokens.data.filter(el => el.id !== token.id));
+		tokens = tokens;
 	}
 }
 
@@ -93,6 +95,9 @@ let transitionParams = {
 		Create new token
 	</Button>
 </div>
+{#if $tokens.isLoading}
+<div class="w-full text-center"><Spinner></Spinner></div>
+{:else}
 <Table striped={true} class="mt-2">
 	<TableHead>
 		<TableHeadCell>Name</TableHeadCell>
@@ -100,7 +105,7 @@ let transitionParams = {
 		<TableHeadCell>Actions</TableHeadCell>
 	</TableHead>
 	<TableBody class="divide-y">
-		{#each tokens as token (token.id)}
+		{#each $tokens.data as token (token.id)}
 		<TableBodyRow>
 			<TableBodyCell>{token.name}</TableBodyCell>
 			<TableBodyCell class="truncate" style="max-width: 10rem">{token.token}</TableBodyCell>
@@ -112,17 +117,18 @@ let transitionParams = {
 		{/each}
 	</TableBody>
 </Table>
+{/if}
 <Drawer transitionType="fly" placement="right" {transitionParams} bind:hidden={drawerClosed}>
 	<div class='flex items-center'>
 		<h5 id="drawer-label" class="inline-flex items-center mb-6 text-base font-semibold text-gray-500 uppercase dark:text-gray-400">Create new token</h5>
 		<CloseButton on:click={() => (drawerClosed = true)} class='mb-4 dark:text-white'/>
 	  </div>
-	   <form action="#" class="mb-6">
+	   <form action="#" class="mb-6" on:submit|preventDefault={createToken}>
 		<div class="mb-6">
 		  <Label for='name' class='block mb-2'>Name</Label>
 		  <Input id='name' name='name' bind:value={tokenName} required placeholder="server01" />
 		</div>
-			<Button type="submit" class="w-full" on:click={createToken}>
+			<Button type="submit" class="w-full">
 				<Fa class="mr-2" icon={faHashtag} /> Create Token
 			</Button>
 	   </form>
