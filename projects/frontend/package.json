@@ -8,7 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
-    "lint": "eslint --ext .js,.ts,.svelte ."
+    "lint": "prettier --write 'src/**/*.{html,js,svelte}'"
   },
   "devDependencies": {
     "@popperjs/core": "^2.11.6",
@@ -23,9 +23,9 @@
     "flowbite-svelte": "^0.29.5",
     "postcss": "^8.4.14",
     "postcss-load-config": "^4.0.1",
-    "prettier": "^2.8.1",
+    "prettier": "^2.8.2",
     "prettier-plugin-svelte": "^2.9.0",
-    "svelte": "^3.54.0",
+    "svelte": "^3.55.1",
     "svelte-check": "^2.10.0",
     "svelte-preprocess": "^4.10.7",
     "tailwindcss": "^3.1.5",

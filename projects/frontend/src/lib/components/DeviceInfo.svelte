@@ -1,21 +1,10 @@
 <script lang="ts">
-import {
-  Button,
-  Hr,
-  Table,
-  TableBody,
-  TableBodyCell,
-  TableBodyRow
-} from "flowbite-svelte";
-import { customConfirm } from "svelte-lib";
-import {
-  callDeviceFunction
-} from "../helper/http";
-import type {
-  Device
-} from "../../types";
+    import { Button, Hr, Table, TableBody, TableBodyCell, TableBodyRow } from 'flowbite-svelte';
+    import { customConfirm } from 'svelte-lib';
+    import { callDeviceFunction } from '../helper/http';
+    import type { Device } from '../../types';
 
-export let device: Device;
+    export let device: Device;
 </script>
 
 <div class="w-full">
@@ -62,15 +51,22 @@ export let device: Device;
     </Table>
     <Hr />
     <div class="flex mt-2">
-        <Button color="red" class="mr-2" on:click={async () => {
-						if (await customConfirm("Are you sure you want to reboot this device?")) {
-							callDeviceFunction(device.deviceID, "reboot")
-						}
-						}}>Reboot</Button>
-        <Button color="red" on:click={ async () => {
-					if (await customConfirm("Are you sure you want to shutdown this device?")) {
-						callDeviceFunction(device.deviceID, "shutdown")
-					}
-					}}>Shutdown</Button>
+        <Button
+            color="red"
+            class="mr-2"
+            on:click={async () => {
+                if (await customConfirm('Are you sure you want to reboot this device?')) {
+                    callDeviceFunction(device.deviceID, 'reboot');
+                }
+            }}>Reboot</Button
+        >
+        <Button
+            color="red"
+            on:click={async () => {
+                if (await customConfirm('Are you sure you want to shutdown this device?')) {
+                    callDeviceFunction(device.deviceID, 'shutdown');
+                }
+            }}>Shutdown</Button
+        >
     </div>
 </div>
