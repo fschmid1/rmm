@@ -3,9 +3,9 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "config",
     srcs = [
-        "database.go",
-        "jwt.go",
-		"pushover.go"
+        "database.config.go",
+        "jwt.config.go",
+		"pushover.config.go"
     ],
     importpath = "github.com/fes111/rmm/projects/backend/config",
     visibility = ["//visibility:public"],

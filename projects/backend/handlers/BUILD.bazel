@@ -3,8 +3,8 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "handlers",
     srcs = [
-        "auth.go",
-        "device.go",
+        "auth.handler.go",
+        "device.handler.go",
 		"user.handler.go",
 		"notfication.handler.go"
     ],

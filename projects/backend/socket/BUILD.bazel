@@ -3,8 +3,8 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "socket",
     srcs = [
-        "devices.go",
-        "handlers.go",
+        "devices.socket.go",
+        "handlers.socket.go",
         "socket.go",
     ],
     importpath = "github.com/fes111/rmm/projects/backend/socket",
