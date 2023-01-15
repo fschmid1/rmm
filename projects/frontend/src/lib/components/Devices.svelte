@@ -15,6 +15,11 @@
                 method: 'GET',
             }).then((res) => res.json()),
     });
+
+    const handleClick = (event, device) => {
+        if (event.target.classList.contains('ip')) return;
+        navigate(`/devices/${device.id}/info`);
+    };
 </script>
 
 <div class="w-9/12 mx-auto mt-12">
@@ -30,13 +35,13 @@
             </TableHead>
             <TableBody class="divide-y">
                 {#each $devices.data as device (device.id)}
-                    <TableBodyRow class="cursor-pointer" on:click={() => navigate(`/devices/${device.id}/info`)}>
+                    <TableBodyRow class="cursor-pointer" on:click={(event) => handleClick(event, device)}>
                         <TableBodyCell
                             ><div class="flex">
                                 <ConnectionIndecator connected={device.connected} />{device.name}
                             </div></TableBodyCell
                         >
-                        <TableBodyCell>{device.systemInfo.ip}</TableBodyCell>
+                        <TableBodyCell class="ip">{device.systemInfo.ip}</TableBodyCell>
                         <TableBodyCell>{device.systemInfo.cores}</TableBodyCell>
                         <TableBodyCell>{device.systemInfo.memoryTotal.toFixed(2)} GB</TableBodyCell>
                     </TableBodyRow>
