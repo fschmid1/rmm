@@ -1,6 +1,9 @@
 <script lang="ts">
+    import { faCopy } from '@fortawesome/free-solid-svg-icons';
     import { createQuery } from '@tanstack/svelte-query';
+    import { toast } from '@zerodevx/svelte-toast';
     import { Spinner, Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from 'flowbite-svelte';
+    import Fa from 'svelte-fa/src/fa.svelte';
     import { useNavigate } from 'svelte-navigator';
     import type { Device } from '../../types';
     import { apiBase } from '../../vars';
@@ -17,7 +20,11 @@
     });
 
     const handleClick = (event, device) => {
-        if (event.target.classList.contains('ip')) return;
+        if (event.target.classList.contains('ip')) {
+            toast.push('IP copied to clipboard');
+            navigator.clipboard.writeText(device.systemInfo.ip);
+            return;
+        }
         navigate(`/devices/${device.id}/info`);
     };
 </script>
@@ -36,12 +43,19 @@
             <TableBody class="divide-y">
                 {#each $devices.data as device (device.id)}
                     <TableBodyRow class="cursor-pointer" on:click={(event) => handleClick(event, device)}>
-                        <TableBodyCell
-                            ><div class="flex">
+                        <TableBodyCell>
+                            <div class="flex">
                                 <ConnectionIndecator connected={device.connected} />{device.name}
-                            </div></TableBodyCell
-                        >
-                        <TableBodyCell class="ip">{device.systemInfo.ip}</TableBodyCell>
+                            </div>
+                        </TableBodyCell>
+                        <TableBodyCell>
+                            {#if device.systemInfo.ip}
+                                <div class="ip flex">
+                                    {device.systemInfo.ip}
+                                    <div class="ml-2"><Fa icon={faCopy} class="" /></div>
+                                </div>
+                            {/if}
+                        </TableBodyCell>
                         <TableBodyCell>{device.systemInfo.cores}</TableBodyCell>
                         <TableBodyCell>{device.systemInfo.memoryTotal.toFixed(2)} GB</TableBodyCell>
                     </TableBodyRow>
@@ -50,3 +64,13 @@
         </Table>
     {/if}
 </div>
+
+<style>
+    .hover-trigger .hover-target {
+        display: none;
+    }
+
+    .hover-trigger:hover .hover-target {
+        display: block;
+    }
+</style>
