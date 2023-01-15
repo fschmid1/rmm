@@ -6,10 +6,16 @@ import (
 	"os/exec"
 	"strconv"
 	"strings"
+	"time"
 )
 
 func Run(cmd string) string {
 	out := exec.Command("bash", "-c", cmd)
+	timer := time.AfterFunc(time.Second*4, func() {
+		out.Process.Kill()
+	})
+
+	defer timer.Stop()
 	stdout, _ := out.CombinedOutput()
 	return string(stdout)
 }

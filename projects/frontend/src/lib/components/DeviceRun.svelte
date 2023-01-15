@@ -30,12 +30,13 @@
     const handleKey = async (event) => {
         if (event.key === 'Enter') {
             trimOutput();
-            const response = await callDeviceFunction<string>(device.deviceID, 'run', command);
-            output += response.data.replace(/\n/g, '<br />');
+            callDeviceFunction<string>(device.deviceID, 'run', command).then((response) => {
+                output += response.data.replace(/\n/g, '<br />');
+                scrollToBottom(outputElement, response.data);
+            });
             commands = [command, ...commands];
             command = '';
             commandIndex = -1;
-            scrollToBottom(outputElement, response.data);
         } else if (event.key === 'ArrowUp') {
             event.preventDefault();
             if (commandIndex < commands.length - 1 || commands.length === -1) {
