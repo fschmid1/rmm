@@ -14,7 +14,7 @@ A remote monitoring and management software written in Go. It provides a set of 
     ```
     make build.backend.linux
     ```
-    This will create a binary at: "./bazel-bin/projects/backend/RMM_API_LINUX_/RMM_API_LINUX"
+    This will create a binary at: "bazel-bin/projects/backend/RMM_API_LINUX_/RMM_API_LINUX"
 2. Transfer the binary to a server
 3. Set the environment variables
     ```
@@ -30,7 +30,7 @@ A remote monitoring and management software written in Go. It provides a set of 
     ```
     make build.client.linux
     ```
-    This will create a binary at: "./bazel-bin/projects/client/RMM_CLIENT_LINUX_/RMM_CLIENT_LINUX"
+    This will create a binary at: "bazel-bin/projects/client/RMM_CLIENT_LINUX_/RMM_CLIENT_LINUX"
 2. Transfer the binary to a server
 3. Run binary as root
 4. Create a Device Token in the UI
