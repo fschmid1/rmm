@@ -48,6 +48,8 @@ func RegisterDevice() {
 					device = parseDevice(event.Data.(map[string]interface{}))
 					WriteConfiguration(devicePath, device)
 					vars.Device = device
+					fmt.Println("Device was registered. Pls restart the client")
+					os.Exit(0)
 				})
 				vars.Queue <- models.SocketEvent{
 					Event: "devices-get",
@@ -56,6 +58,8 @@ func RegisterDevice() {
 			} else {
 				device = parseDevice(event.Data.(map[string]interface{}))
 				WriteConfiguration(devicePath, device)
+				fmt.Println("Device was registered. Pls restart the client")
+				os.Exit(0)
 			}
 		})
 		vars.Queue <- models.SocketEvent{
@@ -134,14 +138,18 @@ func ReadConfiguration() {
 
 func SetupDevice() {
 	firstTime := false
+	register := false
 	if !system.FileOrFolderExists(devicePath) {
-		log.Println("Device is not registered")
-		RegisterDevice()
-		firstTime = true
+		register = true
 	}
 	file, _ := ioutil.ReadFile(devicePath)
 	device := models.Device{}
 	json.Unmarshal(file, &device)
+	if  register || device.SystemInfo.ID == 0 {
+		log.Println("Device is not registered")
+		RegisterDevice()
+		firstTime = true
+	}
 
 	vars.Device = device
 	if !firstTime {
