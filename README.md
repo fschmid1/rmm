@@ -71,6 +71,6 @@ A remote monitoring and management software written in Go.
     ```
 3. Build frontend
     ```
-    npx turbo build
+    npx turbo build (in root folder of the project)
     ```
     This will create the static files under: "projects/frontend/dist"
