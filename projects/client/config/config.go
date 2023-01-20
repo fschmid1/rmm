@@ -95,7 +95,9 @@ func UpdateSystemInfo() {
 }
 
 func CreateConfiguration() {
-	config := models.Configuration{}
+	config := models.Configuration{
+		Path:   "/",
+	}
 	WriteConfiguration(configPath, config)
 	log.Printf("Configuration files was created under '%s'\nAfter configuration pls restart the client\n", configPath)
 	os.Exit(0)
