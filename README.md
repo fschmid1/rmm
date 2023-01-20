@@ -1,7 +1,7 @@
 
 # FES_RMM
 ## Description
-A remote monitoring and management software written in Go. It provides a set of API endpoints to remotely monitor and manage the system.
+A remote monitoring and management software written in Go.
 
 ## Installation
 1. Clone the repository to your local machine
