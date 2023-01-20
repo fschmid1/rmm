@@ -59,3 +59,18 @@ A remote monitoring and management software written in Go.
     ```
 6. Run client again. This should register the device.
 7. Restart the client one more time. Now the Device should be visible in the UI.
+## Deploy Frontend
+.1 Change api base to backend url
+    ``` ts
+     // projects/frontend/src/vars.ts
+     export const apiBase = 'http://localhost:8080';
+    ```
+2. Install dependencies
+    ```
+    npm i (in root folder of the project)
+    ```
+3. Build frontend
+    ```
+    npx turbo build
+    ```
+    This will create the static files under: "projects/frontend/dist"
