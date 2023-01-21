@@ -1,0 +1,17 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "socket",
+    srcs = [
+        "main.socket.go",
+        "usage.go",
+    ],
+    importpath = "github.com/fes111/rmm/projects/client/socket",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libs/go/models",
+        "//projects/client/system",
+        "//projects/client/vars",
+        "@com_github_recws_org_recws//:recws",
+    ],
+)
