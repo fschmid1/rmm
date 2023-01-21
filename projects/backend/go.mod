@@ -3,7 +3,7 @@ module github.com/fes111/rmm/projects/backend
 go 1.18
 
 require (
-	github.com/fes111/rmm v0.0.0-20230104120351-1c288c31753b
+	github.com/fes111/rmm v0.0.0-20230121183532-cf9344c8335e
 	github.com/gofiber/fiber/v2 v2.41.0
 	github.com/gofiber/jwt/v3 v3.3.4
 	github.com/gofiber/websocket/v2 v2.1.2

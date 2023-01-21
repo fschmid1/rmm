@@ -19,6 +19,22 @@ func AddDeviceToUser(id string, token string) error {
 	if len(result) == 0 {
 		config.Database.Table("user_devices").Create(map[string]interface{}{"user_id": deviceToken.UserID, "device_id": device.ID})
 	}
+	devicePermissions, _ := GetDevicePermissionsByUserId(device.ID, deviceToken.UserID)
+	if len(devicePermissions) == 0 {
+		UpdateDevicePermissions(models.DevicePermissions{
+			ID:     0,
+			UserID: deviceToken.UserID, DeviceID: device.ID, Run: true, Shutdown: true, Reboot: true,
+			ProcessList:       true,
+			ServiceList:       true,
+			ServiceStart:      true,
+			ServiceStop:       true,
+			ServiceRestart:    true,
+			ServiceLogs:       true,
+			ServiceStatus:     true,
+			Kill:              true,
+			ChangePermissions: true,
+		})
+	}
 	return nil
 }
 
