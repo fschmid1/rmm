@@ -5,5 +5,8 @@ go_library(
     srcs = ["socket.go"],
     importpath = "github.com/fes111/rmm/projects/client/http",
     visibility = ["//visibility:public"],
-    deps = ["@com_github_gorilla_websocket//:websocket", "//libs/go/models:models"],
+    deps = [
+        "//libs/go/models",
+        "@com_github_recws_org_recws//:recws",
+    ],
 )

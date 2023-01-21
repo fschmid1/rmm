@@ -3,13 +3,13 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "models",
     srcs = [
+        "configuration.go",
         "device.go",
         "device-token.go",
         "socket-event.go",
         "systeminfo.go",
+        "usage.go",
         "user.go",
-		"configuration.go",
-		"usage.go",
     ],
     importpath = "github.com/fes111/rmm/libs/go/models",
     visibility = ["//visibility:public"],

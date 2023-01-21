@@ -6,14 +6,14 @@ go_library(
     importpath = "github.com/fes111/rmm/projects/client",
     visibility = ["//visibility:private"],
     deps = [
-		"@com_github_gorilla_websocket//:websocket",
-		"//libs/go/models:models",
-		"//projects/client/vars:vars",
-		"//projects/client/system:system",
-		"//projects/client/http:http",
-		"//projects/client/config:config",
-		"//libs/go/helpers:helpers",
-	],
+        "//libs/go/helpers",
+        "//libs/go/models",
+        "//projects/client/config",
+        "//projects/client/http",
+        "//projects/client/system",
+        "//projects/client/vars",
+        "@com_github_recws_org_recws//:recws",
+    ],
 )
 
 go_binary(
@@ -25,15 +25,15 @@ go_binary(
 go_binary(
     name = "RMM_CLIENT_ARM",
     embed = [":client_lib"],
+    goarch = "arm64",
+    goos = "linux",
     visibility = ["//visibility:public"],
-		goos = "linux",
-		goarch = "arm64",
 )
 
 go_binary(
     name = "RMM_CLIENT_LINUX",
     embed = [":client_lib"],
+    goarch = "amd64",
+    goos = "linux",
     visibility = ["//visibility:public"],
-		goos = "linux",
-		goarch = "amd64",
 )

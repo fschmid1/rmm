@@ -3,31 +3,30 @@ load("@bazel_tools//tools/build_defs/pkg:pkg.bzl", "pkg_tar")
 
 go_library(
     name = "backend_lib",
-    visibility = ["//visibility:public"],
-	importpath = "github.com/fes111/rmm/projects/backend",
     srcs = ["main.go"],
+    importpath = "github.com/fes111/rmm/projects/backend",
+    visibility = ["//visibility:public"],
     deps = [
+        "//libs/go/helpers",
+        "//projects/backend/config",
+        "//projects/backend/handlers",
+        "//projects/backend/socket",
         "@com_github_gofiber_fiber_v2//:fiber",
         "@com_github_gofiber_fiber_v2//middleware/cors",
         "@com_github_gofiber_jwt_v3//:jwt",
-		"//projects/backend/config:config",
-		"//projects/backend/socket:socket",
-		"//projects/backend/controller:controller",
-		"//projects/backend/handlers:handlers",
-		"//libs/go/helpers:helpers",
     ],
 )
 
 go_binary(
-	name = "RMM_API",
-	embed = [":backend_lib"],
-	visibility = ["//visibility:public"],
+    name = "RMM_API",
+    embed = [":backend_lib"],
+    visibility = ["//visibility:public"],
 )
 
 go_binary(
-	name = "RMM_API_LINUX",
-	embed = [":backend_lib"],
-	visibility = ["//visibility:public"],
-	goos = "linux",
-	goarch = "amd64",
+    name = "RMM_API_LINUX",
+    embed = [":backend_lib"],
+    goarch = "amd64",
+    goos = "linux",
+    visibility = ["//visibility:public"],
 )

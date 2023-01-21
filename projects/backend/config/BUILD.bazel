@@ -5,16 +5,16 @@ go_library(
     srcs = [
         "database.config.go",
         "jwt.config.go",
-		"pushover.config.go"
+        "pushover.config.go",
     ],
     importpath = "github.com/fes111/rmm/projects/backend/config",
     visibility = ["//visibility:public"],
     deps = [
+        "//libs/go/helpers",
+        "//libs/go/models",
         "@com_github_gofiber_jwt_v3//:jwt",
+        "@com_github_gregdel_pushover//:pushover",
         "@io_gorm_driver_mysql//:mysql",
         "@io_gorm_gorm//:gorm",
-		"@com_github_gregdel_pushover//:pushover",
-		"//libs/go/models:models",
-		"//libs/go/helpers:helpers"
     ],
 )

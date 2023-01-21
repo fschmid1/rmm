@@ -30,6 +30,26 @@ load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies", "go_repository")
 
 load("//:deps.bzl", "go_dependencies")
 
+go_repository(
+    name = "com_github_gorilla_websocket",
+    importpath = "github.com/gorilla/websocket",
+    sum = "h1:PPwGk2jz7EePpoHN/+ClbZu8SPxiqlu12wZP/3sWmnc=",
+    version = "v1.5.0",
+)
+
+go_repository(
+    name = "com_github_jpillora_backoff",
+    importpath = "github.com/jpillora/backoff",
+    sum = "h1:uvFg412JmmHBHw7iwprIxkPMI+sGQ4kzOWsMeHnm2EA=",
+    version = "v1.0.0",
+)
+
+go_repository(
+    name = "com_github_recws_org_recws",
+    importpath = "github.com/recws-org/recws",
+    sum = "h1:y9LLddtAicjejikNZXiaY9DQjIwcAQ82acd1XU6n0lU=",
+    version = "v1.4.0",
+)
 
 # gazelle:repository_macro deps.bzl%go_dependencies
 go_dependencies()

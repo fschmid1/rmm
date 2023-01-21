@@ -8,11 +8,11 @@ go_library(
         "stysteminfo.go",
         "usage.go",
     ],
-		deps = [
-			"//projects/client/vars:vars",
-			"//projects/client/http:http",
-			"//libs/go/models:models",
-		],
     importpath = "github.com/fes111/rmm/projects/client/system",
     visibility = ["//visibility:public"],
+    deps = [
+        "//libs/go/models",
+        "//projects/client/http",
+        "//projects/client/vars",
+    ],
 )

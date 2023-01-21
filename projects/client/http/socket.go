@@ -2,10 +2,10 @@ package http
 
 import (
 	"github.com/fes111/rmm/libs/go/models"
-	"github.com/gorilla/websocket"
+	"github.com/recws-org/recws"
 )
 
-var SocketConn *websocket.Conn
+var SocketConn recws.RecConn
 
 func SocketSend(event string, data interface{}) {
 	SocketConn.WriteJSON(models.SocketEvent{

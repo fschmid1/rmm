@@ -13,6 +13,13 @@ def go_dependencies():
         sum = "h1:B4zbe3xXyvIdnqjOZrafVFklCUq5ZLo/TqCt5JA1wLE=",
         version = "v1.5.0",
     )
+
+    go_repository(
+        name = "com_github_fes111_rmm",
+        importpath = "github.com/fes111/rmm",
+        sum = "h1:6AhsywrlDSBZFDK3xQQ3HykG2XIGkUOIiPRU9Q4d+cA=",
+        version = "v0.0.0-20230103145619-0479a5a65032",
+    )
     go_repository(
         name = "com_github_go_sql_driver_mysql",
         importpath = "github.com/go-sql-driver/mysql",
@@ -55,13 +62,13 @@ def go_dependencies():
         sum = "h1:t6JiXgmwXMjEs8VusXIJk2BXHsn+wx8BZdTaoZ5fu7I=",
         version = "v1.3.0",
     )
-    go_repository(
-        name = "com_github_gorilla_websocket",
-        importpath = "github.com/gorilla/websocket",
-        sum = "h1:PPwGk2jz7EePpoHN/+ClbZu8SPxiqlu12wZP/3sWmnc=",
-        version = "v1.5.0",
-    )
 
+    go_repository(
+        name = "com_github_gregdel_pushover",
+        importpath = "github.com/gregdel/pushover",
+        sum = "h1:dwHyvrcpZCOS9V1fAnKPaGRRI5OC55cVaKhMybqNsKQ=",
+        version = "v1.1.0",
+    )
     go_repository(
         name = "com_github_jinzhu_inflection",
         importpath = "github.com/jinzhu/inflection",
@@ -175,16 +182,4 @@ def go_dependencies():
         importpath = "golang.org/x/tools",
         sum = "h1:FDhOuMEY4JVRztM/gsbk+IKUQ8kj74bxZrgw87eMMVc=",
         version = "v0.0.0-20180917221912-90fa682c2a6e",
-    )
-    go_repository(
-        name = "com_github_fes111_rmm",
-        importpath = "github.com/fes111/rmm",
-        sum = "h1:6AhsywrlDSBZFDK3xQQ3HykG2XIGkUOIiPRU9Q4d+cA=",
-        version = "v0.0.0-20230103145619-0479a5a65032",
-    )
-    go_repository(
-        name = "com_github_gregdel_pushover",
-        importpath = "github.com/gregdel/pushover",
-        sum = "h1:dwHyvrcpZCOS9V1fAnKPaGRRI5OC55cVaKhMybqNsKQ=",
-        version = "v1.1.0",
     )

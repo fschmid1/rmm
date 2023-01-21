@@ -5,19 +5,19 @@ go_library(
     srcs = [
         "auth.handler.go",
         "device.handler.go",
-		"user.handler.go",
-		"notfication.handler.go"
+        "notfication.handler.go",
+        "user.handler.go",
     ],
     importpath = "github.com/fes111/rmm/projects/backend/handlers",
     visibility = ["//visibility:public"],
     deps = [
+        "//libs/go/models",
+        "//projects/backend/config",
+        "//projects/backend/controller",
         "@com_github_gofiber_fiber_v2//:fiber",
         "@com_github_golang_jwt_jwt_v4//:jwt",
         "@io_gorm_gorm//:gorm",
         "@io_gorm_gorm//clause",
         "@org_golang_x_crypto//bcrypt",
-		"//libs/go/models:models",
-		"//projects/backend/config:config",
-		"//projects/backend/controller:controller",
     ],
 )
