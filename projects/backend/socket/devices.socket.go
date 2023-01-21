@@ -137,7 +137,7 @@ func getDeviceById(id string, mac bool) (models.Device, error) {
 		systemInfo := controller.GetSystemInfoByMacAddress(id)
 		result = config.Database.Preload(clause.Associations).Where("system_info_id = ?", systemInfo.ID).First(&device)
 	} else {
-		result = config.Database.Preload(clause.Associations).Find(&device, id)
+		result = config.Database.Preload(clause.Associations).Where("device_id = ?", id).First(&device)
 	}
 	if result.Error != nil {
 		return models.Device{}, errors.New("something went wrong")
@@ -182,6 +182,6 @@ func updateDevice(data map[string]interface{}) (models.Device, error) {
 	if err != nil {
 		return models.Device{}, err
 	}
-
+	device, err = getDeviceById(device.DeviceID, false)
 	return device, nil
 }

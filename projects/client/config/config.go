@@ -18,6 +18,7 @@ var configPath = system.CreateConfigurationPath() + "config"
 var devicePath = system.CreateConfigurationPath() + "device"
 
 func RegisterDevice() {
+	fmt.Println("Registering device...")
 	id := uuid.New().String()
 
 	systemInfo := models.SystemInfo{
@@ -100,7 +101,7 @@ func UpdateSystemInfo() {
 
 func CreateConfiguration() {
 	config := models.Configuration{
-		Path:   "/",
+		Path: "/",
 	}
 	WriteConfiguration(configPath, config)
 	log.Printf("Configuration files was created under '%s'\nAfter configuration pls restart the client\n", configPath)
@@ -139,13 +140,14 @@ func ReadConfiguration() {
 func SetupDevice() {
 	firstTime := false
 	register := false
+	device := models.Device{}
 	if !system.FileOrFolderExists(devicePath) {
 		register = true
+	} else {
+		file, _ := ioutil.ReadFile(devicePath)
+		json.Unmarshal(file, &device)
 	}
-	file, _ := ioutil.ReadFile(devicePath)
-	device := models.Device{}
-	json.Unmarshal(file, &device)
-	if  register || device.SystemInfo.ID == 0 {
+	if register || device.SystemInfoId == 0 {
 		log.Println("Device is not registered")
 		RegisterDevice()
 		firstTime = true

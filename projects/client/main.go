@@ -30,11 +30,15 @@ func main() {
 		log.Printf("No token found, please create one first and add it to the config file\n")
 		os.Exit(1)
 	}
+	if vars.Device.DeviceID == "" {
+		vars.Device.DeviceID = "new"
+	}
 	u := vars.WsUrl + fmt.Sprintf("%s?token=%s", vars.Device.DeviceID, vars.Configuration.Token)
 	connectWebsocket(u)
 }
 
 func connectWebsocket(url string) {
+	fmt.Println(url)
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 	firstConnecton := false
@@ -64,7 +68,6 @@ func connectWebsocket(url string) {
 							if err != nil {
 								log.Println(err)
 							}
-							return
 						}
 					}()
 				}
