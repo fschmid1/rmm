@@ -6,13 +6,8 @@ go_library(
         "functions.go",
         "platform.go",
         "stysteminfo.go",
-        "usage.go",
     ],
     importpath = "github.com/fes111/rmm/projects/client/system",
     visibility = ["//visibility:public"],
-    deps = [
-        "//libs/go/models",
-        "//projects/client/http",
-        "//projects/client/vars",
-    ],
+    deps = ["//projects/client/vars"],
 )

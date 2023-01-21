@@ -6,13 +6,9 @@ go_library(
     importpath = "github.com/fes111/rmm/projects/client",
     visibility = ["//visibility:private"],
     deps = [
-        "//libs/go/helpers",
-        "//libs/go/models",
         "//projects/client/config",
-        "//projects/client/http",
-        "//projects/client/system",
+        "//projects/client/socket",
         "//projects/client/vars",
-        "@com_github_recws_org_recws//:recws",
     ],
 )
 

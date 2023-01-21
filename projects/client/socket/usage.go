@@ -1,4 +1,4 @@
-package system
+package socket
 
 import (
 	"strconv"
@@ -6,9 +6,8 @@ import (
 	"time"
 
 	"github.com/fes111/rmm/libs/go/models"
+	"github.com/fes111/rmm/projects/client/system"
 	"github.com/fes111/rmm/projects/client/vars"
-
-	"github.com/fes111/rmm/projects/client/http"
 )
 
 var StartStopUsageStream chan bool
@@ -16,9 +15,9 @@ var EndUsageStream chan bool
 
 func GetUsage() models.Usage {
 	usage := models.Usage{}
-	if IsLinux() {
-		mem, _ := strconv.ParseFloat(strings.ReplaceAll(Run("free -m | awk '$1 == \"Mem:\" {print $3}'"), "\n", ""), 64)
-		cpu, _ := strconv.ParseFloat(strings.ReplaceAll(Run("top -bn1 | grep '^%Cpu' | cut -c 9- | xargs | awk '{printf(\"%.1f\"), $1 + $3}'"), ",", "."), 64)
+	if system.IsLinux() {
+		mem, _ := strconv.ParseFloat(strings.ReplaceAll(system.Run("free -m | awk '$1 == \"Mem:\" {print $3}'"), "\n", ""), 64)
+		cpu, _ := strconv.ParseFloat(strings.ReplaceAll(system.Run("top -bn1 | grep '^%Cpu' | cut -c 9- | xargs | awk '{printf(\"%.1f\"), $1 + $3}'"), ",", "."), 64)
 		usage = models.Usage{
 			CPU:    cpu,
 			Memory: (mem / 1024) / vars.Device.SystemInfo.MemoryTotal * 100,
@@ -40,7 +39,7 @@ func SendUsage() {
 			return
 		default:
 			if sending {
-				http.SocketSend("usage", GetUsage())
+				SocketSend("usage", GetUsage())
 				time.Sleep(time.Second)
 			}
 		}
