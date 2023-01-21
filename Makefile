@@ -1,4 +1,4 @@
-.PHONY: clean build run env
+.PHONY: clean build run env bazel
 clean:
 	rm -rf ./build
 
@@ -22,6 +22,9 @@ linux: clean
 
 run.backend: build.backend
 	. ./projects/backend/.env && bazel run //projects/backend:RMM_API
+
+bazel:
+	bazel run //:gazelle
 
 run.client: build.client
 	sudo bazel-bin/projects/client/RMM_CLIENT_/RMM_CLIENT
