@@ -41,3 +41,26 @@ export type DeviceToken = {
     token: string;
     name: string;
 };
+
+export type DevicePermission = {
+	id: number;
+	created_at: string;
+	updated_at: string;
+	deleted_at: null;
+	deviceID: number;
+	userID: number;
+	run: boolean;
+	kill: boolean;
+	reboot: boolean;
+	shutdown: boolean;
+	processList: boolean;
+	serviceList: boolean;
+	serviceLogs: boolean;
+	serviceStart: boolean;
+	serviceStop: boolean;
+	serviceRestart: boolean;
+	serviceStatus: boolean;
+	changePermissions: boolean;
+	user: User;
+};
+

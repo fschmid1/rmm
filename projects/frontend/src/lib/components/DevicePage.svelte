@@ -9,6 +9,7 @@
     import { fetchWithToken } from '../helper/http';
     import DeviceHeader from './DeviceHeader.svelte';
     import DeviceInfo from './DeviceInfo.svelte';
+    import DevicePermissions from './DevicePermissions.svelte';
     import DeviceProcesses from './DeviceProcesses.svelte';
     import DeviceRun from './DeviceRun.svelte';
     import DeviceServices from './DeviceServices.svelte';
@@ -63,6 +64,12 @@
                             <span class="space-x-4">Run</span>
                         </Link>
                     </Li>
+                    <Li class="py-2 pl-4">
+                        <Link to="/devices/{$device.data.id}/permissions">
+                            <span class="space-x-4">Permissions</span>
+                        </Link>
+                    </Li>
+
                 </List>
             </div>
             <div class="flex w-9/12 flex-col">
@@ -83,6 +90,9 @@
                         </Route>
                         <Route path="/run" primary={false}>
                             <DeviceRun device={$device.data} />
+                        </Route>
+                        <Route path="/permissions" primary={false}>
+                            <DevicePermissions device={$device.data} />
                         </Route>
                     </Router>
                 </div>

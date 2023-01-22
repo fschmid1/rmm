@@ -38,6 +38,12 @@ func AddDeviceToUser(id string, token string) error {
 	return nil
 }
 
+func GetUsersByDeviceID(id uint) ([]models.User, error) {
+	users := []models.User{}
+	err := config.Database.Table("users").Joins("JOIN user_devices ON users.id = user_devices.user_id").Where("user_devices.device_id = ?", id).Find(&users).Error
+	return users, err
+}
+
 func UpdateUser(user models.User) error {
 	err := config.Database.Save(&user).Error
 	return err

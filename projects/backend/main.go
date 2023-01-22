@@ -39,9 +39,11 @@ func main() {
 	deviceRouter.Get("/tokens", handlers.GetDeviceTokens)
 	deviceRouter.Delete("/tokens/:id", handlers.DeleteDeviceToken)
 
-	deviceRouter.Get("/permissions/:id", handlers.HandleGetDevicePermissions)
-	deviceRouter.Patch("/permissions/:id", handlers.HandleUpdateDevicePermissions)
-	deviceRouter.Delete("/permissions/:id", handlers.HandleDeleteDevicePermissions)
+	deviceRouter.Get("/:id/permissions", handlers.HandleGetDevicePermissions)
+	deviceRouter.Patch("/:id/permissions", handlers.HandleUpdateDevicePermissions)
+	deviceRouter.Delete("/:id/permissions", handlers.HandleDeleteDevicePermissions)
+
+	deviceRouter.Get("/:id/users", handlers.HandleGetUsersByDeviceID)
 
 	deviceRouter.Get("/", handlers.GetDevices)
 	deviceRouter.Get("/:id", handlers.GetDevice)

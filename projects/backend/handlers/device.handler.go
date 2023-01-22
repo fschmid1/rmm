@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"log"
+	"strconv"
 
 	"github.com/fes111/rmm/libs/go/models"
 	"github.com/fes111/rmm/projects/backend/config"
@@ -164,4 +165,13 @@ func RemoveDevice(c *fiber.Ctx) error {
 	}
 
 	return c.SendStatus(200)
+}
+
+func HandleGetUsersByDeviceID(c *fiber.Ctx) error {
+	id, _ := strconv.ParseUint(c.Params("id"), 10, 32)
+	users, err := controller.GetUsersByDeviceID(uint(id))
+	if err != nil {
+		return c.SendStatus(500)
+	}
+	return c.Status(200).JSON(users)
 }

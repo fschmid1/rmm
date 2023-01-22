@@ -2,7 +2,7 @@ package models
 
 type DevicePermissions struct {
 	ID                uint64 `gorm:"primary_key" json:"id"`
-	DeviceID          uint   `json:"deviceID" gorm:"uniqueIndex"`
+	DeviceID          uint   `json:"deviceID" gorm:"not null"`
 	UserID            uint64 `json:"userID" gorm:"not null"`
 	Run               bool   `json:"run" gorm:"default:false"`
 	Shutdown          bool   `json:"shutdown" gorm:"default:false"`
@@ -16,4 +16,5 @@ type DevicePermissions struct {
 	ServiceStatus     bool   `json:"serviceStatus" gorm:"default:false"`
 	Kill              bool   `json:"kill" gorm:"default:false"`
 	ChangePermissions bool   `json:"changePermissions" gorm:"default:false"`
+	User              User   `json:"user" gorm:"constraint:OnDelete:CASCADE;"`
 }
