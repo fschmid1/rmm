@@ -1,13 +1,13 @@
 <script lang="ts">
     import { createQuery, useQueryClient } from "@tanstack/svelte-query";
     import { sineIn } from 'svelte/easing';
-    import { Drawer, Spinner, Accordion, Li, AccordionItem, Toggle, Button, CloseButton, Label, Input, List } from "flowbite-svelte";
+    import { Drawer, Spinner, Accordion, Li, AccordionItem, Toggle, Button, CloseButton, List } from "flowbite-svelte";
 	import type { User, Device,  DevicePermission } from "../../types";
 	import { userStore } from "../../stores";
     import { apiBase } from "../../vars";
     import { fetchWithToken } from "../helper/http";
-    import Fa from "svelte-fa/src/fa.svelte";
-    import { faHashtag, faPlus } from "@fortawesome/free-solid-svg-icons";
+    import Fa from "svelte-fa";
+    import { faPlus } from "@fortawesome/free-solid-svg-icons";
 	export let device: Device;
 
 	let drawerClosed = true;
