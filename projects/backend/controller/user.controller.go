@@ -14,12 +14,29 @@ func AddDeviceToUser(id string, token string) error {
 	if err != nil {
 		return err
 	}
-	result := map[string]interface{}{}
-	config.Database.Table("user_devices").Where("user_id = ?", deviceToken.UserID).Where("device_id = ?", device.ID).Find(&result)
-	if len(result) == 0 {
-		config.Database.Table("user_devices").Create(map[string]interface{}{"user_id": deviceToken.UserID, "device_id": device.ID})
+	devicePermissions, _ := GetDevicePermissionsByUserId(device.ID, deviceToken.UserID)
+	if devicePermissions.ID == 0 {
+		UpdateDevicePermissions(models.DevicePermissions{
+			ID:     0,
+			UserID: deviceToken.UserID, DeviceID: device.ID, Run: true, Shutdown: true, Reboot: true,
+			ProcessList:       true,
+			ServiceList:       true,
+			ServiceStart:      true,
+			ServiceStop:       true,
+			ServiceRestart:    true,
+			ServiceLogs:       true,
+			ServiceStatus:     true,
+			Kill:              true,
+			ChangePermissions: true,
+		})
 	}
 	return nil
+}
+
+func GetAllUsers() ([]models.User, error) {
+	var users []models.User
+	err := config.Database.Find(&users).Error
+	return users, err
 }
 
 func UpdateUser(user models.User) error {

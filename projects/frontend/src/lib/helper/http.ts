@@ -27,6 +27,10 @@ export async function callDeviceFunction<T>(
             data,
         }),
     });
+	if (response.status != 200) {
+		toast.push(await response.text(), {});
+		throw new Error('Error calling function');
+	}
     const json = await response.json();
     if (json.error) {
         toast.push(json.error, {});

@@ -44,7 +44,7 @@ func AddDeviceToken(c *fiber.Ctx) error {
 func GetDeviceTokens(c *fiber.Ctx) error {
 	var tokens []models.DeviceToken
 	userId := c.Locals("user").(*jwt.Token).Claims.(jwt.MapClaims)["user"].(map[string]interface{})["id"]
-	result := config.Database.Preload(clause.Associations).Find(&tokens).Where("u	ser_id = ?", userId)
+	result := config.Database.Preload(clause.Associations).Find(&tokens).Where("user_id = ?", userId)
 
 	if result.Error != nil {
 		return c.SendStatus(500)
@@ -74,7 +74,7 @@ func GetDevices(c *fiber.Ctx) error {
 	var devices []models.Device
 
 	userId := c.Locals("user").(*jwt.Token).Claims.(jwt.MapClaims)["user"].(map[string]interface{})["id"]
-	result := config.Database.Preload(clause.Associations).Where("id IN (?)", config.Database.Table("user_devices").Select("device_id").Where("user_id = ?", userId)).Find(&devices)
+	result := config.Database.Preload(clause.Associations).Where("id IN (?)", config.Database.Table("device_permissions").Select("device_id").Where("user_id = ?", userId)).Find(&devices)
 
 	if result.Error != nil {
 		return c.SendStatus(500)

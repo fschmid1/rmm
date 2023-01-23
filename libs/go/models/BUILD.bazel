@@ -5,6 +5,7 @@ go_library(
     srcs = [
         "configuration.go",
         "device.go",
+        "device-permissions.model.go",
         "device-token.go",
         "socket-event.go",
         "systeminfo.go",

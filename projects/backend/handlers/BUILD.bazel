@@ -6,6 +6,7 @@ go_library(
         "auth.handler.go",
         "device.handler.go",
         "notfication.handler.go",
+        "permissions.handler.go",
         "user.handler.go",
     ],
     importpath = "github.com/fes111/rmm/projects/backend/handlers",
