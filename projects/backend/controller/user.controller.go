@@ -14,13 +14,8 @@ func AddDeviceToUser(id string, token string) error {
 	if err != nil {
 		return err
 	}
-	result := map[string]interface{}{}
-	config.Database.Table("user_devices").Where("user_id = ?", deviceToken.UserID).Where("device_id = ?", device.ID).Find(&result)
-	if len(result) == 0 {
-		config.Database.Table("user_devices").Create(map[string]interface{}{"user_id": deviceToken.UserID, "device_id": device.ID})
-	}
 	devicePermissions, _ := GetDevicePermissionsByUserId(device.ID, deviceToken.UserID)
-	if len(devicePermissions) == 0 {
+	if devicePermissions.ID == 0 {
 		UpdateDevicePermissions(models.DevicePermissions{
 			ID:     0,
 			UserID: deviceToken.UserID, DeviceID: device.ID, Run: true, Shutdown: true, Reboot: true,
@@ -38,9 +33,9 @@ func AddDeviceToUser(id string, token string) error {
 	return nil
 }
 
-func GetUsersByDeviceID(id uint) ([]models.User, error) {
-	users := []models.User{}
-	err := config.Database.Table("users").Joins("JOIN user_devices ON users.id = user_devices.user_id").Where("user_devices.device_id = ?", id).Find(&users).Error
+func GetAllUsers() ([]models.User, error) {
+	var users []models.User
+	err := config.Database.Find(&users).Error
 	return users, err
 }
 

@@ -12,9 +12,9 @@ func GetDevicePermissions(id uint) ([]models.DevicePermissions, error) {
 	return permissions, err
 }
 
-func GetDevicePermissionsByUserId(deviceId uint, id uint64) ([]models.DevicePermissions, error) {
-	permissions := []models.DevicePermissions{}
-	err := config.Database.Where("user_id = ?", id).Where("device_id = ?", deviceId).Find(&permissions).Error
+func GetDevicePermissionsByUserId(deviceId uint, id uint64) (models.DevicePermissions, error) {
+	permissions := models.DevicePermissions{}
+	err := config.Database.Where("user_id = ?", id).Where("device_id = ?", deviceId).First(&permissions).Error
 	return permissions, err
 }
 

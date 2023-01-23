@@ -24,6 +24,15 @@ func HandleUserUpdate(c *fiber.Ctx) error {
 	return c.Status(200).JSON(user)
 }
 
+func HandleGetAllUsers(c *fiber.Ctx) error {
+	users, err := controller.GetAllUsers()
+	if err != nil {
+		return c.Status(400).SendString(err.Error())
+	}
+
+	return c.Status(200).JSON(users)
+}
+
 func HandleGetProfile(c *fiber.Ctx) error {
 	userId := c.Locals("user").(*jwt.Token).Claims.(jwt.MapClaims)["user"].(map[string]interface{})["id"]
 

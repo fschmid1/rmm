@@ -26,6 +26,7 @@ func main() {
 	userRouter.Use(jwtware.New(config.JWT_CONFIG))
 
 	userRouter.Get("/", handlers.HandleGetProfile)
+	userRouter.Get("/all", handlers.HandleGetAllUsers)
 	userRouter.Patch("/notifications/toggle", handlers.HandleToggleDeviceNotfication)
 	userRouter.Get("/notifications", handlers.HandleGetDeviceNotfications)
 	userRouter.Patch("/", handlers.HandleUserUpdate)
@@ -42,8 +43,6 @@ func main() {
 	deviceRouter.Get("/:id/permissions", handlers.HandleGetDevicePermissions)
 	deviceRouter.Patch("/:id/permissions", handlers.HandleUpdateDevicePermissions)
 	deviceRouter.Delete("/:id/permissions", handlers.HandleDeleteDevicePermissions)
-
-	deviceRouter.Get("/:id/users", handlers.HandleGetUsersByDeviceID)
 
 	deviceRouter.Get("/", handlers.GetDevices)
 	deviceRouter.Get("/:id", handlers.GetDevice)

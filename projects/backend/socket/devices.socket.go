@@ -39,7 +39,7 @@ func NotfiyUserDeviceConnection(id string, connected bool) {
 	}
 
 	result := []map[string]interface{}{}
-	config.Database.Table("user_devices").Select("user_id").Where("device_id = ?", device.ID).Find(&result)
+	config.Database.Table("device_permissions").Select("user_id").Where("device_id = ?", device.ID).Find(&result)
 	connectionEvent := CreateConnectionEventChannel(device.DeviceID)
 	var duration time.Duration
 	if connected {

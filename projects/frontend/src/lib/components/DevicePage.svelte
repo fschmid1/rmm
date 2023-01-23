@@ -66,10 +66,9 @@
                     </Li>
                     <Li class="py-2 pl-4">
                         <Link to="/devices/{$device.data.id}/permissions">
-                            <span class="space-x-4">Permissions</span>
+                            <span class="space-x-4">User permissions</span>
                         </Link>
                     </Li>
-
                 </List>
             </div>
             <div class="flex w-9/12 flex-col">

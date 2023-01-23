@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/fes111/rmm/libs/go/models"
+	"github.com/fes111/rmm/projects/backend/controller"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
 )
@@ -230,40 +231,60 @@ func RebootDevice(c *fiber.Ctx, event models.SocketEvent) error {
 
 func FunctionsHandler(c *fiber.Ctx) error {
 	event := new(models.SocketEvent)
+	userId := c.Locals("user").(*jwt.Token).Claims.(jwt.MapClaims)["user"].(map[string]interface{})["id"]
 
 	if err := c.BodyParser(event); err != nil {
 		return c.Status(400).SendString(err.Error())
 	}
-	switch event.Event {
-	case "run":
-		return RunCommand(c, *event)
-	case "process-list":
-		return GetDeviceProcessList(c, *event)
-	case "process-kill":
-		return DeviceKillProcess(c, *event)
-	case "service-logs":
-		return GetServiceLogs(c, *event)
-	case "service-list":
-		return GetServiceList(c, *event)
-	case "service-status":
-		return GetServiceStatus(c, *event)
-	case "service-start":
-		return StartService(c, *event)
-	case "service-stop":
-		return StopService(c, *event)
-	case "service-restart":
-		return RestartService(c, *event)
-	case "usage-start":
-		return StartUsageStream(c, *event)
-	case "usage-stop":
-		return StopUsageStream(c, *event)
-	case "shutdown":
-		return ShutdownDevice(c, *event)
-	case "reboot":
-		return RebootDevice(c, *event)
-	default:
-		return c.Status(400).SendString("Function not valid")
+
+	device, err := GetDeviceByDeviceId(event.Id)
+	if err != nil {
+		return c.SendStatus(403)
 	}
+	permission, err := controller.GetDevicePermissionsByUserId(device.ID, uint64(userId.(float64)))
+	if err != nil {
+		return c.SendStatus(403)
+	}
+	if event.Event == "run" && permission.Run {
+		return RunCommand(c, *event)
+	}
+	if event.Event == "process-list" && permission.ProcessList {
+		return GetDeviceProcessList(c, *event)
+	}
+	if event.Event == "process-kill" && permission.Kill {
+		return DeviceKillProcess(c, *event)
+	}
+	if event.Event == "service-logs" && permission.ServiceLogs {
+		return GetServiceLogs(c, *event)
+	}
+	if event.Event == "service-list" && permission.ServiceList {
+		return GetServiceList(c, *event)
+	}
+	if event.Event == "service-status" && permission.ServiceStatus {
+		return GetServiceStatus(c, *event)
+	}
+	if event.Event == "service-start" && permission.ServiceStart {
+		return StartService(c, *event)
+	}
+	if event.Event == "service-stop" && permission.ServiceStop {
+		return StopService(c, *event)
+	}
+	if event.Event == "service-restart" && permission.ServiceRestart {
+		return RestartService(c, *event)
+	}
+	if event.Event == "usage-start" {
+		return StartUsageStream(c, *event)
+	}
+	if event.Event == "usage-stop" {
+		return StopUsageStream(c, *event)
+	}
+	if event.Event == "shutdown" && permission.Shutdown {
+		return ShutdownDevice(c, *event)
+	}
+	if event.Event == "reboot" && permission.Reboot {
+		return RebootDevice(c, *event)
+	}
+	return c.SendStatus(403)
 }
 
 func StartUsageStream(c *fiber.Ctx, event models.SocketEvent) error {
