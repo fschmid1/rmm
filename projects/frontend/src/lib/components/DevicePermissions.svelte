@@ -40,6 +40,9 @@
                 method: 'PATCH',
                 body: JSON.stringify(permission),
             });
+            if (res.status !== 200) {
+                $permissions.refetch();
+            }
         }, 0);
     };
 
