@@ -58,6 +58,21 @@ func HandleSignUp(c *fiber.Ctx) error {
 		return err
 	}
 
+	c.Cookie(&fiber.Cookie{
+		Name:     "jwt",
+		Value:    token,
+		HTTPOnly: true,
+		Path:     "/",
+		MaxAge:   60 * 30,
+		Secure:   true,
+		SameSite: func() string {
+			if config.DEV {
+				return "None"
+			}
+			return "Strict"
+		}(),
+		Expires: time.Now().Add(time.Minute * 30),
+	})
 	return c.JSON(fiber.Map{"token": token, "exp": exp, "user": user})
 }
 
@@ -86,7 +101,23 @@ func HandleLogin(c *fiber.Ctx) error {
 		return err
 	}
 
-	return c.JSON(fiber.Map{"token": token, "exp": exp, "user": user})
+	c.Cookie(&fiber.Cookie{
+		Name:     "jwt",
+		Value:    token,
+		HTTPOnly: true,
+		Path:     "/",
+		MaxAge:   60 * 30,
+		Secure:   true,
+		SameSite: func() string {
+			if config.DEV {
+				return "None"
+			}
+			return "Strict"
+		}(),
+		Expires: time.Now().Add(time.Minute * 30),
+	})
+
+	return c.JSON(fiber.Map{"exp": exp, "user": user})
 }
 
 func createJWTToken(user models.User) (string, int64, error) {

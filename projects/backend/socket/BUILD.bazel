@@ -16,7 +16,6 @@ go_library(
         "//projects/backend/controller",
         "@com_github_gofiber_fiber_v2//:fiber",
         "@com_github_gofiber_websocket_v2//:websocket",
-        "@com_github_golang_jwt_jwt_v4//:jwt",
         "@io_gorm_gorm//:gorm",
         "@io_gorm_gorm//clause",
     ],

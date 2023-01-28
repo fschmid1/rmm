@@ -20,6 +20,14 @@ build.client.arm: bazel
 run.backend: build.backend
 	. ./projects/backend/.env && bazel run //projects/backend:RMM_API
 
+run.frontend:
+	cp projects/frontend/src/vars.dev.ts projects/frontend/src/vars.ts
+	npx turbo dev
+
+build.frontend:
+	cp projects/frontend/src/vars.prod.ts projects/frontend/src/vars.ts
+	npx turbo build
+
 bazel:
 	bazel run //:gazelle
 

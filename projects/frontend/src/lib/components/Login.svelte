@@ -21,12 +21,11 @@
             }),
         });
         const data = await response.json();
-        if (data.token) {
-            localStorage.setItem('token', data.token);
+        if (data.user) {
             navigate('/');
             location.reload();
+            userStore.set(data.user);
         }
-        if (data.user) userStore.set(data.user);
     };
 </script>
 

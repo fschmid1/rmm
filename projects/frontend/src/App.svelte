@@ -22,10 +22,6 @@
         document.documentElement.classList.add('dark');
 
         if (location.pathname == '/login') return;
-        if (localStorage.getItem('token') == null) {
-            location.href = '/login';
-            return;
-        }
 
         const user = await (
             await fetchWithToken(`${apiBase}/user`, {
@@ -34,7 +30,7 @@
         ).json();
         userStore.set(user as User);
 
-        ws.set(new Websocket($userStore.id, localStorage.getItem('token')));
+        ws.set(new Websocket($userStore.id));
 
         $ws.on('device-connection', (data: { id: number; connected: boolean }) => {
             const newData = (queryClient.getQueryData(['devices']) as Device[]).map((device: any) => {

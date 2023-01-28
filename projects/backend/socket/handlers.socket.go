@@ -7,7 +7,6 @@ import (
 	"github.com/fes111/rmm/libs/go/models"
 	"github.com/fes111/rmm/projects/backend/controller"
 	"github.com/gofiber/fiber/v2"
-	"github.com/golang-jwt/jwt/v4"
 )
 
 func GetDeviceProcessList(c *fiber.Ctx, event models.SocketEvent) error {
@@ -231,7 +230,7 @@ func RebootDevice(c *fiber.Ctx, event models.SocketEvent) error {
 
 func FunctionsHandler(c *fiber.Ctx) error {
 	event := new(models.SocketEvent)
-	userId := c.Locals("user").(*jwt.Token).Claims.(jwt.MapClaims)["user"].(map[string]interface{})["id"]
+	userId := c.Locals("user").(models.User).ID
 
 	if err := c.BodyParser(event); err != nil {
 		return c.Status(400).SendString(err.Error())
@@ -241,7 +240,7 @@ func FunctionsHandler(c *fiber.Ctx) error {
 	if err != nil {
 		return c.SendStatus(403)
 	}
-	permission, err := controller.GetDevicePermissionsByUserId(device.ID, uint64(userId.(float64)))
+	permission, err := controller.GetDevicePermissionsByUserId(device.ID, uint64(userId))
 	if err != nil {
 		return c.SendStatus(403)
 	}
@@ -294,7 +293,7 @@ func StartUsageStream(c *fiber.Ctx, event models.SocketEvent) error {
 	if err != nil {
 		return c.SendStatus(500)
 	}
-	userId := strconv.FormatFloat(c.Locals("user").(*jwt.Token).Claims.(jwt.MapClaims)["user"].(map[string]interface{})["id"].(float64), 'f', 0, 64)
+	userId := strconv.FormatUint(uint64(c.Locals("user").(models.User).ID), 10)
 	if client, ok := Clients[userId]; ok {
 		if UsageStreams[event.Id] == nil {
 			UsageStreams[event.Id] = make(map[string]Client)
