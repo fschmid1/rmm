@@ -7,7 +7,6 @@ import (
 	"github.com/fes111/rmm/projects/backend/config"
 	"github.com/fes111/rmm/projects/backend/controller"
 	"github.com/gofiber/fiber/v2"
-	"github.com/golang-jwt/jwt/v4"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
@@ -19,10 +18,8 @@ func AddDeviceToken(c *fiber.Ctx) error {
 	if err := c.BodyParser(deviceToken); err != nil {
 		return c.Status(503).SendString(err.Error())
 	}
-	user := c.Locals("user").(*jwt.Token)
-	claims := user.Claims.(jwt.MapClaims)
-	id := claims["user"].(map[string]interface{})["id"]
-	deviceToken.UserID = uint64(id.(float64))
+	userId := c.Locals("user").(models.User).ID
+	deviceToken.UserID = uint64(userId)
 	deviceToken.Token, err = controller.GenerateDeviceJWT(*deviceToken)
 	if err != nil {
 		return c.Status(400).SendString(err.Error())
@@ -43,7 +40,7 @@ func AddDeviceToken(c *fiber.Ctx) error {
 
 func GetDeviceTokens(c *fiber.Ctx) error {
 	var tokens []models.DeviceToken
-	userId := c.Locals("user").(*jwt.Token).Claims.(jwt.MapClaims)["user"].(map[string]interface{})["id"]
+	userId := c.Locals("user").(models.User).ID
 	result := config.Database.Preload(clause.Associations).Find(&tokens).Where("user_id = ?", userId)
 
 	if result.Error != nil {
@@ -73,7 +70,7 @@ func DeleteDeviceToken(c *fiber.Ctx) error {
 func GetDevices(c *fiber.Ctx) error {
 	var devices []models.Device
 
-	userId := c.Locals("user").(*jwt.Token).Claims.(jwt.MapClaims)["user"].(map[string]interface{})["id"]
+	userId := c.Locals("user").(models.User).ID
 	result := config.Database.Preload(clause.Associations).Where("id IN (?)", config.Database.Table("device_permissions").Select("device_id").Where("user_id = ?", userId)).Find(&devices)
 
 	if result.Error != nil {

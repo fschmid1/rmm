@@ -10,10 +10,10 @@ go_library(
         "//libs/go/helpers",
         "//projects/backend/config",
         "//projects/backend/handlers",
+        "//projects/backend/middlewares",
         "//projects/backend/socket",
         "@com_github_gofiber_fiber_v2//:fiber",
         "@com_github_gofiber_fiber_v2//middleware/cors",
-        "@com_github_gofiber_jwt_v3//:jwt",
     ],
 )
 

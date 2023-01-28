@@ -7,7 +7,6 @@ import (
 	"github.com/fes111/rmm/libs/go/models"
 	"github.com/fes111/rmm/projects/backend/controller"
 	"github.com/gofiber/fiber/v2"
-	"github.com/golang-jwt/jwt/v4"
 )
 
 func HandleGetDevicePermissions(c *fiber.Ctx) error {
@@ -23,7 +22,7 @@ func HandleGetDevicePermissions(c *fiber.Ctx) error {
 }
 
 func HandleUpdateDevicePermissions(c *fiber.Ctx) error {
-	userId := c.Locals("user").(*jwt.Token).Claims.(jwt.MapClaims)["user"].(map[string]interface{})["id"]
+	userId := c.Locals("user").(models.User).ID
 	permissions := models.DevicePermissions{}
 	err := c.BodyParser(&permissions)
 	if err != nil {
@@ -32,7 +31,7 @@ func HandleUpdateDevicePermissions(c *fiber.Ctx) error {
 			"error": "Bad Request",
 		})
 	}
-	permission, err2 := controller.GetDevicePermissionsByUserId(permissions.DeviceID, uint64(userId.(float64)))
+	permission, err2 := controller.GetDevicePermissionsByUserId(permissions.DeviceID, uint64(userId))
 	if err2 != nil || !permission.ChangePermissions {
 		return c.SendStatus(403)
 	}

@@ -22,18 +22,25 @@ func GenerateDeviceJWT(device models.DeviceToken) (string, error) {
 	return tokenString, nil
 }
 
-func VerifyUserJWT(tokenString string) bool {
+func VerifyUserJWT(tokenString string) (bool, models.User) {
 	token, err := jwt.ParseWithClaims(tokenString, jwt.MapClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(config.JWT_SECRET), nil
 	})
 	if err != nil {
 		log.Println(err)
-		return false
+		return false, models.User{}
 	}
 	if token.Valid {
-		return true
+		userMap := token.Claims.(jwt.MapClaims)["user"].(map[string]interface{})
+		return true, models.User{
+			ID:        uint(userMap["id"].(float64)),
+			Name:      userMap["name"].(string),
+			Email:     userMap["email"].(string),
+			PushToken: userMap["pushToken"].(string),
+		}
+
 	} else {
-		return false
+		return false, models.User{}
 	}
 }
 

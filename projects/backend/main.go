@@ -4,16 +4,18 @@ import (
 	"github.com/fes111/rmm/libs/go/helpers"
 	"github.com/fes111/rmm/projects/backend/config"
 	"github.com/fes111/rmm/projects/backend/handlers"
+	"github.com/fes111/rmm/projects/backend/middlewares"
 	"github.com/fes111/rmm/projects/backend/socket"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
-	jwtware "github.com/gofiber/jwt/v3"
 )
 
 func main() {
 	app := fiber.New()
 
-	app.Use(cors.New())
+	app.Use(cors.New(cors.Config{
+		AllowCredentials: true,
+	}))
 
 	config.Connect()
 
@@ -23,7 +25,7 @@ func main() {
 	app.Post("/auth/signup", handlers.HandleSignUp)
 
 	userRouter := app.Group("/user")
-	userRouter.Use(jwtware.New(config.JWT_CONFIG))
+	userRouter.Use(middlewares.JwtAuth)
 
 	userRouter.Get("/", handlers.HandleGetProfile)
 	userRouter.Get("/all", handlers.HandleGetAllUsers)
@@ -32,7 +34,7 @@ func main() {
 	userRouter.Patch("/", handlers.HandleUserUpdate)
 
 	deviceRouter := app.Group("/devices")
-	deviceRouter.Use(jwtware.New(config.JWT_CONFIG))
+	deviceRouter.Use(middlewares.JwtAuth)
 
 	deviceRouter.Post("/functions", socket.FunctionsHandler)
 

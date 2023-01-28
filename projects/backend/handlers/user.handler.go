@@ -1,15 +1,15 @@
 package handlers
 
 import (
+	"github.com/fes111/rmm/libs/go/models"
 	"github.com/fes111/rmm/projects/backend/controller"
 	"github.com/gofiber/fiber/v2"
-	"github.com/golang-jwt/jwt/v4"
 )
 
 func HandleUserUpdate(c *fiber.Ctx) error {
-	userId := c.Locals("user").(*jwt.Token).Claims.(jwt.MapClaims)["user"].(map[string]interface{})["id"]
+	userId := c.Locals("user").(models.User).ID
 
-	user, err := controller.GetUserById(uint(userId.(float64)))
+	user, err := controller.GetUserById(userId)
 	if err != nil {
 		return c.Status(404).SendString(err.Error())
 	}
@@ -34,9 +34,9 @@ func HandleGetAllUsers(c *fiber.Ctx) error {
 }
 
 func HandleGetProfile(c *fiber.Ctx) error {
-	userId := c.Locals("user").(*jwt.Token).Claims.(jwt.MapClaims)["user"].(map[string]interface{})["id"]
+	userId := c.Locals("user").(models.User).ID
 
-	user, err := controller.GetUserById(uint(userId.(float64)))
+	user, err := controller.GetUserById(userId)
 	if err != nil {
 		return c.Status(404).SendString(err.Error())
 	}

@@ -99,12 +99,15 @@ func RegisterWebsocketRoute(app *fiber.App) {
 	route := app.Group("/ws")
 
 	route.Use(func(c *fiber.Ctx) error {
-		if websocket.IsWebSocketUpgrade(c) && c.Query("token") != "" {
+		if websocket.IsWebSocketUpgrade(c) {
 			token := c.Query("token")
 			if strings.Contains(c.Path(), "/client/") && controller.VerifyClientJWT(token) {
 				return c.Next()
-			} else if strings.Contains(c.Path(), "/user/") && controller.VerifyUserJWT(token) {
-				return c.Next()
+			} else if strings.Contains(c.Path(), "/user/") {
+				verify, _ := controller.VerifyUserJWT(c.Cookies("jwt"))
+				if verify {
+					return c.Next()
+				}
 			}
 		}
 		return c.SendStatus(fiber.StatusUpgradeRequired)

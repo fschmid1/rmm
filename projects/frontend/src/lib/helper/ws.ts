@@ -1,21 +1,19 @@
-import { apiBase } from '../../vars';
+import {  wsBase } from '../../vars';
 
 export class Websocket {
     private ws;
     private events: Map<string, (...data: any) => void> = new Map();
 
     private userId: number;
-    private token: string;
 
-    constructor(userId: number, token: string) {
+    constructor(userId: number) {
         this.userId = userId;
-        this.token = token;
 
         this.connect();
     }
 
     private connect() {
-        this.ws = new WebSocket(`${apiBase.replace(/^http/, 'ws')}/ws/user/${this.userId}?token=${this.token}`);
+        this.ws = new WebSocket(`${wsBase}/ws/user/${this.userId}`);
 
         this.ws.onmessage = (rawEvent) => {
             try {
