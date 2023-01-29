@@ -23,6 +23,8 @@ func main() {
 
 	app.Post("/auth/login", handlers.HandleLogin)
 	app.Post("/auth/signup", handlers.HandleSignUp)
+	app.Post("/auth/refresh", handlers.HandleRefreshToken)
+	app.Post("/auth/logout", handlers.HandleLogout)
 
 	userRouter := app.Group("/user")
 	userRouter.Use(middlewares.JwtAuth)

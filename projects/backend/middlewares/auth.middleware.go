@@ -6,11 +6,12 @@ import (
 )
 
 func JwtAuth(c *fiber.Ctx) error {
-	cookie := c.Cookies("jwt")
-	if cookie == "" {
+	header := c.Get("Authorization", "")
+	if header == "" {
 		return c.SendStatus(fiber.StatusUnauthorized)
 	}
-	verify, user := controller.VerifyUserJWT(cookie)
+	token := header[7:]
+	verify, user := controller.VerifyUserJWT(token)
 	if verify {
 		c.Locals("user", user)
 		return c.Next()

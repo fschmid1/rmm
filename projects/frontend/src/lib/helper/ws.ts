@@ -1,4 +1,6 @@
-import {  wsBase } from '../../vars';
+import { get } from 'svelte/store';
+import { accessToken } from '../../stores';
+import { wsBase } from '../../vars';
 
 export class Websocket {
     private ws;
@@ -13,7 +15,11 @@ export class Websocket {
     }
 
     private connect() {
-        this.ws = new WebSocket(`${wsBase}/ws/user/${this.userId}`);
+        this.ws = new WebSocket(`${wsBase}/ws/user/${this.userId}?token=${get(accessToken)}`);
+
+        this.ws.onconnection = () => {
+            console.log('connected');
+        };
 
         this.ws.onmessage = (rawEvent) => {
             try {

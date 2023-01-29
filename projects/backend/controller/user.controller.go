@@ -3,6 +3,7 @@ package controller
 import (
 	"github.com/fes111/rmm/libs/go/models"
 	"github.com/fes111/rmm/projects/backend/config"
+	"time"
 )
 
 func AddDeviceToUser(id string, token string) error {
@@ -31,6 +32,32 @@ func AddDeviceToUser(id string, token string) error {
 		})
 	}
 	return nil
+}
+
+func GetRefreshTokens(userId uint) ([]models.RefreshToken, error) {
+	var refreshTokens []models.RefreshToken
+	err := config.Database.Where("user_id = ?", userId).Find(&refreshTokens).Error
+	return refreshTokens, err
+}
+
+func GetRefreshToken(token string) (models.RefreshToken, error) {
+	var refreshToken models.RefreshToken
+	err := config.Database.Where("token = ?", token).First(&refreshToken).Error
+	return refreshToken, err
+}
+
+func AddRefreshToken(token string, userId uint) error {
+	err := config.Database.Create(&models.RefreshToken{
+		Token:     token,
+		UserID:    userId,
+		ExpiresAt: time.Now().Add(time.Hour * 24 * 7).Unix(),
+	}).Error
+	return err
+}
+
+func DeleteRefreshToken(token string) error {
+	err := config.Database.Where("token = ?", token).Delete(&models.RefreshToken{}).Error
+	return err
 }
 
 func GetAllUsers() ([]models.User, error) {

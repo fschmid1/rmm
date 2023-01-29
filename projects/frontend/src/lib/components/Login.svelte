@@ -1,7 +1,6 @@
 <script lang="ts">
     import { Button, Input, Label } from 'flowbite-svelte';
     import { useNavigate } from 'svelte-navigator';
-    import { userStore } from '../../stores';
     import { apiBase } from '../../vars';
 
     let email = '';
@@ -24,7 +23,6 @@
         if (data.user) {
             navigate('/');
             location.reload();
-            userStore.set(data.user);
         }
     };
 </script>
