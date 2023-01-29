@@ -29,6 +29,7 @@
             },
             method: 'POST',
         });
+        if (res.status != 200) location.pathname = '/login';
         const { access_token } = await res.json();
         accessToken.set(access_token);
 
