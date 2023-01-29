@@ -7,6 +7,7 @@ go_library(
         "device.go",
         "device-permissions.model.go",
         "device-token.go",
+        "refresh-token.model.go",
         "socket-event.go",
         "systeminfo.go",
         "usage.go",

@@ -104,7 +104,7 @@ func RegisterWebsocketRoute(app *fiber.App) {
 			if strings.Contains(c.Path(), "/client/") && controller.VerifyClientJWT(token) {
 				return c.Next()
 			} else if strings.Contains(c.Path(), "/user/") {
-				verify, _ := controller.VerifyUserJWT(c.Cookies("jwt"))
+				verify, _ := controller.VerifyUserJWT(token)
 				if verify {
 					return c.Next()
 				}

@@ -4,6 +4,8 @@ import type { Device, User } from './types';
 
 export const userStore = writable<User>(null);
 
+export const accessToken = writable<string>(null);
+
 export const device = writable<Device>(null);
 
 export const ws = writable<Websocket>(null);

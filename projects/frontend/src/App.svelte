@@ -12,7 +12,7 @@
     import SettingsPage from './lib/components/SettingsPage.svelte';
     import { fetchWithToken } from './lib/helper/http';
     import { Websocket } from './lib/helper/ws';
-    import { userStore, ws } from './stores';
+    import { accessToken, userStore, ws } from './stores';
     import type { Device, User } from './types';
     import { apiBase } from './vars';
 
@@ -22,6 +22,15 @@
         document.documentElement.classList.add('dark');
 
         if (location.pathname == '/login') return;
+
+        const res = await fetch(`${apiBase}/auth/refresh`, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            method: 'POST',
+        });
+        const { access_token } = await res.json();
+        accessToken.set(access_token);
 
         const user = await (
             await fetchWithToken(`${apiBase}/user`, {
@@ -47,18 +56,20 @@
 <QueryClientProvider client={queryClient}>
     <Router>
         <Header />
-        <Route primary={true} path="/devices">
-            <Devices />
-        </Route>
-        <Route primary={true} path="/devices/:id/*" let:params>
-            <DevicePage id={params.id} />
-        </Route>
-        <Route primary={false} path="/settings/*">
-            <SettingsPage />
-        </Route>
-        <Route>
-            <Redirects />
-        </Route>
+        {#if $userStore}
+            <Route primary={true} path="/devices">
+                <Devices />
+            </Route>
+            <Route primary={true} path="/devices/:id/*" let:params>
+                <DevicePage id={params.id} />
+            </Route>
+            <Route primary={false} path="/settings/*">
+                <SettingsPage />
+            </Route>
+            <Route>
+                <Redirects />
+            </Route>
+        {/if}
         <Route primary={false} path="/login">
             <Login />
         </Route>
