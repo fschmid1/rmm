@@ -11,7 +11,7 @@ func KillProcess(name string) (string, string) {
 		return "", "Process kill is not allowed on this device"
 	}
 	if IsLinux() {
-		return Run("pkill " + name), ""
+		return Run("pkill "+name, 0), ""
 	}
 	return "", ""
 }
@@ -21,7 +21,7 @@ func GetProcessList() (string, string) {
 		return "", "Process list is not allowed on this device"
 	}
 	if IsLinux() {
-		return Run("ps aux"), ""
+		return Run("ps aux", 0), ""
 	}
 	return "", ""
 }
@@ -31,7 +31,7 @@ func GetServiceList() (string, string) {
 		return "", "Service list is not allowed on this device"
 	}
 	if IsLinux() {
-		return Run("service --status-all"), ""
+		return Run("service --status-all", 0), ""
 	}
 	return "", ""
 }
@@ -41,7 +41,7 @@ func GetServiceLogs(service string) (string, string) {
 		return "", "Service logs are not allowed on this device"
 	}
 	if IsLinux() {
-		return Run(fmt.Sprintf("journalctl -u %s -e --no-pager", service)), ""
+		return Run(fmt.Sprintf("journalctl -u %s -e --no-pager", service), 0), ""
 	}
 	return "", ""
 }
@@ -51,7 +51,7 @@ func GetServiceStatus(service string) (string, string) {
 		return "", "Service status is not allowed on this device"
 	}
 	if IsLinux() {
-		return Run(fmt.Sprintf("service %s status", service)), ""
+		return Run(fmt.Sprintf("service %s status", service), 0), ""
 	}
 	return "", ""
 }
@@ -61,7 +61,7 @@ func StartService(service string) (string, string) {
 		return "", "Service start is not allowed on this device"
 	}
 	if IsLinux() {
-		return Run(fmt.Sprintf("systemctl start %s", service)), ""
+		return Run(fmt.Sprintf("systemctl start %s", service), 0), ""
 	}
 	return "", ""
 }
@@ -71,7 +71,7 @@ func StopService(service string) (string, string) {
 		return "", "Service stop is not allowed on this device"
 	}
 	if IsLinux() {
-		return Run(fmt.Sprintf("systemctl stop %s", service)), ""
+		return Run(fmt.Sprintf("systemctl stop %s", service), 0), ""
 	}
 	return "", ""
 }
@@ -81,7 +81,7 @@ func RestartService(service string) (string, string) {
 		return "", "Service restart is not allowed on this device"
 	}
 	if IsLinux() {
-		return Run(fmt.Sprintf("systemctl restart %s", service)), ""
+		return Run(fmt.Sprintf("systemctl restart %s", service), 0), ""
 	}
 	return "", ""
 }
@@ -91,7 +91,7 @@ func Reboot() (string, string) {
 		return "", "Reboot is not allowed on this device"
 	}
 	if IsLinux() {
-		return Run("reboot"), ""
+		return Run("reboot", 0), ""
 	}
 	return "", ""
 }
@@ -101,7 +101,7 @@ func Shutdown() (string, string) {
 		return "", "Shutdown is not allowed on this device"
 	}
 	if IsLinux() {
-		return Run("shutdown -h 10"), ""
+		return Run("shutdown -h 10", 0), ""
 	}
 	return "", ""
 }
