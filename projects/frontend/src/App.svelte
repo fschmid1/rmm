@@ -16,19 +16,35 @@
     import type { Device, User } from './types';
     import { apiBase } from './vars';
 
-    const queryClient = new QueryClient();
+    const queryClient = new QueryClient({});
 
     onMount(async () => {
         document.documentElement.classList.add('dark');
 
         if (location.pathname == '/login') return;
 
-        const res = await fetch(`${apiBase}/auth/refresh`, {
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            method: 'POST',
+        const res: Response = await new Promise(async (resolve) => {
+            let res: Response;
+            let interval: any;
+            let i = 0;
+
+            const refresh = async () => {
+                i++;
+                res = await fetch(`${apiBase}/auth/refresh`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    method: 'POST',
+                });
+                if (res.status == 200 || i == 3) {
+                    clearInterval(interval);
+                    resolve(res);
+                }
+            };
+            await refresh();
+            interval = setInterval(refresh, 1000);
         });
+
         if (res.status != 200) location.pathname = '/login';
         const { access_token } = await res.json();
         accessToken.set(access_token);
