@@ -7,7 +7,7 @@ A remote monitoring and management software written in Go.
 1. Clone the repository to your local machine
 2. Install Bazel
     ```
-    brew install bazel 
+    brew install bazel
     ```
 ## Deploy Backend
 1. Build Backend
@@ -62,15 +62,16 @@ A remote monitoring and management software written in Go.
 ## Deploy Frontend
 1. Change api base to backend url
     ``` ts
-     // projects/frontend/src/vars.ts
-     export const apiBase = 'http://localhost:8080';
+     // projects/frontend/src/vars.prod.ts
+    export const apiBase = '/';
+    export const wsBase = 'ws://';
     ```
 2. Install dependencies
     ```
-    npm i (in root folder of the project)
+    npm i (in root folder of this repo)
     ```
 3. Build frontend
     ```
-    npx turbo build (in root folder of the project)
+    make build.backend (in root folder of this repo)
     ```
     This will create the static files under: "projects/frontend/dist"
