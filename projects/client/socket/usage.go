@@ -28,6 +28,7 @@ func GetUsage() models.Usage {
 
 func SendUsage() {
 	sending := false
+	ticker := time.NewTicker(time.Second)
 	StartStopUsageStream = make(chan bool)
 	EndUsageStream = make(chan bool)
 	defer close(StartStopUsageStream)
@@ -36,11 +37,11 @@ func SendUsage() {
 		case value := <-StartStopUsageStream:
 			sending = value
 		case <-EndUsageStream:
+			ticker.Stop()
 			return
-		default:
+		case <-ticker.C:
 			if sending {
 				SocketSend("usage", GetUsage())
-				time.Sleep(time.Second)
 			}
 		}
 	}
