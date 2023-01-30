@@ -22,7 +22,7 @@ func SocketSend(event string, data interface{}) {
 }
 
 func ConnectWebsocket() {
-	url := vars.WsUrl + fmt.Sprintf("%s?token=%s", vars.Device.DeviceID, vars.Configuration.Token)
+	url := vars.WsUrl
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 	firstConnecton := false
@@ -35,8 +35,6 @@ func ConnectWebsocket() {
 	ws.Dial(url, nil)
 	SocketConn = ws
 
-	go SendUsage()
-
 	for {
 		select {
 		case <-ctx.Done():
@@ -45,19 +43,17 @@ func ConnectWebsocket() {
 		default:
 			if !ws.IsConnected() && firstConnecton {
 				fmt.Println("Disconnected from server")
+				EndUsageStream <- true
 				firstConnecton = false
 			}
 			if ws.IsConnected() {
 				if !firstConnecton {
 					fmt.Println("Connected to server")
-					go func() {
-						for item := range vars.Queue {
-							err := ws.WriteJSON(item)
-							if err != nil {
-								log.Println(err)
-							}
-						}
-					}()
+					go SendUsage()
+					ws.WriteJSON(models.SocketEvent{
+						Event: "auth",
+						Data:  map[string]string{"token": vars.Configuration.Token, "id": vars.Device.DeviceID},
+					})
 				}
 				firstConnecton = true
 				var msg models.SocketEvent
@@ -76,7 +72,18 @@ func ConnectWebsocket() {
 					continue
 				}
 				switch msg.Event {
+				case "auth-success":
+					fmt.Println("Auth success")
+					go func() {
+						for item := range vars.Queue {
+							err := ws.WriteJSON(item)
+							if err != nil {
+								log.Println(err)
+							}
+						}
+					}()
 				case "usage-start":
+					fmt.Println("Start usage stream")
 					StartStopUsageStream <- true
 				case "usage-stop":
 					StartStopUsageStream <- false
