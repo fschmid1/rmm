@@ -21,8 +21,6 @@
     onMount(async () => {
         document.documentElement.classList.add('dark');
 
-        if (location.pathname == '/login') return;
-
         const res: Response = await new Promise(async (resolve) => {
             let res: Response;
             let interval: any;
@@ -45,7 +43,8 @@
             interval = setInterval(refresh, 1000);
         });
 
-        if (res.status != 200) location.pathname = '/login';
+        if (res.status != 200 && location.pathname != '/login') location.pathname = '/login';
+        if (res.status == 200 && location.pathname == '/login') location.pathname = '/devices';
         const { access_token } = await res.json();
         accessToken.set(access_token);
 
