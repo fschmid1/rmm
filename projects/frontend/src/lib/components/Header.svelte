@@ -2,6 +2,7 @@
     import { Avatar, Dropdown, DropdownHeader, DropdownItem, Navbar } from 'flowbite-svelte';
     import { useNavigate } from 'svelte-navigator';
     import { userStore } from '../../stores';
+    import { apiBase } from '../../vars';
     const navigate = useNavigate();
 </script>
 
@@ -18,8 +19,10 @@
                 </DropdownHeader>
                 <DropdownItem
                     on:click={async () => {
-                        localStorage.clear();
-                        location.reload();
+                        await fetch(`${apiBase}/auth/logout`, {
+                            method: 'POST',
+                        });
+                        location.pathname = '/login';
                     }}>Sign out</DropdownItem
                 >
             </Dropdown>
