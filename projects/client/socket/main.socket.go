@@ -25,7 +25,7 @@ func ConnectWebsocket() {
 	url := vars.WsUrl
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-	firstConnecton := false
+	firstConnection := true
 	ws := recws.RecConn{
 		KeepAliveTimeout: 0,
 		RecIntvlMin:      time.Second * 5,
@@ -33,7 +33,7 @@ func ConnectWebsocket() {
 	}
 
 	ws.Dial(url, nil)
-	SocketConn = ws
+	go SendUsage()
 
 	for {
 		select {
@@ -41,21 +41,21 @@ func ConnectWebsocket() {
 			go ws.Close()
 			return
 		default:
-			if !ws.IsConnected() && firstConnecton {
+			if !ws.IsConnected() && !firstConnection {
+				StartStopUsageStream <- false
 				fmt.Println("Disconnected from server")
-				EndUsageStream <- true
-				firstConnecton = false
+				firstConnection = true
 			}
 			if ws.IsConnected() {
-				if !firstConnecton {
+				if firstConnection {
 					fmt.Println("Connected to server")
-					go SendUsage()
+					SocketConn = ws
 					ws.WriteJSON(models.SocketEvent{
 						Event: "auth",
 						Data:  map[string]string{"token": vars.Configuration.Token, "id": vars.Device.DeviceID},
 					})
 				}
-				firstConnecton = true
+				firstConnection = false
 				var msg models.SocketEvent
 				err := ws.ReadJSON(&msg)
 				if err != nil {
@@ -83,7 +83,6 @@ func ConnectWebsocket() {
 						}
 					}()
 				case "usage-start":
-					fmt.Println("Start usage stream")
 					StartStopUsageStream <- true
 				case "usage-stop":
 					StartStopUsageStream <- false
