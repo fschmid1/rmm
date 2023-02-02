@@ -119,6 +119,9 @@ func RegisterWebsocketRoute(app *fiber.App) {
 
 		time.AfterFunc(5*time.Second, func() {
 			if !client.Authenicated {
+				if client.Connection.Conn == nil {
+					return
+				}
 				client.Connection.WriteJSON(models.SocketEvent{
 					Event: "auth-fail",
 				})
@@ -127,10 +130,13 @@ func RegisterWebsocketRoute(app *fiber.App) {
 		})
 
 		for {
+			if client.Connection.Conn == nil {
+				break
+			}
 			message := models.SocketEvent{}
 			err := client.Connection.ReadJSON(&message)
 			if err != nil {
-				return
+				break
 			}
 
 			if message.Event == "auth" {
@@ -186,10 +192,13 @@ func RegisterWebsocketRoute(app *fiber.App) {
 		})
 
 		for {
+			if client.Connection.Conn == nil {
+				break
+			}
 			message := models.SocketEvent{}
 			err := client.Connection.ReadJSON(&message)
 			if err != nil {
-				return
+				break
 			}
 			if message.Event == "auth" {
 				token := message.Data.(map[string]interface{})["token"].(string)
@@ -210,10 +219,6 @@ func RegisterWebsocketRoute(app *fiber.App) {
 					return
 				}
 			}
-			if !client.Authenicated {
-				continue
-			}
-
 			if strings.HasPrefix(message.Event, "result-") {
 				if channel, ok := Results[message.Event+client.Id]; ok {
 					channel <- message
