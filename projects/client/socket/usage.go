@@ -32,6 +32,7 @@ func SendUsage() {
 	StartStopUsageStream = make(chan bool)
 	EndUsageStream = make(chan bool)
 	defer close(StartStopUsageStream)
+	defer close(EndUsageStream)
 	for {
 		select {
 		case value := <-StartStopUsageStream:

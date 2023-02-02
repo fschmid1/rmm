@@ -4,6 +4,7 @@ import (
 	"errors"
 	"log"
 	"strings"
+	"time"
 
 	"github.com/fes111/rmm/libs/go/models"
 	"github.com/fes111/rmm/projects/backend/controller"
@@ -12,9 +13,10 @@ import (
 )
 
 type Client struct {
-	Id         string
-	Connection *websocket.Conn
-	User       bool
+	Id           string
+	Connection   *websocket.Conn
+	User         bool
+	Authenicated bool
 }
 
 var Clients = make(map[string]Client)
@@ -100,22 +102,13 @@ func RegisterWebsocketRoute(app *fiber.App) {
 
 	route.Use(func(c *fiber.Ctx) error {
 		if websocket.IsWebSocketUpgrade(c) {
-			token := c.Query("token")
-			if strings.Contains(c.Path(), "/client/") && controller.VerifyClientJWT(token) {
-				return c.Next()
-			} else if strings.Contains(c.Path(), "/user/") {
-				verify, _ := controller.VerifyUserJWT(token)
-				if verify {
-					return c.Next()
-				}
-			}
+			return c.Next()
 		}
 		return c.SendStatus(fiber.StatusUpgradeRequired)
 	})
 
-	route.Get("/user/:id", websocket.New(func(c *websocket.Conn) {
+	route.Get("/user", websocket.New(func(c *websocket.Conn) {
 		client := Client{
-			Id:         c.Params("id"),
 			Connection: c,
 			User:       true,
 		}
@@ -124,13 +117,43 @@ func RegisterWebsocketRoute(app *fiber.App) {
 			c.Close()
 		}()
 
-		register <- client
+		time.AfterFunc(5*time.Second, func() {
+			if !client.Authenicated {
+				if client.Connection.Conn == nil {
+					return
+				}
+				client.Connection.WriteJSON(models.SocketEvent{
+					Event: "auth-fail",
+				})
+				client.Connection.Close()
+			}
+		})
 
 		for {
+			if client.Connection.Conn == nil {
+				break
+			}
 			message := models.SocketEvent{}
 			err := client.Connection.ReadJSON(&message)
 			if err != nil {
-				return
+				break
+			}
+
+			if message.Event == "auth" {
+				verrify, _ := controller.VerifyUserJWT(message.Data.(map[string]interface{})["token"].(string))
+				if verrify {
+					client.Authenicated = true
+					client.Id = message.Data.(map[string]interface{})["id"].(string)
+					register <- client
+					client.Connection.WriteJSON(models.SocketEvent{
+						Event: "auth-success",
+					})
+				} else {
+					client.Connection.WriteJSON(models.SocketEvent{
+						Event: "auth-fail",
+					})
+					break
+				}
 			}
 			if strings.HasPrefix(message.Event, "result-") {
 				if channel, ok := Results[message.Event+client.Id]; ok {
@@ -148,27 +171,53 @@ func RegisterWebsocketRoute(app *fiber.App) {
 		}
 	}))
 
-	route.Get("/client/:id", websocket.New(func(c *websocket.Conn) {
+	route.Get("/client", websocket.New(func(c *websocket.Conn) {
 		client := Client{
-			Id:         c.Params("id"),
-			Connection: c,
-			User:       false,
+			Connection:   c,
+			User:         false,
+			Authenicated: false,
 		}
 		defer func() {
 			unregister <- client
 			c.Close()
 		}()
 
-		register <- client
-
-		go controller.SetDeviceToken(client.Id, c.Query("token"))
-		go controller.AddDeviceToUser(client.Id, c.Query("token"))
+		time.AfterFunc(5*time.Second, func() {
+			if !client.Authenicated {
+				client.Connection.WriteJSON(models.SocketEvent{
+					Event: "auth-fail",
+				})
+				client.Connection.Close()
+			}
+		})
 
 		for {
+			if client.Connection.Conn == nil {
+				break
+			}
 			message := models.SocketEvent{}
 			err := client.Connection.ReadJSON(&message)
 			if err != nil {
-				return
+				break
+			}
+			if message.Event == "auth" {
+				token := message.Data.(map[string]interface{})["token"].(string)
+				verify := controller.VerifyClientJWT(token)
+				if verify {
+					client.Authenicated = true
+					client.Id = message.Data.(map[string]interface{})["id"].(string)
+					register <- client
+					go controller.SetDeviceToken(client.Id, token)
+					go controller.AddDeviceToUser(client.Id, token)
+					client.Connection.WriteJSON(models.SocketEvent{
+						Event: "auth-success",
+					})
+				} else {
+					client.Connection.WriteJSON(models.SocketEvent{
+						Event: "auth-fail",
+					})
+					return
+				}
 			}
 			if strings.HasPrefix(message.Event, "result-") {
 				if channel, ok := Results[message.Event+client.Id]; ok {

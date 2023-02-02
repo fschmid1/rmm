@@ -15,10 +15,19 @@ export class Websocket {
     }
 
     private connect() {
-        this.ws = new WebSocket(`${wsBase}/ws/user/${this.userId}?token=${get(accessToken)}`);
+        this.ws = new WebSocket(`${wsBase}/ws/user`);
 
-        this.ws.onconnection = () => {
+        this.ws.onopen = () => {
             console.log('connected');
+            this.ws.send(
+                JSON.stringify({
+                    event: 'auth',
+                    data: {
+                        token: get(accessToken),
+                        id: this.userId.toString(),
+                    },
+                }),
+            );
         };
 
         this.ws.onmessage = (rawEvent) => {
