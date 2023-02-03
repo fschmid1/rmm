@@ -18,7 +18,6 @@ export class Websocket {
         this.ws = new WebSocket(`${wsBase}/ws/user`);
 
         this.ws.onopen = () => {
-            console.log('connected');
             this.ws.send(
                 JSON.stringify({
                     event: 'auth',

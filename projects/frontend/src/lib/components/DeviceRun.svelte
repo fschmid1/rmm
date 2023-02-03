@@ -27,7 +27,7 @@
         }, 0);
     };
 
-    const handleKey = async (event) => {
+    const handleKey = async (event: any) => {
         if (event.key === 'Enter') {
             trimOutput();
             callDeviceFunction<string>(device.deviceID, 'run', command).then((response) => {

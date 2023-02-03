@@ -18,8 +18,8 @@ func Run(cmd string, timeout time.Duration) string {
 		out.Process.Kill()
 	})
 
-	defer timer.Stop()
 	stdout, _ := out.CombinedOutput()
+	timer.Stop()
 	return string(stdout)
 }
 
