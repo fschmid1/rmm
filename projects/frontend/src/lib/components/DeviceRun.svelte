@@ -27,9 +27,10 @@
         }, 0);
     };
 
-    const handleKey = async (event) => {
+    const handleKey = async (event: any) => {
         if (event.key === 'Enter') {
             trimOutput();
+			console.log(command);
             callDeviceFunction<string>(device.deviceID, 'run', command).then((response) => {
                 output += response.data.replace(/\n/g, '<br />');
                 scrollToBottom(outputElement, response.data);
