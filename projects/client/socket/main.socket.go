@@ -88,8 +88,7 @@ func ConnectWebsocket() {
 					StartStopUsageStream <- false
 				case "run":
 					if vars.Configuration.Allow.Run {
-						data := system.Run(fmt.Sprintf("%v", msg.Data), 5)
-						fmt.Println(data)
+						data := system.Run(msg.Data.(string), time.Second*5)
 						ws.WriteJSON(models.SocketEvent{
 							Event: "result-run",
 							Data:  data,
