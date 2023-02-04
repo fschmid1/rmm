@@ -7,7 +7,8 @@
     import { apiBase } from '../../vars';
     import { fetchWithToken } from '../helper/http';
     import Fa from 'svelte-fa';
-    import { faPlus } from '@fortawesome/free-solid-svg-icons';
+    import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
+    import { customConfirm } from 'svelte-lib';
     export let device: Device;
 
     let drawerClosed = true;
@@ -46,6 +47,16 @@
         }, 0);
     };
 
+    const handleDelete = async (permission: DevicePermission) => {
+        if ((await customConfirm('Are you sure you want to delete this permission?')) === false) return;
+        const res = await fetchWithToken(`${apiBase}/devices/permissions/${permission.id}`, {
+            method: 'DELETE',
+        });
+        if (res.status === 200) {
+            client.invalidateQueries(['permissions', device.id]);
+        }
+    };
+
     const client = useQueryClient();
 
     let transitionParams = {
@@ -78,6 +89,11 @@
 
         drawerClosed = true;
     };
+
+	$: filterdUsers = $users.data?.filter((user) => {
+		const permission = $permissions.data?.find((permission) => permission.user.id === user.id);
+		return permission === undefined && user.id !== $userStore.id;
+	});
 </script>
 
 <div class="flex w-full justify-end mb-2">
@@ -98,7 +114,10 @@
                 <span slot="header">
                     {permission.user.name}
                 </span>
-                <div class="flex flex-row">
+                <div class="flex flex-row relative">
+                    <div class="absolute right-2 cursor-pointer" on:click={() => handleDelete(permission)}>
+                        <Fa icon={faTrash} />
+                    </div>
                     <div class="w-1/2">
                         <Toggle class="my-1" on:click={() => handleToggle(permission)} bind:checked={permission.run}
                             >Run</Toggle
@@ -173,17 +192,15 @@
         <CloseButton on:click={() => (drawerClosed = true)} class="mb-4 dark:text-white" />
     </div>
     <List>
-        {#if $users.data}
-            {#each $users.data as user (user.id)}
-                {#if user.id !== $userStore.id}
-                    <Li class="flex justify-between items-center">
+        {#if filterdUsers.length > 0}
+            {#each filterdUsers as user (user.id)}
+                    <Li class="flex justify-between items-center my-2">
                         <span>{user.name}</span>
                         <Button on:click={() => addPermissions(user)} class="ml-2">
                             <Fa icon={faPlus} class="mr-2" />
                             Add
                         </Button>
                     </Li>
-                {/if}
             {/each}
         {/if}
     </List>
