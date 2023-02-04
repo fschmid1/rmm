@@ -46,7 +46,7 @@ func main() {
 
 	deviceRouter.Get("/:id/permissions", handlers.HandleGetDevicePermissions)
 	deviceRouter.Patch("/:id/permissions", handlers.HandleUpdateDevicePermissions)
-	deviceRouter.Delete("/:id/permissions", handlers.HandleDeleteDevicePermissions)
+	deviceRouter.Delete("/:devideId/permissions/:id", handlers.HandleDeleteDevicePermissions)
 
 	deviceRouter.Get("/", handlers.GetDevices)
 	deviceRouter.Get("/:id", handlers.GetDevice)

@@ -12,6 +12,9 @@ export async function fetchWithToken(url: string, options: any, json = true) {
     if (response.status == 401) {
         location.href = '/login';
     }
+	if (response.status != 200) {
+		toast.push(await response.text(), {});
+	}
     return response;
 }
 

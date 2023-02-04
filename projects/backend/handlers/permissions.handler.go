@@ -46,8 +46,15 @@ func HandleUpdateDevicePermissions(c *fiber.Ctx) error {
 }
 
 func HandleDeleteDevicePermissions(c *fiber.Ctx) error {
+	userId := c.Locals("user").(models.User).ID
 	id, _ := strconv.ParseUint(c.Params("id"), 10, 32)
-	err := controller.DeleteDevicePermissions(uint(id))
+	deviceId, _ := strconv.ParseUint(c.Params("devideId"), 10, 32)
+
+	permission, err := controller.GetDevicePermissionsByUserId(uint(deviceId), uint64(userId))
+	if err != nil || !permission.ChangePermissions {
+		return c.SendStatus(403)
+	}
+	err = controller.DeleteDevicePermissions(uint(id))
 	if err != nil {
 		log.Println(err)
 		return c.Status(500).JSON(fiber.Map{
