@@ -50,13 +50,18 @@ func AddRefreshToken(token string, userId uint) error {
 	err := config.Database.Create(&models.RefreshToken{
 		Token:     token,
 		UserID:    userId,
-		ExpiresAt: time.Now().Add(time.Hour * 24 * 7).Unix(),
+		ExpiresAt: time.Now().Add(time.Hour * 24 * 14).Unix(),
 	}).Error
 	return err
 }
 
 func DeleteRefreshToken(token string) error {
 	err := config.Database.Where("token = ?", token).Delete(&models.RefreshToken{}).Error
+	return err
+}
+
+func ClearRefreshTokens(userId uint) error {
+	err := config.Database.Where("user_id = ?", userId).Delete(&models.RefreshToken{}).Error
 	return err
 }
 
