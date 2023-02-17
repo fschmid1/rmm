@@ -132,7 +132,14 @@ func HandleLogin(c *fiber.Ctx) error {
 
 func HandleLogout(c *fiber.Ctx) error {
 	refreshToken := c.Cookies("refresh_token")
-	controller.DeleteRefreshToken(refreshToken)
+	if refreshToken == "" {
+		return fiber.NewError(fiber.StatusBadRequest, "invalid refresh token")
+	}
+	token, err := controller.GetRefreshToken(refreshToken)
+	if err != nil {
+		return err
+	}
+	controller.ClearRefreshTokens(token.UserID)
 	c.ClearCookie("refresh_token")
 	return c.SendStatus(fiber.StatusOK)
 }
@@ -183,6 +190,7 @@ func createJWTToken(user models.User, exp int64) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
 	claims["user"] = user
+	claims["iat"] = time.Now().Unix()
 	if exp != 0 {
 		claims["exp"] = exp
 	}

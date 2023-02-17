@@ -45,7 +45,7 @@ func NotfiyUserDeviceConnection(id string, connected bool) {
 	if connected {
 		duration = time.Second * 0
 	} else {
-		duration = time.Second * 20
+		duration = time.Second * 25
 	}
 	timer := time.NewTimer(duration)
 	select {
